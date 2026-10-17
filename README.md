@@ -1,24 +1,24 @@
-# 大模型部署工程：基础知识与实战
+# 端侧大模型部署适配与推理优化：知识体系与实战
 
 围绕一条工程主线学习：明确需求 → 确认兼容 → 跑通服务 → 测量性能 → 定位优化 → 验收交付。
 
-适合准备做大模型部署、推理优化和多硬件适配的工程师。先理解基础概念，再用实测 Case 检查自己能否完成一条可复现的部署链路。
+面向大模型部署、推理优化和多硬件适配工程师。知识体系从端侧约束与请求链路开始，完整展开硬件兼容、模型量化、内存预算、llama.cpp 部署、终端迁移、调度、压测、性能分析、排障、并行与工程交付。
 
 | 内容 | 从哪里开始 | 读完或跑完能得到什么 |
 | --- | --- | --- |
-| 第 1 章：大模型部署基础知识 | [工程知识体系](docs/01-deployment-foundations/README.md) | 硬件、模型、显存、推理框架、性能指标和交付之间的关系 |
+| 工程知识体系：13 个专题 | [完整目录](docs/01-deployment-foundations/README.md) | 原理、计算、命令模板、平台边界、排障与交付方法 |
 | 实战 Case | [Case 目录](cases/README.md) | 逐步教程、脚本、样例输入、核验截图和实测汇总 |
 | 项目记录 | [部署复盘模板](templates/deployment-review.md) | 一份能说明环境、实验、证据和限制的交付记录 |
 
-![大模型部署工程知识地图](docs/01-deployment-foundations/assets/deployment-engineering-map.png)
+![大模型部署适配知识体系框架](docs/01-deployment-foundations/assets/edge-llm-deployment-framework-original.png)
 
-图中概括的是学习和排查顺序；具体说明见[第 1 章](docs/01-deployment-foundations/README.md)。需要清晰缩放或二次编辑时使用 [SVG 矢量版](docs/01-deployment-foundations/assets/deployment-engineering-map.svg)。
+图为作者提供的原始知识框架，具体概念、版本边界与修订见[知识体系](docs/01-deployment-foundations/README.md)。图表达学习范围，不是已验证的全平台支持矩阵。另保留早期简图的 [SVG](docs/01-deployment-foundations/assets/deployment-engineering-map.svg) 供辅助阅读。
 
 ## 仓库结构
 
 ```text
 llm-serving-diagnosis/
-├── docs/01-deployment-foundations/   工程基础知识与新版知识地图
+├── docs/01-deployment-foundations/   13 个专题、原始框架图与适配/实验模板
 ├── cases/
 │   └── llama-cpp-flash-attention/    独立 Case：教程、脚本、数据、截图、汇总
 ├── templates/                       部署项目复盘模板
