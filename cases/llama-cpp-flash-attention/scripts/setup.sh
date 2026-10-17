@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT="${PROJECT:-/mnt/workspace/llm-serving-diagnosis}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT="${PROJECT:-$(dirname -- "$SCRIPT_DIR")}"
 mkdir -p "$PROJECT"/{cache,cuda12,models,logs,results}
 cd "$PROJECT"
 

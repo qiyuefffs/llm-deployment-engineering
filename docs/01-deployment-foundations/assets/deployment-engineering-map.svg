@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1352" viewBox="0 0 1680 1352" role="img" aria-labelledby="map-title map-desc">
+<title id="map-title">大模型部署工程知识地图</title>
+<desc id="map-desc">从需求到交付的六步流程，以及硬件、显存、推理、测量、交付五层能力与各层的证据产物。</desc>
+<rect x="0" y="0" width="1680" height="1352" rx="0" fill="#F4F7FB" stroke="none"/>
+<rect x="0" y="0" width="1680" height="128" rx="0" fill="#102D50" stroke="none"/>
+<text x="64" y="27" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="44" font-weight="700" fill="#FFFFFF">大模型部署工程知识地图</text>
+<text x="66" y="88" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="23" font-weight="400" fill="#D6E4F5">从模型可运行，到性能可验证、服务可交付</text>
+<rect x="64" y="157" width="240" height="112" rx="14" fill="#FFFFFF" stroke="#D7E1EE"/>
+<text x="82" y="171" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#4C79B3">01</text>
+<text x="82" y="200" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="27" font-weight="700" fill="#102D50">明确需求</text>
+<text x="82" y="241" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="15" font-weight="400" fill="#5D7086">输入 / 输出 / 质量与延迟目标</text>
+<text x="308" y="201" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="24" font-weight="400" fill="#7391B3">›</text>
+<rect x="326" y="157" width="240" height="112" rx="14" fill="#FFFFFF" stroke="#D7E1EE"/>
+<text x="344" y="171" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#4C79B3">02</text>
+<text x="344" y="200" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="27" font-weight="700" fill="#102D50">确认兼容</text>
+<text x="344" y="241" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="15" font-weight="400" fill="#5D7086">硬件 / 模型 / 精度 / 后端</text>
+<text x="570" y="201" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="24" font-weight="400" fill="#7391B3">›</text>
+<rect x="588" y="157" width="240" height="112" rx="14" fill="#FFFFFF" stroke="#D7E1EE"/>
+<text x="606" y="171" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#4C79B3">03</text>
+<text x="606" y="200" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="27" font-weight="700" fill="#102D50">跑通服务</text>
+<text x="606" y="241" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="15" font-weight="400" fill="#5D7086">加载 / 就绪 / API 与异常</text>
+<text x="832" y="201" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="24" font-weight="400" fill="#7391B3">›</text>
+<rect x="850" y="157" width="240" height="112" rx="14" fill="#FFFFFF" stroke="#D7E1EE"/>
+<text x="868" y="171" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#4C79B3">04</text>
+<text x="868" y="200" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="27" font-weight="700" fill="#102D50">测量性能</text>
+<text x="868" y="241" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="15" font-weight="400" fill="#5D7086">固定负载 / 保存基线</text>
+<text x="1094" y="201" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="24" font-weight="400" fill="#7391B3">›</text>
+<rect x="1112" y="157" width="240" height="112" rx="14" fill="#FFFFFF" stroke="#D7E1EE"/>
+<text x="1130" y="171" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#4C79B3">05</text>
+<text x="1130" y="200" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="27" font-weight="700" fill="#102D50">定位优化</text>
+<text x="1130" y="241" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="15" font-weight="400" fill="#5D7086">提出假设 / 单变量对照</text>
+<text x="1356" y="201" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="24" font-weight="400" fill="#7391B3">›</text>
+<rect x="1374" y="157" width="240" height="112" rx="14" fill="#FFFFFF" stroke="#D7E1EE"/>
+<text x="1392" y="171" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#4C79B3">06</text>
+<text x="1392" y="200" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="27" font-weight="700" fill="#102D50">验收交付</text>
+<text x="1392" y="241" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="15" font-weight="400" fill="#5D7086">证据 / 监控 / 恢复与回滚</text>
+<text x="64" y="304" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="26" font-weight="700" fill="#102D50">五层能力：每一层，都要留下可检查的结果</text>
+<text x="84" y="356" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#5D7086">能力层</text>
+<text x="332" y="356" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#5D7086">关键知识与判断</text>
+<text x="1146" y="356" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#5D7086">应留下的证据</text>
+<rect x="64" y="392" width="1552" height="132" rx="14" fill="#FFFFFF" stroke="#DCE5F0"/>
+<rect x="64" y="392" width="236" height="132" rx="14" fill="#E8F0FC" stroke="none"/>
+<text x="84" y="412" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#2462AB">01</text>
+<text x="84" y="450" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="28" font-weight="700" fill="#2462AB">硬件与兼容</text>
+<text x="332" y="409" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#102D50">模型、算子和精度，能否在目标设备运行？</text>
+<text x="332" y="451" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">设备 → 驱动 / Runtime → 框架后端 → 架构 / kernel</text>
+<text x="332" y="487" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">支持列表只是入口；按固定版本逐项验证</text>
+<line x1="1114" y1="414" x2="1114" y2="502" stroke="#E0E7F0" stroke-width="1"/>
+<text x="1146" y="411" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#2462AB">环境版本清单</text>
+<text x="1146" y="453" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">设备识别 · 依赖核对</text>
+<text x="1146" y="488" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">最小请求与结果核验</text>
+<rect x="64" y="540" width="1552" height="132" rx="14" fill="#FFFFFF" stroke="#DCE5F0"/>
+<rect x="64" y="540" width="236" height="132" rx="14" fill="#E7F5F0" stroke="none"/>
+<text x="84" y="560" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#187A66">02</text>
+<text x="84" y="598" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="28" font-weight="700" fill="#187A66">模型与显存</text>
+<text x="332" y="557" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#102D50">权重能放下，请求运行时还有余量吗？</text>
+<text x="332" y="599" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">格式 ≠ 精度 ≠ 量化方法；质量与速度分别验证</text>
+<text x="332" y="635" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">预算 = 权重 + KV + 中间工作区 + 运行开销</text>
+<line x1="1114" y1="562" x2="1114" y2="650" stroke="#E0E7F0" stroke-width="1"/>
+<text x="1146" y="559" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#187A66">模型哈希与容量预算</text>
+<text x="1146" y="601" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">实测峰值 · 质量对照样例</text>
+<text x="1146" y="636" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">架构差异与量化边界</text>
+<rect x="64" y="688" width="1552" height="132" rx="14" fill="#FFFFFF" stroke="#DCE5F0"/>
+<rect x="64" y="688" width="236" height="132" rx="14" fill="#F0EBFC" stroke="none"/>
+<text x="84" y="708" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#7050A8">03</text>
+<text x="84" y="746" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="28" font-weight="700" fill="#7050A8">推理与调度</text>
+<text x="332" y="705" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#102D50">请求怎样排队、计算并持续输出？</text>
+<text x="332" y="747" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">Prefill / Decode · 持续批处理 · 缓存 · 并行</text>
+<text x="332" y="783" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">选型依据：模型 + 设备 + 负载 + 运维约束</text>
+<line x1="1114" y1="710" x2="1114" y2="798" stroke="#E0E7F0" stroke-width="1"/>
+<text x="1146" y="707" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#7050A8">服务配置与接口结果</text>
+<text x="1146" y="749" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">启动参数 · 正常 / 异常响应</text>
+<text x="1146" y="784" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">模板、流式输出与工具支持</text>
+<rect x="64" y="836" width="1552" height="132" rx="14" fill="#FFFFFF" stroke="#DCE5F0"/>
+<rect x="64" y="836" width="236" height="132" rx="14" fill="#FFF1E3" stroke="none"/>
+<text x="84" y="856" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#A86117">04</text>
+<text x="84" y="894" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="28" font-weight="700" fill="#A86117">测量与优化</text>
+<text x="332" y="853" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#102D50">慢在哪里，改动是否改善了目标？</text>
+<text x="332" y="895" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">TTFT · TPOT / ITL · 吞吐 · 尾延迟 · 成功率</text>
+<text x="332" y="931" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">固定负载、预热与缓存条件；比较达标吞吐</text>
+<line x1="1114" y1="858" x2="1114" y2="946" stroke="#E0E7F0" stroke-width="1"/>
+<text x="1146" y="855" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#A86117">基线与逐请求证据</text>
+<text x="1146" y="897" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">重复对照 · 资源采样</text>
+<text x="1146" y="932" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">失败边界与测量口径</text>
+<rect x="64" y="984" width="1552" height="132" rx="14" fill="#FFFFFF" stroke="#DCE5F0"/>
+<rect x="64" y="984" width="236" height="132" rx="14" fill="#FBE9EC" stroke="none"/>
+<text x="84" y="1004" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="18" font-weight="700" fill="#AC455E">05</text>
+<text x="84" y="1042" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="28" font-weight="700" fill="#AC455E">工程交付</text>
+<text x="332" y="1001" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#102D50">重启、监控、升级和回滚能否操作？</text>
+<text x="332" y="1043" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">接口约定 · 鉴权限流 · 监控告警 · 发布回滚</text>
+<text x="332" y="1079" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">先验证功能，再验证质量、性能与恢复能力</text>
+<line x1="1114" y1="1006" x2="1114" y2="1094" stroke="#E0E7F0" stroke-width="1"/>
+<text x="1146" y="1003" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#AC455E">可复现交付包</text>
+<text x="1146" y="1045" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="21" font-weight="400" fill="#233B55">代码 / 输入 / 日志 / 报告</text>
+<text x="1146" y="1080" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="20" font-weight="400" fill="#5D7086">部署手册与验收边界</text>
+<rect x="64" y="1152" width="1552" height="116" rx="14" fill="#102D50" stroke="none"/>
+<text x="90" y="1174" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="700" fill="#FFFFFF">优化闭环</text>
+<text x="250" y="1177" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="25" font-weight="400" fill="#FFFFFF">固定负载 → 保存基线 → 提出假设 → 对照实验 → 重复验证 → 记录边界</text>
+<text x="90" y="1222" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="23" font-weight="400" fill="#D6E4F5">先证明现象，再解释原因；同时检查质量、延迟、吞吐与资源成本。</text>
+<text x="64" y="1304" dominant-baseline="text-before-edge" font-family="'Microsoft YaHei','Noto Sans CJK SC','PingFang SC',sans-serif" font-size="19" font-weight="400" fill="#5D7086">2026-10-17  ·  工程基础概念图；具体后端与参数支持以固定版本文档及实测为准。</text>
+</svg>

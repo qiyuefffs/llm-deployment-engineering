@@ -1,26 +1,43 @@
-# llama.cpp 部署性能优化 Case
+# 大模型部署工程：基础知识与实战
 
-从 [新手教程](CASE.md) 开始；[技术附录](CASE_TECHNICAL.md)说明指标口径和实验限制。
+围绕一条工程主线学习：明确需求 → 确认兼容 → 跑通服务 → 测量性能 → 定位优化 → 验收交付。
 
-## 目录用途
+适合准备做大模型部署、推理优化和多硬件适配的工程师。先理解基础概念，再用实测 Case 检查自己能否完成一条可复现的部署链路。
 
-| 路径 | 用途 | 公开上传 |
+| 内容 | 从哪里开始 | 读完或跑完能得到什么 |
 | --- | --- | --- |
-| `CASE.md`、`CASE_TECHNICAL.md` | 正文和方法细节 | 是 |
-| `scripts/` | 下载、部署、功能检查、压测和报告代码 | 是，排除 `__pycache__` |
-| `data/workload.jsonl` | 可公开的测试输入 | 是 |
-| `figures/` | 已有的真实核验截图 | 是，上传前再次检查敏感信息 |
-| `results/observed-summary.csv` | 从本次运行结果转录的 12 组汇总 | 是，注明不是原始请求记录 |
-| `local-cache/` | 本地源码包、早期打包文件、Python 缓存 | 否 |
-| `models/`、`cuda12/`、`build-cuda12/`、`logs/` | Notebook 运行时生成 | 否 |
+| 第 1 章：大模型部署基础知识 | [工程知识体系](docs/01-deployment-foundations/README.md) | 硬件、模型、显存、推理框架、性能指标和交付之间的关系 |
+| 实战 Case | [Case 目录](cases/README.md) | 逐步教程、脚本、样例输入、核验截图和实测汇总 |
+| 项目记录 | [部署复盘模板](templates/deployment-review.md) | 一份能说明环境、实验、证据和限制的交付记录 |
 
-当前材料是教程草稿。成功编译的完整日志、全新实例从头复现记录，以及可公开访问的逐请求原始结果还未齐备，不能标记为可正式投稿的完整 Case。
+![大模型部署工程知识地图](docs/01-deployment-foundations/assets/deployment-engineering-map.png)
 
-## 上传位置
+图中概括的是学习和排查顺序；具体说明见[第 1 章](docs/01-deployment-foundations/README.md)。需要清晰缩放或二次编辑时使用 [SVG 矢量版](docs/01-deployment-foundations/assets/deployment-engineering-map.svg)。
 
-1. **公开代码仓库**：本文发布在 [qiyuefffs/llm-serving-diagnosis](https://github.com/qiyuefffs/llm-serving-diagnosis)。仓库只包含教程、代码、样例数据、截图和转录汇总；不要把整个个人项目仓库或 `local-cache/` 一起公开。
-2. **魔搭 Notebook**：在 GPU 实例的 `/mnt/workspace/` 运行 `git clone https://github.com/qiyuefffs/llm-serving-diagnosis.git`，之后按 `CASE.md` 从第一步执行。Notebook 工作区主要用于运行和保存真实输出；临时实例路径不是公开分享链接。
-3. **正式投稿前**：在全新实例跑通并保存构建日志、原始 JSONL、GPU 采样和报告。检查日志与截图中的账号、路径和其他敏感信息后，放到公开仓库的 `evidence/` 或可长期访问的公开存储，并在正文加入链接。若魔搭提供可公开访问的 Notebook 文件页面，再同时给出该页面链接。
-4. **魔搭 Cookbook/创空间**：最终文章引用公开仓库和可访问的运行证据。创空间仅在需要交互演示时建立；这个性能对照 Case 的核心交付物是可复跑脚本、日志和报告，不必为展示而常驻运行 27B 模型服务。
+## 仓库结构
 
-仓库不包含 16.8GB 模型权重或 37MB 的源码压缩包。模型和源码由 `scripts/setup.sh` 按固定地址下载并校验 SHA256。
+```text
+llm-serving-diagnosis/
+├── docs/01-deployment-foundations/   工程基础知识与新版知识地图
+├── cases/
+│   └── llama-cpp-flash-attention/    独立 Case：教程、脚本、数据、截图、汇总
+├── templates/                       部署项目复盘模板
+└── tools/                           知识地图的生成脚本
+```
+
+Case 的运行文件全部放在自己的目录中。以后新增实验，在 `cases/` 下新建目录，分别保存环境、参数、输入和结果，避免混用不同实验的模型或指标。
+
+## 获取与运行
+
+```bash
+git clone https://github.com/qiyuefffs/llm-serving-diagnosis.git
+cd llm-serving-diagnosis
+```
+
+基础章节可以直接阅读。运行现有 Case 时，进入 `cases/llama-cpp-flash-attention/`，再按其中的 [CASE.md](cases/llama-cpp-flash-attention/CASE.md) 执行。该 Case 需要 Linux GPU Notebook；本仓库不包含模型权重、CUDA 工具链和构建缓存。
+
+## 当前实战的证据状态
+
+llama.cpp Case 来自 A10 24GB 上的实测，公开材料含 8 张核验截图和 12 组汇总转录。成功编译的完整日志、全新实例从头复现记录，以及完整逐请求原始证据尚未齐备，仍标为教程草稿。基础章节介绍的其他平台和优化技术是知识整理，不表示作者已逐项实测。
+
+知识章节更新于 **2026-10-17**，参考资料集中列在章节末尾。框架支持和参数默认值会变化，具体项目应固定版本后再验证。
