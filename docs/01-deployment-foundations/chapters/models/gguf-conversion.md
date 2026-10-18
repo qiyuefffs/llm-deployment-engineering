@@ -33,7 +33,7 @@ python -m pip freeze > conversion-packages.txt
 mkdir -p artifacts/source artifacts/gguf records
 ```
 
-`b9557`对应本书CPU演练使用的引擎系列，短提交为`0f7fada56`。安装依赖后保存的`conversion-packages.txt`是该次转换环境快照；若要长期重复相同构建，应将经过验证的依赖快照、Python版本与wheel一并归档。源码tag固定，并不自动固定所有下载依赖。
+`b9557`对应本体系CPU演练使用的引擎系列，短提交为`0f7fada56`。安装依赖后保存的`conversion-packages.txt`是该次转换环境快照；若要长期重复相同构建，应将经过验证的依赖快照、Python版本与wheel一并归档。源码tag固定，并不自动固定所有下载依赖。
 
 下载原始Qwen3-0.6B到固定目录。模型revision是公开仓库的具体提交，与CPU演练的成品GGUF revision分别记录：
 

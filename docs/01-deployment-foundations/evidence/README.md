@@ -6,6 +6,8 @@
 
 ## 1. 整理范围与方法
 
+平台完整工程集中在[实例矩阵](../engineering/README.md)。50份技术文章保留完整技术正文和代码块；路径、认证和私人节点脱敏，技术错误注明修订。各篇保留的字符与代码围栏数量见[源文覆盖清单](source-coverage.json)。新增8060S单机Vulkan的CPU→GPU→参数组合过程，以及Q4/BF16的完整对照。
+
 本次依据空间技术目录和模型部署、编译、推理、量化、压测等主题检索，核对相关目录与多篇工程文章。原《大模型部署适配交付知识体系框架》决定六部分与五层结构，具体工程内容从各平台部署、转换、服务和测试记录提取。
 
 知识框架用于组织关系，运行命令与输出用于支撑实例。有命令不等于已执行；有成功标题也不能覆盖后续明确失败。文章中的建议命令、早期结论、失败日志和实测汇总分别判断。
@@ -37,12 +39,13 @@
 | E17 | GB10 Qwen3-VL、Qwen3-Omni、granite-docling部署 | 原模型/端口/预算、图像传输与功能分项 | 不给新公开测试卡配上未执行的模型结果 |
 | E18 | Intel报告中的ASR/TTS、全NPU、Kokoro专项 | 三轮计时、shape、错误音频、回滚、48例CPU结果 | 原音频未公开，ASR辅助检查不等于通用质量集 |
 | E19 | IPEX-LLM量化并导入Ollama的Intel集显记录 | Windows程序来源、SYCL变量、Modelfile与卸载验证 | 早期预发布路线，无固定当前支持承诺 |
+| E20 | Qwen3.6-35B-A3B部署与推理、BF16推理优化 | 8060S Vulkan卸载、ctx/batch、Q4/BF16与buffer表 | RAM字段冲突、缺质量与逐请求文件；带宽极限结论已修订 |
 
 其他概念笔记包括KV、Prefill、Prefix Cache、ROCm/PyTorch、CUDA/Vulkan构建与环境封装，解释已按官方概念修订。没有形成完整公开记录的平台保留为适配方法，不补造运行成绩。
 
 ## 3. 可公开的测量字段
 
-[measurements.json](measurements.json)保存15组结构化历史转录。数字保持源单位，字段按白名单手工整理；缺失数据不猜测补全。
+[measurements.json](measurements.json)保存16组结构化历史转录。数字保持源单位，字段按白名单手工整理；缺失数据不猜测补全。
 
 | 数据键 | 关键条件与结果 | 阅读位置 |
 | --- | --- | --- |
@@ -61,6 +64,7 @@
 | `intel_qwen_tts_cpu` | 0.6B INT8、CPU输出8秒音频；NPU动态shape失败 | 成品IR不等于NPU-ready |
 | `intel_kokoro_cpu` | 8音色×6文本；P95 RTF0.189、RSS约3GiB | 干净背景与多项验收 |
 | `intel_kokoro_npuw` | 首次>20分钟、缓存复测120秒超时、无WAV | 编译未完成，不报告NPU吞吐 |
+| `amd_8060s_vulkan` | Q4 22.9→47.2→58.4token/s；BF16 10.8→10.1token/s | 单机Vulkan与多参数组合，不宣称无损或理论极限 |
 
 ### E01 完整条件
 

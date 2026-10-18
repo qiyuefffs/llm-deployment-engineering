@@ -1,12 +1,14 @@
 # KV、缓存与调度：分别解决什么问题
 
+**完整工程记录：** [MLX-VLM APC完整配置与调用原文](../../engineering/apple-mlx.md)
+
 [总目录](../../SUMMARY.md) · [显存与性能总章](../../02-capability-layers/04-memory-performance.md) · [压测](benchmarking.md)
 
 ## 本章概览
 
 KV Cache保存历史状态；PagedAttention组织状态；Continuous Batching安排请求；Chunked Prefill划分长输入计算；Prefix Cache复用相同前缀。把这五件事分清，才知道一个开关为什么可能有用、为什么也可能没有收益。
 
-本章参考FlowUs的KV、Prefill与Prefix笔记及GB10服务配置。原笔记将vLLM前缀缓存与RadixAttention混称，本书按各项目实现区分：RadixAttention是SGLang相关机制的名称，不能直接当作vLLM Prefix Cache的实现说明。
+本章参考FlowUs的KV、Prefill与Prefix笔记及GB10服务配置。原笔记将vLLM前缀缓存与RadixAttention混称，本体系按各项目实现区分：RadixAttention是SGLang相关机制的名称，不能直接当作vLLM Prefix Cache的实现说明。
 
 ## 1. KV 保存的是什么？
 
@@ -28,7 +30,7 @@ Flash Attention主要改善attention计算的数据访问与中间存储，两�
 
 但活动序列越多，每轮资源和KV压力也会变化，单请求可能更慢。`max-num-seqs`是活动序列预算，`max-num-batched-tokens`是每轮token预算，客户端并发和到达率属于输入负载。三者一起决定排队与批处理，不能把任何一个数字叫作“真实GPU并发”。
 
-本书CPU实跑c2相对c1提高HTTP总吞吐，但TTFT和E2E上升。这种结果应按目标延迟判断，而不是只选吞吐最大的一档。
+本体系CPU实跑c2相对c1提高HTTP总吞吐，但TTFT和E2E上升。这种结果应按目标延迟判断，而不是只选吞吐最大的一档。
 
 ## 4. Chunked Prefill 给长输入分段
 

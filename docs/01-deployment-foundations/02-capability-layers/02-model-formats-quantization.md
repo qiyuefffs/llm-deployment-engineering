@@ -1,140 +1,115 @@
 # 第2层：模型格式与量化层
 
-## 本章概览
-
-硬件路线确定以后，需要准备能够被引擎正确读取的模型。这里的“模型”是一组部署材料：权重、结构配置、tokenizer、聊天模板，以及任务需要的处理器和辅助权重。格式转换改变制品组织方式，量化改变部分数值表示；两者都需要重新检查加载和输出。
-
-本章保留原框架的六节。先理解格式与量化，再学习制品选择；完整转换操作放在2.6的配套教程中。
+[总目录](../SUMMARY.md) · [GGUF完整流程](../chapters/models/gguf-conversion.md) · [量化与AWQ四组](../chapters/models/quantization.md)
 
 ## 2.1 这一层解决什么问题？
 
-最常见的问题是模型太大、格式不兼容或量化后结果变化。解决时先确认目标引擎支持什么，再选择模型制品。直接寻找最小文件，可能得到当前后端无法执行的张量类型。
+| 问题 | 检查对象 | 输出 |
+| --- | --- | --- |
+| 放不下 | 权重大小、KV/状态、工作区、卸载位置 | 精度/量化/并行与内存预算 |
+| 不能加载 | 架构、张量名称与类型、分片、转换器 | 支持该引擎的完整制品 |
+| 量化后慢 | 实际kernel、group/layout、反量化、batch | 后端性能与质量对照 |
+| 答案变化 | 权重误差、模板、tokenizer、采样、输出预算 | 固定题集的差异与采用结论 |
+| VLM缺功能 | processor、视觉encoder、投影与输入协议 | 单独功能范围和完整材料 |
 
-模型身份需要固定到仓库和revision。同名目录可能包含不同转换、量化与模板，只有模型名称无法追溯结果。下载后应保存文件清单与哈希，转换后再记录工具版本、命令和生成制品。
-
-质量与性能分别验收。压缩后文件更小，不保证所有请求都更快；能够加载，也不保证多轮、结构化输出或视觉能力完整。应使用同一组任务检查实际输出，再决定是否采用。
+模型身份至少是`仓库＋revision＋文件清单＋量化配置＋模板＋工具版本`。磁盘目录名和“4bit”标签不足以确定制品。
 
 ## 2.2 模型格式体系
 
-Hugging Face模型通常以一个目录分发。`config.json`说明结构；safetensors或历史bin保存张量；分片索引指出各张量所在文件；tokenizer与模板决定文本怎样变成模型输入。多模态还可能需要processor、图像编码器与投影相关材料。
-
-GGUF把张量与必要元数据放在一套容器中，常用于llama.cpp。它可以保存高精度或多种量化张量，因此GGUF与4bit不能画等号。ONNX和OpenVINO IR则以图和权重等配套文件组织执行材料，加载路径与HF或GGUF不同。
-
 ```text
-常见制品
-├── HF目录：配置、权重、索引、tokenizer、模板、processor
-├── GGUF：张量与元数据容器
-├── ONNX：图与权重等配套材料
-├── OpenVINO IR：图、权重、tokenizer与GenAI配置
-├── TensorRT / TensorRT-LLM对应执行制品
-└── 厂商运行时要求的图、缓存或专用包
+模型制品
+├── Hugging Face目录：safetensors/bin＋config＋tokenizer＋template
+├── GGUF：张量与模型元数据容器，可包含F16/BF16或量化张量
+├── ONNX：计算图及内嵌/外部权重
+├── OpenVINO IR：XML/BIN及GenAI、tokenizer/processor配置
+├── TensorRT / TensorRT-LLM：对应版本的检查点/执行制品
+└── 平台专用图、运行包与编译缓存
 ```
 
-### 怎样检查目录完整性
+| 文件 | 工程职责 | 失败表现 |
+| --- | --- | --- |
+| config.json | 架构、层数、维度、RoPE/MoE等 | unknown model、shape错误 |
+| *.safetensors＋索引 | 张量内容及张量到分片文件映射 | missing tensor/shard、大小不符 |
+| tokenizer* | 文本编码、特殊token、解码 | token数异常、乱码或停止不正确 |
+| chat_template.jinja | 角色、历史、工具、思考与生成起点 | 角色标记、只思考、工具解析失败 |
+| generation_config.json | 默认采样与停止策略 | 与显式参数叠加导致实验不一致 |
+| processor/preprocessor | 图像/音频预处理 | 文本成功但多模态失败 |
+| quantization_config | 方法、位宽、分组、模块排除 | kernel/布局不支持或误加载 |
 
-先读取模型说明和索引，再核对分片。单文件模型不一定有索引，多模态模型也不止语言权重。以下代码只检查分片是否存在，完整校验还需要来源清单或哈希。
+分片索引不决定GPU切分；多分片也可加载到一张GPU。转换和量化生成新制品，须保存源身份、工具commit、命令、日志和输出摘要。
 
 ```python
 import json
 from pathlib import Path
-model_dir = Path('/srv/models/example-model')
-config = json.loads((model_dir / 'config.json').read_text(encoding='utf-8'))
-print('model_type:', config.get('model_type'))
-index = model_dir / 'model.safetensors.index.json'
-if index.exists():
-    mapping = json.loads(index.read_text(encoding='utf-8'))['weight_map']
-    missing = [name for name in set(mapping.values()) if not (model_dir/name).is_file()]
-    print('missing:', missing)
-    assert not missing
+p = Path('/srv/models/example-model')
+cfg = json.loads((p/'config.json').read_text(encoding='utf-8'))
+print(cfg.get('model_type'), cfg.get('architectures'))
+idx = p/'model.safetensors.index.json'
+if idx.exists():
+    shards = set(json.loads(idx.read_text(encoding='utf-8'))['weight_map'].values())
+    assert all((p/s).is_file() for s in shards)
 ```
 
-### 从目录看各文件的职责
-
-一份典型部署目录可以这样阅读，实际名称随模型而变：
-
-```text
-model/
-├── config.json                 模型层数、维度、架构等
-├── model.safetensors.index.json 张量到分片文件的映射
-├── model-00001-of-00004.safetensors
-├── tokenizer.json              分词规则与词表
-├── tokenizer_config.json       特殊token、模板相关配置
-├── chat_template.jinja         部分模型单独保存的聊天模板
-├── generation_config.json      建议生成参数
-└── preprocessor_config.json    视觉等输入处理配置（模型需要时）
-```
-
-index把逻辑张量映射到文件，不负责把模型分到GPU。服务可以从多个磁盘分片加载到一张卡，也可以把一个逻辑模型切到多张卡，二者属于不同层。
-
-tokenizer决定输入token和输出解码，模板决定角色、历史、工具和生成起点。Apple工程中“权重正常但只输出思考”最终定位到独立jinja模板，说明模型资产清单必须把模板列为正式文件。升级时只替换权重、保留旧模板也会引入兼容问题。
-
-对于VLM，再核对视觉权重、processor和图文连接方式；对于推测解码，再核对drafter/assistant及它与目标模型的匹配。一个可以完成文本的目录，不一定拥有完整视觉或草稿能力。
+该代码只检查分片存在，不验证内容正确；下载摘要仍需独立核验。
 
 ## 2.3 量化体系
 
-讨论量化时，分清格式、数值精度、量化方法与执行布局。safetensors是存储格式，INT4是低位宽表示，AWQ/GPTQ是量化方法，具体分组、缩放与打包还要由后端kernel处理。它们处于不同层次。
+```text
+数值表示：FP16/BF16、FP8、INT8/INT4、MXFP4/NVFP4等
+量化对象：权重W、激活A、KV/循环状态分别记录
+量化方法：AWQ、GPTQ、工具支持的动态/静态/在线方案
+存储布局：分组、scale/zero-point、pack、混合精度、排除模块
+执行实现：设备原生低精度kernel或反量化/转换路径
+```
 
-FP16与BF16是常见16位浮点表示；FP8还要区分具体格式和缩放方式。INT8、INT4减少部分存储与搬运，但会引入量化误差及解包、尺度读取等成本。能否加速取决于硬件、kernel、batch与任务。
+| 术语 | 具体含义 | 不能据此推断 |
+| --- | --- | --- |
+| W4A16 | 主要权重4bit、激活16bit的路线 | KV也4bit、所有层都4bit |
+| AWQ/GPTQ | 权重量化方法与相应制品 | 所有设备使用同一kernel |
+| Q4_K_M | GGUF K-quant混合方案 | K代表k-means、恰好4BPW |
+| FP8 | 需区分具体格式与scale | 任何GPU均有原生FP8矩阵指令 |
+| KV量化 | 历史状态低精度存储 | 权重变小、长上下文无质量损失 |
+| 在线量化 | 加载/运行过程中转换的路线 | 无校准成本、与离线文件等价 |
 
-AWQ和GPTQ常用于权重量化。BitsAndBytes及在线量化是另外的工具或执行路线，使用时需要说明何时量化、哪些张量量化、是否使用校准数据及目标后端。不同制品的4bit标签不表示布局一致。
-
-### 权重、激活与KV分别记录
-
-权重通常常驻，激活在执行中产生，KV随上下文和活动序列增长。`W4A16`描述部分权重/激活表示，没有说明KV精度。服务采用FP8 KV时，还要检查后端支持和长上下文质量。
-
-量化并不让所有层都变成同一位宽。尺度、元数据、敏感层与混合方案都会影响实际大小。GGUF的Q4_K_M属于K-quant混合方案，K不应解释为k-means。
-
-更完整的量化判读与真实AWQ/IR对照见[量化制品怎样验证](../chapters/models/quantization.md)。
-
-### 分组、缩放和误差怎样理解
-
-量化可以把一组浮点数映射到有限整数，再用尺度等信息近似恢复。分组更细通常增加尺度/元数据，也可能减少某些局部误差；位宽、组大小、异常值处理和哪些层保留高精度共同影响质量与容量。
-
-以纯教学算例说明开销：一组128个权重、每个4bit，数据本身64字节；若额外保存2字节尺度，最低就成66字节，还没有零点、对齐与其他信息。因此“32B×0.5字节”只给数量级，不给最终文件大小。
-
-权重量化常帮助小batch decode降低数据读取量；较大batch或prefill可能更依赖矩阵kernel和反量化效率。相同4bit在两个设备上表现不同，可以先检查实际kernel，而不是怀疑文件名不够“新”。AWQ四组的完整参数和结果在[量化实战](../chapters/models/quantization.md#八完整工程gb10的gemma4-awq四组比较)。
+128个4bit权重的数据区为64字节；若额外有2字节scale就是至少66字节，还不含zero、对齐与敏感层。容量估算不能只乘0.5字节。低精度源转存F16不会恢复已经丢失的信息。
 
 ## 2.4 常见格式解释
 
-| 项目 | 它是什么 | 工程上重点检查 |
+| 候选 | 适用检查 | 性能与质量风险 |
 | --- | --- | --- |
-| FP16/BF16 | 常见浮点表示 | 设备支持、容量与基线质量 |
-| FP8 | 更低位宽浮点路线 | 格式、缩放、kernel与模型支持 |
-| INT8/INT4 | 低位宽整数表示 | 分组、校准、解包与任务质量 |
-| AWQ/GPTQ | 权重量化方法 | 制品配置、后端布局和kernel |
-| GGUF Q4/Q5/Q8 | GGUF内的量化系列 | 架构、张量类型与实际后端 |
-| OpenVINO IR | 图与配套文件 | 设备编译、Pipeline和tokenizer |
-| KV量化 | 缓存状态的低精度表示 | 长度、并发、资源与长上下文质量 |
-
-选择时还要考虑模型来源。已有低精度源模型转存成FP16，只增加表示空间，不会自动恢复丢失的信息。任意FP8模型也不能保证直接转换成GGUF，转换器需要认识其结构和张量布局。
+| FP16/BF16 | 原生支持、权重容量、基线 | 权重带宽与内存较高 |
+| FP8 | 硬件代际、format/scale、模型kernel | 软件转换、回退、校准与长文本质量 |
+| INT8/INT4 | 方法、group、布局和校准集 | 小文件未必更快，任务可能退化 |
+| AWQ/GPTQ | 引擎、模型与设备kernel组合 | 不同制品不能只按位宽归因 |
+| GGUF | 转换器/后端认识架构和tensor type | unknown type、缺tensor、辅助模型不配套 |
+| IR | 对应设备可编译、tokenizer/GenAI完整 | GPU成功不表示NPU可编译 |
+| KV低精度 | 长度/并发下资源和质量对照 | 长程检索、稳定性与后端限制 |
 
 ## 2.5 vLLM 与 llama.cpp 的格式选择
 
-vLLM服务通常选择其明确支持的HF模型和量化实现。检查模型架构后，再确认目标设备上的精度与kernel。GGUF支持需按版本、模型和功能核对，不能假定与llama.cpp等价。
+| 执行路线 | 制品选择 | 必验项 |
+| --- | --- | --- |
+| vLLM | 受支持HF架构与FP16/BF16/FP8/AWQ/GPTQ等 | 量化kernel、模板、活动序列、KV与API |
+| llama.cpp | 受支持GGUF与必要mmproj/辅助权重 | 张量类型、后端卸载、ctx、完整输出 |
+| OpenVINO GenAI | 完整IR和管线配置 | 编译设备、shape、实际生成与输出质量 |
+| MLX-LM/VLM | 对应实现支持的MLX制品 | tokenizer、模板、processor、统一内存 |
 
-llama.cpp优先使用受支持的GGUF。端侧常见的Q4/Q5/Q8只是候选，实际选择要看容量、速度和质量。部分卸载时，还需要把CPU、设备内存和转移成本一起纳入预算。
-
-Intel OpenVINO与Apple MLX各有配套制品与运行方式。为它们选择原生支持的材料，通常比拿另一条路线的目录反复尝试更容易定位问题。
-
-| 已确定的执行路线 | 先准备什么 |
-| --- | --- |
-| vLLM | 固定HF/量化制品、tokenizer与模板 |
-| llama.cpp | 兼容GGUF及必要辅助模型 |
-| OpenVINO GenAI | 完整IR与GenAI/tokenizer配置 |
-| MLX-LM/MLX-VLM | 对应实现支持的MLX制品与processor |
-
-### 三种真实路径怎样落地
-
-RTX2060工程选择GGUF与CUDA混合执行，是在12GB显存、32GB RAM内解决容量约束；Intel16GB设备使用IR INT4在GPU生成，同时保留Vulkan/SYCL作为另一制品路线；Apple工程按GGUF/Metal与MLX制品分别选引擎。三者说明制品选择由整个链路决定。
-
-迁移时先确认目标是否能够读取原制品，再决定转换。转换有时间、磁盘和质量成本，某些自定义架构还没有成熟转换器；直接使用受支持的原格式可能更简单。必须转换时保留高精度源与工具身份，给每份产物独立版本。
+vLLM部分版本的GGUF支持按实际功能测试，不假设与llama.cpp相同。选择顺序是引擎支持→容量→质量→负载性能，不能先选最小文件再解决所有兼容问题。
 
 ## 2.6 格式选择
 
-完整选择顺序是：任务和设备→支持的引擎→可用制品→资源预算→最小加载→固定任务质量→目标负载性能。高精度基线可容纳时，先保留它；低精度候选的收益与代价才有参照。
+```text
+目标任务与设备 → 引擎支持矩阵 → 原精度基线/候选量化
+ → 完整下载与摘要 → 加载/模板 → 固定质量题集
+ → 同负载性能/峰值 → 制品采用或回退
+```
 
-第一次动手可以使用[CPU演练的固定GGUF](../practice/first-service/README.md)。模型、revision、文件大小与SHA256已经给出，适合先理解制品身份和校验。它的三道功能题结果也说明，小文件和高速度不能代替答案检查。
+| 实例 | 具体选择与结果 |
+| --- | --- |
+| [RTX2060](../engineering/nvidia-rtx2060.md) | GGUF＋CPU/GPU混合，重点总内存和卸载 |
+| [8060S](../engineering/amd-8060s.md) | Q4约58token/s与BF16约10token/s，质量与计时缺项明确保留 |
+| [GB10 AWQ](../engineering/nvidia-gb10.md) | 26B-A4B/31B四组4/8bit，保留完整延迟；不单凭位宽归因 |
+| [Intel IR](../engineering/intel-arc-npu.md) | 固定revision的INT4/INT8；GPU与NPU分别验收 |
+| [Mac](../engineering/apple-mlx.md) | GGUF/Metal与MLX制品分路线，视觉不沿用文本结论 |
 
-需要自行转换时，按[HF→GGUF→量化→Ollama完整教程](../chapters/models/gguf-conversion.md)执行。该教程来自作者转换与导入笔记，统一源模型、输出文件和目录，说明依赖、资源、命令、检查与常见错误。
-
-本层最终留下模型清单、完整文件、转换记录和质量结果。下一章使用这些材料建立推理服务。
+原操作全文：[HF→GGUF→量化→Ollama](../engineering/gguf-ollama.md)。制品交付包含身份清单、完整文件、转换/量化记录、摘要、功能与质量结果。

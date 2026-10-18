@@ -1,5 +1,7 @@
 # 推测解码：验证速度，也验证答案与归因
 
+**完整工程记录：** [GB10关闭/开启MTP、DFlash完整构建与测试原文](../../engineering/nvidia-gb10.md)
+
 [总目录](../../SUMMARY.md) · [性能总章](../../02-capability-layers/04-memory-performance.md) · [实验记录模板](../../templates/experiment-record.md)
 
 ## 本章概览
@@ -108,7 +110,7 @@ c1记录为2032次draft、8128个draft token、3094个accepted token，接受率
 
 接受率和平均接受长度不是同一个比例。需要同时保存drafts、draft tokens、accepted tokens、每位置接受率及工具定义。仅凭接受率40%，无法算出吞吐一定提升多少，因为提出候选、目标验证、回退和输出搬运也消耗时间。
 
-原报告peak output throughput与配置并发有不一致字段，这些峰值未参与本书推荐。对可核算的总输出/总时间保留比较，对无法解释的字段保留问题，避免选择看起来最好的一列。
+原报告peak output throughput与配置并发有不一致字段，这些峰值未参与本体系推荐。对可核算的总输出/总时间保留比较，对无法解释的字段保留问题，避免选择看起来最好的一列。
 
 ## 八、DFlash：GB10源码与执行路径
 

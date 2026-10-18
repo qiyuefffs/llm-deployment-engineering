@@ -622,5 +622,42 @@
     "rtf": null,
     "deployment_passed": false,
     "limits": "Compilation did not finish; no NPU generation throughput. Reported termination is not proof of OOM."
+  },
+  "amd_8060s_vulkan": {
+    "source_titles": [
+      "Qwen3.6-35B-A3B 部署与推理文档",
+      "Qwen3.6-35B-A3B BF16 推理优化记录"
+    ],
+    "device": "Ryzen AI Max+395 / Radeon 8060S / gfx1151",
+    "os": "Ubuntu 24.04.4 / Kernel 6.17.0-19",
+    "runtime": "llama.cpp Vulkan / Mesa 25.2.8 / ROCm 7.2.0",
+    "model": "Qwen3.6-35B-A3B",
+    "q4_k_m": {
+      "file_gib": 20.6,
+      "cpu_decode_token_per_s": 22.9,
+      "gpu_initial_decode_token_per_s": 47.2,
+      "gpu_parameter_group_decode_token_per_s": 58.4,
+      "gpu_followup_group_decode_token_per_s": 58.3,
+      "initial_context": 32768,
+      "optimized_context": 16384,
+      "optimized_batch": 4096,
+      "optimized_ubatch": 1024,
+      "threads": 16,
+      "threads_batch": 32,
+      "parallel": 1,
+      "gpu_weight_mib": 20583,
+      "kv_mib": 320,
+      "state_mib": 63,
+      "compute_mib": 1172
+    },
+    "bf16": {
+      "file_gib": 64.6,
+      "initial_decode_token_per_s": 10.8,
+      "fa_cache_reuse_decode_token_per_s": 10.8,
+      "larger_batch_decode_token_per_s": 10.1,
+      "initial_compute_mib": 1172,
+      "larger_batch_compute_mib": 2312
+    },
+    "limits": "Historical grouped observations; no fixed per-request files or quality comparison; RAM table has 30GB versus 110GB UMA inconsistency; no hardware roofline claim"
   }
 }

@@ -1,5 +1,7 @@
 # 1.2.3 Intel：GPU、NPU与执行制品
 
+**完整工程记录：** [Arc GPU三后端、NPU、ASR/TTS完整部署与测试原文](../../engineering/intel-arc-npu.md)
+
 ## 本节概览
 
 一台Intel设备可能同时提供CPU、GPU和NPU。它们使用的执行插件、支持算子和制品条件不同。本节依据16GB Lunar Lake工程说明怎样选择和验证路线，完整IR运行在框架章展开。

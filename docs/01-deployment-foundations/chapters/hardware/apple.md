@@ -1,5 +1,7 @@
 # 1.2.4 Apple：Metal、MLX与功能验证
 
+**完整工程记录：** [M3 Ultra Metal构建与GGUF排错](../../engineering/apple-metal.md) · [MLX、APC与oMLX完整部署优化](../../engineering/apple-mlx.md)
+
 ## 本节概览
 
 Apple Silicon的CPU和GPU共享物理内存，但框架、制品和任务仍有明确支持条件。本节把GGUF＋Metal、MLX与服务插件分开说明，并结合作者的实际失败记录解释验收边界。
@@ -163,7 +165,7 @@ vllm serve /srv/models/Qwen3.6-35B-A3B-bf16 \
   --scheduler-reserve-full-isl
 ```
 
-原模型的远程代码选项应在固定来源且审阅后按需启用，本书不将它作为所有服务的默认。0.90内存比例和16条序列是历史服务参数，不是512GB上能承诺的16并发SLO；新环境先以更小预算冒烟。
+原模型的远程代码选项应在固定来源且审阅后按需启用，本体系不将它作为所有服务的默认。0.90内存比例和16条序列是历史服务参数，不是512GB上能承诺的16并发SLO；新环境先以更小预算冒烟。
 
 ### 8.3 从“只输出思考”定位到模板
 

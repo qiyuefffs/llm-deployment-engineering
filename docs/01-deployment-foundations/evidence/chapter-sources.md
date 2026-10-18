@@ -1,16 +1,16 @@
 # FlowUs 文章与章节对应表
 
-[全书目录](../SUMMARY.md) · [历史数据与条件](README.md) · [本轮CPU完整记录](../practice/first-service/README.md)
+[知识体系目录](../SUMMARY.md) · [历史数据与条件](README.md) · [本轮CPU完整记录](../practice/first-service/README.md)
 
 ## 1. 怎样使用这些材料？
 
-原《大模型部署适配交付知识体系框架》决定本书六部分、五层及各层节标题。内容从作者FlowUs空间中与部署、编译、格式、量化、缓存、服务、压测和多硬件相关的技术文章整理，按当前知识点连接。未将空间所有文章逐字复制到仓库，也不声称公开了整个私人知识库。
+原《大模型部署适配交付知识体系框架》决定六部分、五层及各层节编号。主框架按组件、参数和工程检查组织；50份相关FlowUs技术文章的完整正文写入[设备工程实例](../engineering/README.md)，保留命令、表格、错误与后续实验。隐私与认证脱敏，篇目与保留范围见[源文覆盖清单](source-coverage.json)。
 
-历史命令改为统一公开路径与回环地址，必要时补上执行顺序和检查方法。没有结果的建议命令仍标为操作说明；失败与成功分别保留。新写教学程序不假称是历史原件。
+平台专题中的执行示例采用统一公开路径；完整源文保留技术参数并替换私人路径和节点，历史监听配置按原文标识。实例入口补执行顺序和技术修订。没有结果的建议命令仍标为操作说明；失败与成功分别保留。新写程序不假称是历史原件。
 
 ## 2. 五层正文分别参考哪些文章？
 
-| 总章 | FlowUs技术文章或记录主题 | 本书专题与采用内容 |
+| 总章 | FlowUs技术文章或记录主题 | 本体系专题与采用内容 |
 | --- | --- | --- |
 | 第1层1.1—1.4 | 4090 CUDA、DGX Spark编译、CUDA链接排错 | [NVIDIA](../chapters/hardware/nvidia.md)：驱动/Toolkit/wheel、SM与kernel |
 | 第1层1.2—1.4 | 780M教程、395五机HIP RPC、ROCm环境 | [AMD](../chapters/hardware/amd.md)：gfx、版本隔离、GTT/TTM |
@@ -63,4 +63,23 @@ Windows CPU演练实际下载固定官方二进制和Qwen3-0.6B-Q8_0，核验模
 
 保留有用的版本、步骤、错误和数据，同时修订格式/量化混称、K-quant解释、CUDA版本关系、4080 NVLink、Docker显存限制与前缀缓存实现等问题。修订列表见[附录B](../appendices/references.md)。
 
-公开材料不含私人页面链接、空间导出、账户、凭据、实际节点地址与未经授权的业务输入。原框架图使用用户提供的附件；其他私人笔记图片未直接搬运为本书实测截图。
+公开材料不含私人页面链接、空间导出、账户、凭据、实际节点地址与未经授权的业务输入。原框架图使用用户提供的附件；其他私人笔记图片未直接搬运为本体系实测截图。
+
+## 5. 完整技术原文到设备实例的对应
+
+| 实例文件 | 完整技术文章 |
+| --- | --- |
+| [nvidia-rtx2060](../engineering/nvidia-rtx2060.md) | R01 nvidai-llamacpp-qwen3:30-a3b-q6测试记录；R02 nvidai-llamacpp-qwen3:30-a3b-q6基准性能测试记录；R03 nvidai-llamacpp-qwen3:32B-q5基准性能测试记录 |
+| [nvidia-dual-gpu](../engineering/nvidia-dual-gpu.md) | R04 服务器：Nvidia显卡：Ubuntu22.04+VLLM+Docker双卡部署Deepseek-r1:32B(Int4) |
+| [nvidia-gb10](../engineering/nvidia-gb10.md) | R05 NVIDIA GB10 ARM编译llamacpp；R06 nvidia GB10设备（arm64架构）编译vllm；R07 DGX Spark适配编译vllm部署Qwen3.6-35B-A3B模型（bf16/fp8精度）；R08 NVIDIA GB10部署Qwen3-30B-A3B-Instruct-2507；R09 DGX GB10部署Gemma-4系列AWQ量化模型；R10 DGX Spark GB10部署gemma-4系列模型及关闭MTP推理加速；R11 DGX Spark GB10部署gemma-4系列模型及MTP推理加速；R12 DGX Spark GB10编译DFlash推理加速模块集成到vllm中 |
+| [nvidia-gb10-multimodal](../engineering/nvidia-gb10-multimodal.md) | R13 GB10部署Qwen3-VL-8B模型；R14 nvidia GB10 部署Qwen2.5-VL-7B；R15 GB10部署Qwen3-VL-30B-A3B；R16 NVIDIA GB10版本vllm部署Qwen3‑Omni‑30B‑A3B‑Instruct；R17 NVIDIA GB10 vllm部署granite-docling-258M |
+| [amd-780m](../engineering/amd-780m.md) | R18 AMD 780M-GPU 适配教程；R19 AMD适配模型（GPU-780M，ＣＰＵ　－8845HS）；R20 AMD：使用Ollama框架将Llama3.1 8b部署在AMD的GPU |
+| [amd-8060s](../engineering/amd-8060s.md) | R21 Qwen3.6-35B-A3B 部署与推理文档；R22 Qwen3.6-35B-A3B BF16 推理优化记录 |
+| [amd-395-rpc](../engineering/amd-395-rpc.md) | R23 AMD Strix Halo 395 五机 HIP RPC 串联部署 Kimi-K2.5-Q2 实战文档；R24 AMD 395 llamcpp+rpc编译流程；R25 AMD 395 llamacpp rpc服务功能环境测试脚本 |
+| [amd-w7900](../engineering/amd-w7900.md) | R26 单节点八卡服务器（W7900*8,48*8）DeepSeek-R1-AWQ-INT4部署；R27 W7900双卡部署Qwen3:30b-A3b；R28 服务器：AMD显卡：Ubuntu22.04+VLLM+Docker双卡部署Deepseek-r1:32b/70b；R29 AMD单节点四卡DS-70B-fp16测试命令；R30 双节点模型部署70B验证；R31 双节点模型部署70B-2.0资源调度验证；R32 双节点，再次推理DS-70B；R33 Deepseek-R1-671b双节点部署；R34 多节点部署排障 |
+| [intel-arc-npu](../engineering/intel-arc-npu.md) | R35 Qwen3.5-9B Intel openvino 平台推理对比报告；R36 Qwen3.5-9B INT4 IR 多模态视觉推理测试报告；R37 使用ipex-llm进行量化并制作ollama模型，部署在Intel集显。；R38 Intel NPU进行模型推理：deepseek-r1:1.5b,7b,8b |
+| [apple-metal](../engineering/apple-metal.md) | R39 llama.cpp 在 Mac Studio (Apple Silicon) 上的编译指南 |
+| [apple-mlx](../engineering/apple-mlx.md) | R40 vllm-metal 编译与推理记录；R41 mlx-vlm 多视觉模型推理与 API 调用指南；R42 oMLX Mac 推理操作流程；R43 oMLX 推理框架性能测试报告与压测流程；R44 Mac 设备推理框架分类总结 |
+| [ascend-310p](../engineering/ascend-310p.md) | R45 华为昇腾310P3推理Qwen3-32B；R46 华为昇腾310p3：qwen3-32b与qwen3-235b-a22b-2507测试；R47 昇腾310P3部署Qwen3-32B benchmark记录 |
+| [benchmark-tools](../engineering/benchmark-tools.md) | R48 llama.cpp 与 vLLM 推理性能评测工具2026年版本 ；R49 大模型性能评估框架集合 |
+| [gguf-ollama](../engineering/gguf-ollama.md) | R50 使用llama.cpp进行模型转换和量化，再使用ollama自定义模型。 |

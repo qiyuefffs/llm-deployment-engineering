@@ -1,5 +1,7 @@
 # vLLM：从模型目录到可测量的推理服务
 
+**完整工程记录：** [GB10构建与量化加速](../../engineering/nvidia-gb10.md) · [双4080/A6000](../../engineering/nvidia-dual-gpu.md) · [W7900](../../engineering/amd-w7900.md) · [昇腾310P3](../../engineering/ascend-310p.md)
+
 [总目录](../../SUMMARY.md) · [所属总章：推理框架](../../02-capability-layers/03-inference-frameworks.md) · [压测方法](../performance/benchmarking.md)
 
 ## 本章概览
@@ -230,7 +232,7 @@ python docs/01-deployment-foundations/examples/vision_client.py \
 
 ### 7.6 复用于Mac服务时改哪些地方
 
-本书另一路历史MLX-VLM使用`type=input_image、image_url为字符串`，脚本提供`--image-style mlx`对应该协议。端口与模型ID以该服务为准：
+本体系另一路历史MLX-VLM使用`type=input_image、image_url为字符串`，脚本提供`--image-style mlx`对应该协议。端口与模型ID以该服务为准：
 
 ```bash
 python docs/01-deployment-foundations/examples/vision_client.py \

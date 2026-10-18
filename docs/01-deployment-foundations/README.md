@@ -1,71 +1,59 @@
-# 大模型部署适配工程基础
+# 大模型部署适配知识体系
 
-> 面向大模型部署、推理优化和多硬件适配的工程读本。
-> 沿用《大模型部署适配交付知识体系框架》的六部分结构与五层章节。
+![大模型部署适配五层能力框架](assets/edge-llm-deployment-framework-original.png)
 
-## 本书概览
+图注：作者原始框架。目录沿用六部分、五层能力及1.1～5.3节编号；图中的格式、精度、量化与后端分类以正文技术说明为准。
 
-部署一个大模型，起点是一份模型文件和一台设备，终点是一个能够调用、测试和维护的推理服务。中间要解决模型格式、硬件后端、内存分配、请求调度与服务交付等问题。本书按这条链路说明每一步的原理、操作和检查方法。
+> 适用方向：大模型部署、端侧适配、推理优化、多硬件工程交付。
+> 核心产物：可追溯环境、可加载模型、可调用服务、可对照基线、优化实验、验收与回滚记录。
 
-全书先建立知识地图，再进入五层详细框架。每一层保留原稿的节标题，具体平台和操作教程放在对应节下。读者可以从头阅读，也可以通过完整目录直接进入某个问题。
+## 0. 总体定位
 
-- **第一次阅读：** 从[写在前面](00-preface.md)开始，再看第一部分与五层总章。
-- **想先动手：** 运行[第一个本地推理服务](practice/first-service/README.md)，再带着运行结果阅读模型、框架和性能章节。
-- **正在解决问题：** 从[故障速查](06-troubleshooting.md)进入，再回到对应章节查原理。
-- **希望连续阅读：** 下载本目录的[离线书籍页面](book.html)，用浏览器打开；左侧目录、全文搜索和上一章/下一章均可离线使用。
+```text
+模型选择 → 格式转换/量化 → 硬件后端适配 → 引擎构建与部署
+ → 权重/KV/工作区预算 → 功能基线 → 性能压测 → 瓶颈定位
+ → 单项或组合优化 → API/监控 → 交付与回滚
+```
 
-**[展开全书详细目录](SUMMARY.md)**
+知识点按“机制、参数、执行阶段、诊断证据”组织；平台工程保存完整操作链路。历史FlowUs技术文章直接写入对应实例，保留命令、日志、性能表、失败和后续实验，不用摘要替代过程。
 
-## 全书结构
+**[五层框架与完整目录](SUMMARY.md) · [各GPU部署优化实例](engineering/README.md) · [环境与数据约定](00-preface.md) · [可离线搜索的页面](book.html)**
 
-### 第一部分：整体知识体系地图
+## 第一部分：整体知识体系地图
 
-[一条主线与五层能力](01-knowledge-map.md)。解释模型如何成为服务、七个工程模块怎样协作，以及各层需要交付什么。
+[七个工程模块与五层能力](01-knowledge-map.md)：任务约束、阶段输入输出、交付关口与项目目录。
 
-### 第二部分：五层能力详细框架
+## 第二部分：五层能力详细框架
 
-从[第二部分总章](02-capability-layers/README.md)进入。五章依次是：
+| 能力层 | 核心技术 | 主要参数 / 产物 |
+| --- | --- | --- |
+| [1.硬件后端适配](02-capability-layers/01-hardware-backends.md) | CUDA/HIP/SYCL/Vulkan/Metal/CANN/MUSA、驱动与编译、通信 | arch/gfx/ABI、CMakeCache、镜像digest、最小设备执行 |
+| [2.模型格式与量化](02-capability-layers/02-model-formats-quantization.md) | HF/GGUF/IR、W/A/KV精度、AWQ/GPTQ、分组/尺度/kernel | revision、SHA256、quantization_config、模板、质量基线 |
+| [3.推理框架](02-capability-layers/03-inference-frameworks.md) | vLLM、llama.cpp、OpenVINO、MLX、加载与调度 | max-model-len、seqs、batched-tokens、ngl、b/ub、API |
+| [4.显存与性能](02-capability-layers/04-memory-performance.md) | KV、prefill/decode、缓存、并发、TP/PP/EP、MTP/DFlash | TTFT/TPOT/ITL、吞吐、p95/p99、内存峰值、质量 |
+| [5.工程交付](02-capability-layers/05-engineering-delivery.md) | 容器/环境、SSE、监控、限流、验收、回滚 | run-id、有效命令、逐请求数据、部署/恢复入口 |
 
-1. [硬件后端适配层](02-capability-layers/01-hardware-backends.md)：设备、驱动、Runtime、编译与适配流程。
-2. [模型格式与量化层](02-capability-layers/02-model-formats-quantization.md)：格式体系、量化方法、制品选择与转换。
-3. [推理框架层](02-capability-layers/03-inference-frameworks.md)：vLLM、llama.cpp、启动、接口与选型。
-4. [显存与性能优化层](02-capability-layers/04-memory-performance.md)：内存预算、KV、指标、负载、实验与优化。
-5. [工程交付层](02-capability-layers/05-engineering-delivery.md)：环境封装、服务、监控和七项项目结果。
+## 各硬件完整工程实例
 
-平台教程与完整操作实例列在各章下面，讲解时沿用同一组模型路径、别名与结果目录。
+| 硬件 | 完整部署适配与加速优化 |
+| --- | --- |
+| NVIDIA | [RTX2060混合卸载](engineering/nvidia-rtx2060.md) · [RTX4080/A6000双卡](engineering/nvidia-dual-gpu.md) · [GB10构建、FP8、AWQ、MTP与DFlash](engineering/nvidia-gb10.md) · [GB10多模态](engineering/nvidia-gb10-multimodal.md) |
+| AMD | [780M Windows HIP](engineering/amd-780m.md) · [8060S Vulkan Q4/BF16](engineering/amd-8060s.md) · [395五机HIP RPC](engineering/amd-395-rpc.md) · [W7900单机/多节点](engineering/amd-w7900.md) |
+| Intel | [Arc GPU三后端、NPU、ASR/TTS完整记录](engineering/intel-arc-npu.md) |
+| Apple | [M3 Ultra Metal/GGUF](engineering/apple-metal.md) · [MLX、APC、oMLX并发](engineering/apple-mlx.md) |
+| 昇腾 | [310P3 CANN、Qwen3、插件与压测](engineering/ascend-310p.md) |
+| MUSA | [设备适配、构建、API与优化验证流程](engineering/musa.md)，待设备实测 |
+| CPU | [固定Windows完整运行与实际结果](practice/first-service/README.md) |
 
-### 第三部分：核心概念解释库
+## 第三至六部分
 
-[十个核心概念](03-core-concepts.md)。保留原稿的十个主题，用完整段落解释机制，再结合工程记录分析使用条件。
+- [第三部分：核心概念解释库](03-core-concepts.md)：十个核心机制及参数影响。
+- [第四部分：项目复盘模板](04-project-review.md)：硬件、制品、部署、排错、实验、验收十项记录。
+- [第五部分：个人知识库目录设计](05-knowledge-base.md)：八个主题目录与工程资料组织。
+- [第六部分：故障排查速查表](06-troubleshooting.md)：按失败阶段定位、验证和回归。
 
-### 第四部分：项目复盘模板
+## 完整材料与证据
 
-[标准项目与多硬件适配记录](04-project-review.md)。给出可填写模板，并展示怎样依据真实文件写结论。
+[50份源文保留清单](evidence/source-coverage.json) · [章节与文章映射](evidence/chapter-sources.md) · [历史测量JSON](evidence/measurements.json) · [离线核算程序](examples/verify_records.py) · [参考资料](appendices/references.md)
 
-### 第五部分：个人知识库目录设计
-
-[八个主题目录与正文的对应关系](05-knowledge-base.md)。沿用原稿的八个目录，把已有知识、操作、实验和故障连接起来。
-
-### 第六部分：故障排查速查表
-
-[从失败现象找到检查入口](06-troubleshooting.md)。包括构建、加载、内存、接口、质量和多节点问题。
-
-### 附录
-
-[常用命令](appendices/commands.md) · [参考资料与原稿修订](appendices/references.md) · [文章与章节对应表](evidence/chapter-sources.md) · [历史测量来源](evidence/README.md)
-
-## 本书使用的两类实践材料
-
-本次扩充把FlowUs中的工程过程放回对应专题：RTX2060混合推理，395五机HIP RPC与W7900多节点，Mac Metal/vllm-metal/MLX-VLM/oMLX，Intel GPU和NPU语音，GB10多模态、AWQ四组、MTP与DFlash。每个实例连同环境、参数、执行顺序、结果表和排错展开，入口集中在[工程实例检索](SUMMARY.md#工程实例检索)。
-
-其中包含15组可下载的[结构化历史测量](evidence/measurements.json)，以及公开视觉测试卡与完整流式客户端。较长章节在离线阅读页顶部提供本章目录，正文、代码与数据各有固定位置。
-
-一类是作者FlowUs中的实际部署记录，包括AMD、NVIDIA、Intel、Apple和昇腾等平台。它们提供版本、步骤、错误和历史结果；缺少原始文件的地方会说明范围。
-
-另一类是本书新增的Windows CPU入门演练。它公开固定模型、下载校验、完整程序、请求、响应、服务日志和基准结果。2026-10-18实际执行了完整链路，保留了功能题错误和异常状态码，便于读者练习验收。
-
-![原始知识框架](assets/edge-llm-deployment-framework-original.png)
-
-图注：作者原始知识框架图，保留整体布局；格式、量化和指标分类按正文说明阅读。
-
-本书更新时间：2026-10-18。文档与代码只公开必要工程信息；模型、工具与外部资料遵循各自许可证。
+技术记录保留可公开设备、版本、配置、性能和错误。私人路径、节点、认证及附件地址脱敏。历史GPU/NPU成绩标明测试条件，本轮未重新运行；资料缺项与失败不会改写成成功。

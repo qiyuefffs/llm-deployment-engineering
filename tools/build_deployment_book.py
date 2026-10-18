@@ -58,8 +58,8 @@ def render_book():
                 counts[key] = count + 1
                 anchor = key if count == 0 else f'{key}-{count}'
                 token.attrSet('id', f'{page_id}--{anchor}')
-                if token.tag == 'h2':
-                    headings.append((label, f'{page_id}--{anchor}'))
+                if token.tag in ('h2', 'h3'):
+                    headings.append((label, f'{page_id}--{anchor}', token.tag))
             for child in token.children or []:
                 if child.type not in ('link_open', 'image'):
                     continue
@@ -85,16 +85,17 @@ def render_book():
                                   ('#' + parsed.fragment if parsed.fragment else ''))
         title = next(t.content for t in tokens if t.type == 'inline')
         body = md.renderer.render(tokens, md.options, {})
-        local_toc = ''.join(f'<a href="#{html.escape(anchor)}">{html.escape(label)}</a>' for label, anchor in headings)
+        local_toc = ''.join(f'<a class="toc-{level}" href="#{html.escape(anchor)}">{html.escape(label)}</a>'
+                            for label, anchor, level in headings)
         source_link = REMOTE + quote(source.relative_to(ROOT).as_posix())
         pages.append(f'<section class="chapter" id="{page_id}" data-index="{i}" hidden>'
-                     f'<div class="chapter-meta">工程基础 · {i + 1:02} / {len(paths):02}'
+                     f'<div class="chapter-meta">部署适配知识体系 · {i + 1:02} / {len(paths):02}'
                      f'<a href="{source_link}" target="_blank" rel="noreferrer">Markdown 源文</a></div>'
-                     f'<details class="local-toc"><summary>本章目录 · {len(headings)} 个小节</summary>{local_toc}</details>'
+                     f'<details class="local-toc"><summary>页内目录 · {len(headings)} 项</summary>{local_toc}</details>'
                      f'<article>{body}</article></section>')
-        plain = re.sub(r'```.*?```', '', text, flags=re.S)
+        plain = re.sub(r'^\s*```[^\n]*$', '', text, flags=re.M)
         search.append({'id': page_id, 'title': title, 'text': plain})
-    nav = ['<a class="toc-link" href="#ch01">全书详细目录</a>']
+    nav = ['<a class="toc-link" href="#ch01">完整知识体系目录</a>']
     previous_group = None
     for entry in entries:
         if entry['group'] != previous_group:
@@ -104,7 +105,7 @@ def render_book():
                    f'{html.escape(entry["label"])}</a>')
     template = '''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>大模型部署适配工程基础 · 离线阅读</title><link rel="icon" href="data:,"><style>
+<title>大模型部署适配知识体系 · 离线检索</title><link rel="icon" href="data:,"><style>
 :root{--ink:#202f31;--muted:#657475;--accent:#176d65;--paper:#fffefa;--line:#dfe6e2;--side:#f1f4ef}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}
@@ -117,17 +118,17 @@ article{font-size:16px;line-height:1.95;overflow-wrap:anywhere}article h1,articl
 pre{background:#f0f3f1;border:1px solid var(--line);border-left:3px solid #73a193;border-radius:5px;padding:18px 20px;overflow-x:auto;line-height:1.7;font-size:13px;white-space:pre;max-width:100%}code{font-family:Consolas,"SFMono-Regular",monospace;font-size:.88em;background:#edf2ed;padding:2px 5px;border-radius:3px}pre code{background:none;padding:0;font-size:inherit}blockquote{border-left:3px solid #73a193;padding:3px 20px;color:#4e6260;background:#f5f7f2}
 .table-scroll{overflow:auto;border:1px solid var(--line);border-radius:5px;margin:23px 0}table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.8;min-width:530px}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#eaf0e9;font-weight:650}tr:last-child td{border-bottom:0}tbody tr:nth-child(even){background:#f7f8f3}
 .local-toc{margin:50px 0 25px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted)}.local-toc a{display:block;margin:9px 0}.local-toc summary{cursor:pointer}.reader-footer{position:fixed;bottom:0;left:298px;right:0;background:rgba(255,254,250,.97);border-top:1px solid var(--line);padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:13px;z-index:3}.reader-footer a{max-width:43%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.reader-footer span{font-size:11px;color:var(--muted)}.topbar{display:none}.search-results{max-width:850px;margin:auto}.search-card{display:block;border-bottom:1px solid var(--line);padding:20px 0}.search-card strong{display:block;font-size:18px}.search-card p{font-size:14px;color:var(--muted);line-height:1.9}.empty{padding:40px 0;color:var(--muted)}.overlay{display:none}
-.local-toc{margin:0 0 30px;border:1px solid var(--line);border-radius:6px;padding:14px 18px;background:#f5f7f2}.local-toc a{line-height:1.65}
+.local-toc{margin:0 0 30px;border:1px solid var(--line);border-radius:6px;padding:14px 18px;background:#f5f7f2}.local-toc a{line-height:1.65}.local-toc .toc-h3{padding-left:16px;font-size:12px}.toc-link.depth-2{padding-left:32px;font-size:12px}.reader-footer a{min-width:0;flex:1}.reader-footer span{flex-shrink:0;white-space:nowrap}#ch00 .local-toc{display:none}#ch00 article>p:first-of-type img{max-height:76vh;width:auto;object-fit:contain}
 @media(min-width:1450px){main{margin-left:330px;padding-left:80px;padding-right:80px}.sidebar{width:330px}.reader-footer{left:330px}}
 @media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform .2s;width:290px}.sidebar.open{transform:translateX(0)}main{margin-left:0;padding:85px 25px 100px}.topbar{display:flex;position:fixed;inset:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:13px 20px;align-items:center;gap:18px;z-index:4;font-size:13px}.topbar button{border:1px solid var(--line);border-radius:5px;background:var(--side);padding:5px 12px;color:var(--ink)}.reader-footer{left:0;padding:14px 20px}.overlay.show{display:block;position:fixed;inset:0;background:#18282455;z-index:4}article{font-size:15px}article h1{font-size:26px}article h2{font-size:21px}pre{font-size:12px;padding:14px}.chapter-meta{margin-bottom:28px}}
 @media print{.sidebar,.topbar,.reader-footer,.local-toc,.search-results{display:none!important}main{margin:0;padding:0;max-width:none}.chapter[hidden]{display:block!important}.chapter{max-width:none;break-before:page}.table-scroll{overflow:visible}pre{white-space:pre-wrap;overflow:visible}.chapter-meta{margin-top:20px}article{font-size:11pt}article h1{font-size:23pt}article h2{font-size:17pt}a{color:inherit}}
 </style></head><body>
-<div class="topbar"><button id="menu" aria-label="打开目录">目录</button><span>大模型部署适配工程基础</span></div>
-<div class="overlay" id="overlay"></div><aside class="sidebar" aria-label="全书目录"><div class="eyebrow">DEPLOYMENT ENGINEERING</div><div class="brand">大模型部署适配<br>工程基础</div><div class="edition">六部分 · 五层能力 · 2026.10</div>
-<input id="search" aria-label="搜索全书" placeholder="搜索概念、平台或命令…" type="search"><nav>__NAV__</nav></aside>
+<div class="topbar"><button id="menu" aria-label="打开目录">目录</button><span>大模型部署适配知识体系</span></div>
+<div class="overlay" id="overlay"></div><aside class="sidebar" aria-label="知识体系目录"><div class="eyebrow">DEPLOYMENT ENGINEERING</div><div class="brand">大模型部署适配<br>知识体系</div><div class="edition">六部分 · 五层框架 · 完整工程记录</div>
+<input id="search" aria-label="搜索知识体系" placeholder="搜索设备、参数、错误或命令…" type="search"><nav>__NAV__</nav></aside>
 <main><div class="search-results" id="search-results" hidden aria-live="polite"></div>__PAGES__
 <noscript>请启用浏览器JavaScript以使用章节导航，或直接阅读仓库Markdown。</noscript></main>
-<footer class="reader-footer"><a id="prev" href="#ch00">上一章</a><span id="progress"></span><a id="next" href="#ch01">下一章</a></footer>
+<footer class="reader-footer"><a id="prev" href="#ch00">上一项</a><span id="progress"></span><a id="next" href="#ch01">下一项</a></footer>
 <script id="book-data" type="application/json">__DATA__</script><script>
 const data=JSON.parse(document.getElementById('book-data').textContent);
 const chapters=[...document.querySelectorAll('.chapter')];
@@ -145,7 +146,7 @@ function show(){
   document.querySelectorAll('.toc-link').forEach(a=>{const on=a.hash==='#'+page.id;a.classList.toggle('active',on);on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
   for(const [key,index] of [['prev',current-1],['next',current+1]]){const link=document.getElementById(key);link.style.visibility=data[index]?'visible':'hidden';if(data[index]){link.href='#'+data[index].id;link.textContent=(key==='prev'?'← ':'')+data[index].title+(key==='next'?' →':'')}}
   document.getElementById('progress').textContent=(current+1)+' / '+data.length;
-  document.title=data[current].title+' · 大模型部署适配工程基础';closeMenu();
+  document.title=data[current].title+' · 大模型部署适配知识体系';closeMenu();
   requestAnimationFrame(()=>{if(target&&target!==page)target.scrollIntoView({block:'start'});else window.scrollTo(0,0)});
 }
 window.addEventListener('hashchange',show);
@@ -155,7 +156,7 @@ search.addEventListener('input',()=>{
   chapters.forEach(c=>c.hidden=true);results.hidden=false;results.replaceChildren();
   const title=document.createElement('h1');title.textContent='全文搜索';results.append(title);
   const matches=data.filter(d=>d.text.toLowerCase().includes(query));
-  const count=document.createElement('p');count.textContent='找到 '+matches.length+' 个章节';results.append(count);
+  const count=document.createElement('p');count.textContent='找到 '+matches.length+' 项资料';results.append(count);
   for(const d of matches){const link=document.createElement('a');link.className='search-card';link.href='#'+d.id;const h=document.createElement('strong');h.textContent=d.title;const p=document.createElement('p');const at=d.text.toLowerCase().indexOf(query);p.textContent='…'+d.text.slice(Math.max(0,at-45),at+150).replace(/[#*`]/g,'')+'…';link.append(h,p);link.onclick=()=>{search.value='';if(location.hash==='#'+d.id)show();closeMenu()};results.append(link)}
   window.scrollTo(0,0);
 });

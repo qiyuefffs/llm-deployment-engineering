@@ -1,5 +1,7 @@
 # 1.2.2 AMD：gfx、运行库与共享内存
 
+**完整工程记录：** [780M Windows HIP](../../engineering/amd-780m.md) · [8060S Q4/BF16优化](../../engineering/amd-8060s.md) · [395五机RPC](../../engineering/amd-395-rpc.md) · [W7900多卡多机](../../engineering/amd-w7900.md)
+
 ## 本节概览
 
 AMD适配先确认实际GPU目标，再确认系统、ROCm/HIP、算子库和框架后端。作者资料同时包含Windows集显社区路线和Linux395多机工程，本节将两条路线分开说明。
@@ -50,7 +52,7 @@ Get-ChildItem -LiteralPath '.\bin' -Filter '*.dll' | Select-Object Name, Length
 
 排查发现，GTT请求125829120000字节，但TTM实际约66286690304字节。需要比较物理容量、驱动预算与Runtime可见量，而不是只调大模型上下文。
 
-修复后的设备可见总量约120000MiB。该修复与特定内核、DKMS及驱动有关，本书保留原因与检查路径，不把系统级修改写成通用一键优化。
+修复后的设备可见总量约120000MiB。该修复与特定内核、DKMS及驱动有关，本体系保留原因与检查路径，不把系统级修改写成通用一键优化。
 
 ## 五、五机RPC的后续验证
 
@@ -239,7 +241,7 @@ free -h
 
 容器先挂入`/dev/kfd`与`/dev/dri`，核对video/render访问，再在容器内验证设备。模型与结果分别挂到`/srv/models`、`/srv/results`。原`--ipc=host`表示共用宿主IPC命名空间，不能再把`--shm-size=384g`解释为已分配384GB共享内存，更不是显存扩容。
 
-原关键服务预算如下：TP8、ctx4096、seqs8、batched2048、memory0.95、eager、AWQ、BF16计算dtype。0.95为较激进的历史配置，新运行先做余量检查。原笔记调用了普通`api_server`后又请求OpenAI路径，本书统一为OpenAI入口：
+原关键服务预算如下：TP8、ctx4096、seqs8、batched2048、memory0.95、eager、AWQ、BF16计算dtype。0.95为较激进的历史配置，新运行先做余量检查。原笔记调用了普通`api_server`后又请求OpenAI路径，本体系统一为OpenAI入口：
 
 ```bash
 python -m vllm.entrypoints.openai.api_server \

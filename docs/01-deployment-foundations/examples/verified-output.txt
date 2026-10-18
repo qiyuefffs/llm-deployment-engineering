@@ -13,4 +13,5 @@ Gemma31B AWQ4/AWQ8: rounded throughput and shared token totals agree
 Whisper: RTF from rounded core timings 0.03894; source rounded-RTF mean ~0.0387
 Kokoro CPU: 48 samples; 5.46x realtime; RSS target failed
 Speech: full-NPU quality failure and NPUW load failure remain explicit
+AMD8060S: observed CPU/GPU ratio 2.06x; GPU configuration-group ratio 1.24x (not causal estimates)
 PASS: covered counts and rounded arithmetic agree; source runs and quality are not verified.

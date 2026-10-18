@@ -85,6 +85,12 @@ def main():
             'No NPUW throughput without generated audio')
     lines.append(f'Kokoro CPU: 48 samples; {1 / kokoro["rtf_mean"]:.2f}x realtime; RSS target failed')
     lines.append('Speech: full-NPU quality failure and NPUW load failure remain explicit')
+    apu = data['amd_8060s_vulkan']
+    q4 = apu['q4_k_m']
+    offload_ratio = q4['gpu_initial_decode_token_per_s'] / q4['cpu_decode_token_per_s']
+    tuning_ratio = q4['gpu_parameter_group_decode_token_per_s'] / q4['gpu_initial_decode_token_per_s']
+    lines.append(f'AMD8060S: observed CPU/GPU ratio {offload_ratio:.2f}x; '
+                 f'GPU configuration-group ratio {tuning_ratio:.2f}x (not causal estimates)')
     lines.append('PASS: covered counts and rounded arithmetic agree; source runs and quality are not verified.')
     print('\n'.join(lines))
 

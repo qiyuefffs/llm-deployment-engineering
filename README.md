@@ -1,8 +1,10 @@
 # 大模型部署适配与推理优化
 
-面向模型部署、推理优化和多硬件适配工程。知识体系按作者原有的六部分、五层框架写成连续阅读的工程书，包含总章、平台专题、完整操作、实测产物与验收。
+![大模型部署适配知识体系框架](docs/01-deployment-foundations/assets/edge-llm-deployment-framework-original.png)
 
-**开始阅读：[封面与概览](docs/01-deployment-foundations/README.md) · [全书详细目录](docs/01-deployment-foundations/SUMMARY.md) · [离线阅读版](docs/01-deployment-foundations/book.html)**
+面向模型部署、推理优化和多硬件适配工程。沿用原六部分、五层能力及节编号，按组件、参数、执行阶段和检查证据组织。每个设备入口包含部署适配、基线、优化过程及对应FlowUs完整技术记录，共保留50份技术文章。
+
+**工程入口：[知识体系与首页框架图](docs/01-deployment-foundations/README.md) · [五层完整目录](docs/01-deployment-foundations/SUMMARY.md) · [各GPU完整部署优化实例](docs/01-deployment-foundations/engineering/README.md) · [离线检索页面](docs/01-deployment-foundations/book.html)**
 
 | 内容 | 阅读入口 | 用途 |
 | --- | --- | --- |
@@ -10,8 +12,6 @@
 | 本机CPU完整演练 | [顺序教程与实际文件](docs/01-deployment-foundations/practice/first-service/README.md) | 下载校验、部署、API、压测、失败记录和验收 |
 | 独立实战 Case | [Case 目录](cases/README.md) | 完整实战教程、脚本、截图与结果，按项目单独保存 |
 | 工程记录模板 | [适配记录](docs/01-deployment-foundations/templates/adaptation-record.md) · [实验记录](docs/01-deployment-foundations/templates/experiment-record.md) | 记录设备、版本、输入、参数、结果和验收 |
-
-![大模型部署适配知识地图](docs/01-deployment-foundations/assets/deployment-workflow.png)
 
 ## 知识体系怎样组织
 

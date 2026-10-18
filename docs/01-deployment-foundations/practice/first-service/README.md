@@ -1,6 +1,6 @@
 # 完整操作实例：第一个本地推理服务
 
-[全书目录](../../SUMMARY.md) · [llama.cpp原理与构建](../../chapters/frameworks/llama-cpp.md) · [性能分析](../../chapters/performance/benchmarking.md)
+[知识体系目录](../../SUMMARY.md) · [llama.cpp原理与构建](../../chapters/frameworks/llama-cpp.md) · [性能分析](../../chapters/performance/benchmarking.md)
 
 ## 这次练习完成什么？
 

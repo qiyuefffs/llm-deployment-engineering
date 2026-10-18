@@ -1,123 +1,121 @@
 # 第3层：推理框架层
 
-## 本章概览
-
-推理框架将模型制品变成可执行计算，并管理内存、请求与输出。本章按原稿六节展开：先定位框架，再分别理解vLLM与llama.cpp，随后完成启动、构建和选型。
-
-配套教程集中保存完整步骤：[vLLM服务](../chapters/frameworks/vllm-service.md)、[llama.cpp构建与服务](../chapters/frameworks/llama-cpp.md)、[OpenVINO完整运行](../chapters/frameworks/openvino.md)。
+[总目录](../SUMMARY.md) · [vLLM流程](../chapters/frameworks/vllm-service.md) · [llama.cpp流程](../chapters/frameworks/llama-cpp.md) · [OpenVINO流程](../chapters/frameworks/openvino.md)
 
 ## 3.1 框架定位
 
-vLLM常用于多请求服务，重点是模型执行、KV管理与调度。llama.cpp适合GGUF、本地与多种设备后端，也可以通过llama-server提供接口。两者都需要按实际模型和功能验证，不能把定位理解成排他的使用范围。
-
-TensorRT-LLM偏向NVIDIA相应执行和优化路线；SGLang提供服务调度、缓存和结构化任务等能力；Ollama与LM Studio提供方便的本地使用入口。OpenVINO与MLX则需要对应的制品和平台支持。
-
-选择框架先确认任务能够完成，再看性能和交付成本。一个接口看似一致的服务，视觉、工具、JSON约束、取消和错误处理也可能不同。应用会使用的能力应列成明确测试项。
+| 框架 | 主要工程对象 | 优先核对 |
+| --- | --- | --- |
+| vLLM | 多请求服务、KV调度、TP/PP/EP、OpenAI API | 模型/量化kernel、后端与调度参数 |
+| llama.cpp | GGUF、CPU/GPU卸载、多后端、CLI/server | 张量类型、后端、内存、槽位 |
+| TensorRT-LLM | NVIDIA配套编译与服务优化 | GPU代际、模型、执行制品与版本 |
+| SGLang | 服务调度、缓存、结构化等 | 模型/后端、前缀管理与协议 |
+| OpenVINO GenAI | Intel等支持设备的IR管线 | 模型导出、设备编译与shape |
+| MLX生态 | Apple统一内存、文本/视觉服务 | MLX制品、processor、框架功能边界 |
+| Ollama/LM Studio | 本地模型管理和接口 | 模板、实际后端与资源，UI可用不代替压测 |
 
 ## 3.2 vLLM 知识结构
 
-一次聊天请求先经过HTTP与参数检查，再由模板与tokenizer形成模型输入。调度器安排prefill和decode，KV管理器分配历史状态，模型执行器调用设备kernel，最后将token转换成文本并返回客户端。
-
 ```text
-API → 参数与模板 → Tokenizer → Scheduler
- → KV管理 / 缓存 → 模型执行器 / Kernel → 采样 → 文本与流式响应
+HTTP/API校验 → chat template/tokenizer → 等待队列
+ → Scheduler → KV Block Manager/Prefix Cache
+ → Model Executor → attention/matmul/MoE kernel
+ → sampler → detokenize → SSE/JSON → 结束与资源回收
 ```
 
-### 请求的一生：接收、等待、执行与回收
+| 子系统 | 参数 / 数据 | 工程机制 |
+| --- | --- | --- |
+| 接入 | model、messages/prompt、max_tokens、stop | 参数、长度、模板和输入校验 |
+| Prefill/Decode | 输入token、历史KV、当前token | prefill建状态，decode逐步生成 |
+| KV管理 | block、dtype、引用、可用块 | 分块分配/回收，前缀可复用 |
+| 调度 | max-num-seqs、max-num-batched-tokens | 活动序列数与每轮token预算，均不等于客户端请求数 |
+| 长输入 | enable-chunked-prefill | 分块调度，影响prefill/decode干扰 |
+| 重复前缀 | enable-prefix-caching | 同token前缀复用，缓存冷暖与租户要记录 |
+| 模型并行 | tensor/pipeline parallel、expert parallel | rank映射、通信、每卡预算 |
+| 图与执行 | enforce-eager、attention-backend | 预热/图捕获、工作区与kernel支持 |
+| 输出 | reasoning/content、finish_reason、usage | EOS/stop/length/取消/错误分别记录 |
 
-一条请求可能先通过语法/长度校验，进入等待队列，随后执行prefill与多轮decode，最后因EOS、stop、长度上限、取消或错误结束。服务必须释放这条请求占用的活动槽位与KV引用，其他请求才能继续利用资源。
-
-这些结束方式意义不同。EOS/stop通常对应生成策略；length可能截断答案；取消来自客户端或服务控制；错误说明本次没有完成。性能统计要保存这些状态，不能把“收到了一段文本”全部记成功。
-
-服务进程可能已监听端口但模型仍在加载，模型ready也可能在一条视觉请求后因缺encoder退出。Apple的EngineDead记录正是例子。因此就绪检查、功能检查与持续健康都需要各自的证据。
-
-### 推理阶段与内存
-
-Prefill处理输入并形成初始状态；Decode在历史状态上逐步生成。长输入更容易增加prefill计算与工作区，长输出和多活动序列会持续占用KV。PagedAttention等机制改善KV组织，实际资源仍要按模型和负载预算。
-
-### 调度与长上下文
-
-Continuous Batching让不同请求在生成过程中加入或退出执行批次。`max-num-seqs`限制活动序列预算，`max-num-batched-tokens`控制每轮token预算，两者影响资源与请求之间的干扰。
-
-Chunked Prefill将长输入分块调度；Prefix Caching复用相同token前缀的已计算状态；KV量化减少缓存存储。它们作用不同，应该分别验证。具体机制与实验见[缓存和调度专题](../chapters/performance/cache-scheduling.md)。
-
-### 多设备与量化
-
-TP分片层内张量，PP划分阶段，DP使用多个副本；MoE还可能使用EP。Ray可用于组织分布式worker，通信仍需要NCCL/RCCL等完成。量化制品也需要匹配设备kernel，不能只看框架是否认识模型名称。
-
-### 压测与观测
-
-启动日志说明加载、KV预算、编译和warm-up。服务运行后保存请求、错误、TTFT、TPOT/ITL、实际token与资源。框架内部指标和HTTP客户端指标一起看，才能区分计算慢与排队慢。
-
-### 版本、依赖与编译产物是同一套组合
-
-源码框架不只有Python。CUDA/HIP扩展、Triton、FlashInfer与原生库可能在安装或首次生成时构建。`pip install`成功后，还要查当前导入路径与实际设备执行；从源码目录启动可能遮蔽已安装包，torch升级也可能让旧扩展不再兼容。
-
-GB10 DFlash工程为保持cu130版torch使用了特定源码与构建流程；另一份Qwen FP8工程使用不同commit和架构绕过。它们各自有条件，不能把两篇笔记的变量合并成“最新推荐配置”。每个实验保存独立环境和构建日志，升级时回归到目标模型。
+进程监听端口、模型ready、功能通过和负载通过是四种状态。原生扩展、torch、Triton/FlashInfer/设备库需成套；源码目录可遮蔽已安装模块，升级Python包后也可能仍加载旧so。
 
 ## 3.3 vLLM 常见启动模板
 
-启动前准备固定环境、模型目录和任务预算。磁盘路径供服务读取，模型别名供客户端调用，压测tokenizer指向匹配制品。三者需要明确区分。
-
-下面是单设备服务的说明模板，资源参数需先按设备与模型预算：
-
 ```bash
-vllm serve /srv/models/example-model   --served-model-name example-model   --host 127.0.0.1 --port 8001   --tensor-parallel-size 1   --max-model-len 4096   --max-num-seqs 1   --gpu-memory-utilization 0.80
+vllm serve /srv/models/example-model \
+  --served-model-name example-model \
+  --host 127.0.0.1 --port 8001 \
+  --tensor-parallel-size 1 \
+  --gpu-memory-utilization 0.80 \
+  --max-model-len 4096 --max-num-seqs 1
 ```
 
-本机先检查`/health`与`/v1/models`，再发一条短请求。`trust-remote-code`只在模型确需并且已审阅固定仓库代码时使用，不应作为所有模型的默认选项。
+这是小预算配置模板，模型和参数需按设备验证。`gpu-memory-utilization`是引擎内存预算，不是GPU算力利用率。`trust-remote-code`仅在固定模型确需并已审阅时使用。
 
-作者GB10工程的实际配置、启动、请求和200请求结果，在[vLLM服务完整讲解](../chapters/frameworks/vllm-service.md)中按顺序展开。其历史依赖锁与模型revision有缺口，文末说明了需要补齐的材料。
+```bash
+curl --fail-with-body http://127.0.0.1:8001/health
+curl --fail-with-body http://127.0.0.1:8001/v1/models
+curl --fail-with-body http://127.0.0.1:8001/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"example-model","messages":[{"role":"user","content":"计算12乘13，只输出数字。"}],"temperature":0,"max_tokens":128}'
+```
 
-压测放在正常、流式与异常请求检查之后。完整工具选择、负载与结果保存见[压测教程](../chapters/performance/benchmarking.md)。
+先验收功能、SSE、异常和取消，再用固定tokenizer压测。启动、KV预算、热身和真实200请求数据见[GB10完整实例](../engineering/nvidia-gb10.md)。
 
 ## 3.4 llama.cpp 知识结构
 
-llama.cpp先解析GGUF与模型结构，借助GGML后端构建和执行计算。权重、KV与临时缓冲按后端分配，生成过程负责采样与文本转换。CLI、benchmark和server是围绕执行核心提供的不同入口。
+```text
+GGUF读取/架构识别 → Tensor与GGML graph → CPU/设备后端
+ → 权重/KV/循环状态/工作区 → prefill/decode → 采样/模板
+工具：llama-cli / llama-bench / llama-server / llama-quantize
+```
 
-`llama-cli`适合单次生成；`llama-bench`测引擎的pp与tg；`llama-server`处理HTTP、槽位和调度；`llama-quantize`生成量化候选；RPC可调用远端后端资源。每个工具回答的问题不同。
+| 参数 | 作用 | 观察对象 |
+| --- | --- | --- |
+| -ngl / --n-gpu-layers | 请求卸载层数 | 实际offloaded层、每backend buffer |
+| -c / --ctx-size | 上下文预算 | 总ctx、每槽ctx、KV/状态与长输入 |
+| -np / --parallel | 并行槽位预算 | 活动序列、等待请求、每槽长度 |
+| -b / --batch-size | 逻辑token batch | prefill吞吐、调度与工作区 |
+| -ub / --ubatch-size | 物理微批 | 临时buffer峰值和kernel效率 |
+| -t / --threads | CPU执行线程 | CPU负载与decode耗时 |
+| --threads-batch | prefill侧线程 | pp耗时、调度与争用 |
+| -fa | Attention实现选择 | 后端支持、KV dtype、正确性与速度 |
+| tensor-split / split-mode | 设备分配与切分 | 每设备权重、KV、通信 |
 
-### 后端与卸载
-
-CPU、CUDA、HIP、Vulkan、SYCL、Metal等后端有各自依赖。`-ngl`提出卸载层数请求，实际层放置与缓冲分配以日志为准。CPU/GPU混合执行时，速度受到双方计算与数据传递的共同影响。
-
-### 上下文与服务槽位
-
-`-c`与`-np`影响上下文和并行请求。不同版本的KV分配和上下文语义可能不同，启动后查看总预算与每槽位可用长度。服务收到的HTTP请求数也可能大于活动槽位数，多余请求需要等待。
-
-入门演练固定`-c 2048`、`-np 2`、`-t 4`和`-ngl 0`。它的两组HTTP请求展示了吞吐上升同时单请求等待增加的现象，后续性能章节会解释这些数字。
-
-### batch、ubatch和槽位不是同一件事
-
-逻辑batch规定一次处理的token预算，物理ubatch影响实际切块与临时工作区；服务槽位描述同时管理的活动序列，上下文又描述历史容量。它们可能相互影响，但不能只因为名字中有batch就都填成并发数。
-
-AMD五机首次验证用`-c512 -b32 -ub8 -fa off`，先降低工作区与上下文压力；RTX2060原服务设置parallel8，但缺完整并发结果。前者是小预算验证，后者是配置意图，均不能单凭参数推导正式服务容量。
-
-改变`-c/-np`后检查每槽位上下文，确认系统提示、历史、当前输入和预期输出都放得下。多轮应用尤其要处理旧历史增长与截断规则，不应等到生产请求超长才发现每槽位预算不足。
+ctx与parallel的语义按固定版本启动日志核对，不能只按一个通用除法估算。CPU/GPU混合还受双方计算、数据传输与RAM影响。GDN/SSM等结构有循环状态，不能只套纯attention KV模型。
 
 ## 3.5 llama.cpp 常见构建模板
 
-源码构建包含配置与构建两个阶段。`cmake -S . -B build-xxx`检查依赖并生成工程，`cmake --build`才编译产物。后端或工具链改变时分目录构建，避免旧缓存继续引用错误路径。
+同一源码、各后端独立build目录。先记录commit、编译器、Runtime与目标arch，配置后检查CMakeCache里实际启用项。
 
 ```bash
-# 选择一条与本机配套的路线执行
+# 选择当前设备的一条路线；依赖按平台实例准备
 cmake -S . -B build-cpu -DCMAKE_BUILD_TYPE=Release
-cmake --build build-cpu --target llama-server llama-bench llama-cli -j 4
+cmake -S . -B build-cuda -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build-hip -DGGML_HIP=ON -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build-vulkan -DGGML_VULKAN=ON -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build-metal -DGGML_METAL=ON -DCMAKE_BUILD_TYPE=Release
 ```
 
-CUDA、HIP、Vulkan和Metal的完整依赖与命令见[构建与服务教程](../chapters/frameworks/llama-cpp.md)。教程固定源码提交，先检查程序版本，再加载模型，最后测试API与停止方式。
+```bash
+# 示例：已经配置CUDA目录后
+cmake --build build-cuda --target llama-server llama-bench llama-cli -j 4
+./build-cuda/bin/llama-cli --version
+./build-cuda/bin/llama-cli --list-devices
+./build-cuda/bin/llama-server \
+  -m /srv/models/model.Q4_K_M.gguf -ngl 99 -c 4096 -np 1 \
+  --host 127.0.0.1 --port 8080
+```
 
-Windows读者可以先使用[固定官方CPU二进制演练](../practice/first-service/README.md)。其中下载、SHA256、服务参数、功能输入和实际结果都已公开，适合先完成一次链路，再学习源码构建。
+SYCL、MUSA、CANN按对应提交和厂商工具链单独准备，未知CMake变量可能被忽略，不能据此认定后端已启用。平台完整步骤见[实例矩阵](../engineering/README.md)。
 
 ## 3.6 vLLM vs llama.cpp 选型表
 
-| 需求 | 优先验证的候选 | 判断依据 |
+| 约束 | 优先候选 | 决策证据 |
 | --- | --- | --- |
-| 多请求GPU服务 | vLLM等 | 模型/kernel、活动序列、延迟与交付 |
-| GGUF、本地、CPU/GPU混合 | llama.cpp | 架构、后端、卸载与资源 |
-| Intel端侧 | OpenVINO及支持的SYCL/Vulkan等 | IR、GPU/NPU、任务与内存 |
-| Apple本地 | MLX或Metal路线 | 制品、文本/视觉与统一内存 |
-| 多卡/多机容量扩展 | 支持该模型的分布式路线 | 切分、互连、通信与恢复 |
-| 特定NVIDIA优化 | TensorRT-LLM等 | 支持范围、构建与运维成本 |
+| GGUF、低显存、混合卸载 | llama.cpp | 支持架构、RAM/VRAM、卸载与质量 |
+| 多请求服务、模型并行 | vLLM等服务引擎 | kernel、调度、目标SLO下有效吞吐 |
+| Intel端侧 | IR/GenAI、SYCL/Vulkan | 图/shape、设备编译、完整输出 |
+| Apple统一内存 | Metal或MLX路线 | 制品、文本/视觉、缓存与并发 |
+| 特定NVIDIA深度优化 | TensorRT-LLM等 | 模型支持、构建成本、实际性能 |
+| 快速本地管理 | Ollama/LM Studio | 后端、模板、API与维护成本 |
 
-先筛掉无法完成任务的组合，再在同样输入、质量和计时边界下比较。最终选型记录应包含选择理由、基线、资源和功能范围。下一章分析这些服务在目标负载下的内存与性能。
+先通过硬件、制品、功能三个筛选，再比较同任务质量、延迟、资源与交付成本。完整FlowUs框架/服务文章写入各设备实例，不用选型表替代部署步骤。
