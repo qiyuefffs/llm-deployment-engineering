@@ -1,43 +1,63 @@
-# 端侧大模型部署适配与推理优化：知识体系与实战
+# 端侧大模型部署适配与推理优化
 
-围绕一条工程主线学习：明确需求 → 确认兼容 → 跑通服务 → 测量性能 → 定位优化 → 验收交付。
+从实际部署记录出发，按 **准备环境 → 准备模型 → 跑通服务 → 测试基线 → 优化排障 → 交付维护** 组织知识。面向需要把模型部署到电脑、边缘工作站和 GPU 服务器上的工程人员。
 
-面向大模型部署、推理优化和多硬件适配工程师。知识体系从端侧约束与请求链路开始，完整展开硬件兼容、模型量化、内存预算、llama.cpp 部署、终端迁移、调度、压测、性能分析、排障、并行与工程交付。
-
-| 内容 | 从哪里开始 | 读完或跑完能得到什么 |
+| 内容 | 入口 | 包含什么 |
 | --- | --- | --- |
-| 工程知识体系：主线手册 + 13 个专题 | [先读主线手册](docs/01-deployment-foundations/00-engineering-handbook.md) · [完整目录](docs/01-deployment-foundations/README.md) | 用简洁语言理解模型适配、推理、压测、排障与交付 |
-| 实战 Case | [Case 目录](cases/README.md) | 逐步教程、脚本、样例输入、核验截图和实测汇总 |
-| 项目记录 | [部署复盘模板](templates/deployment-review.md) | 一份能说明环境、实验、证据和限制的交付记录 |
+| 工程基础知识体系 | [13 章目录](docs/01-deployment-foundations/README.md) · [阅读指南](docs/01-deployment-foundations/00-engineering-handbook.md) | 概念解释、操作命令、实际记录、结果解读、检查方法 |
+| 独立实战 Case | [Case 目录](cases/README.md) | A10 上的 llama.cpp 部署与 Flash Attention 对照 |
+| 实验和交付记录 | [适配模板](docs/01-deployment-foundations/templates/adaptation-record.md) · [实验模板](docs/01-deployment-foundations/templates/experiment-record.md) · [项目复盘](templates/deployment-review.md) | 环境、参数、输入、结果、限制与恢复步骤 |
 
-![大模型部署适配知识体系框架](docs/01-deployment-foundations/assets/edge-llm-deployment-framework-original.png)
+![大模型部署工程阅读路线](docs/01-deployment-foundations/assets/deployment-workflow.png)
 
-图为作者提供的原始知识框架，具体概念、版本边界与修订见[知识体系](docs/01-deployment-foundations/README.md)。图表达学习范围，不是已验证的全平台支持矩阵。另保留早期简图的 [SVG](docs/01-deployment-foundations/assets/deployment-engineering-map.svg) 供辅助阅读。
+图注：13 章按操作顺序排列。先通过环境、模型和功能检查，再建立基线、开展对照实验，最后整理交付材料。[查看矢量图](docs/01-deployment-foundations/assets/deployment-workflow.svg)。
 
-## 仓库结构
+## 知识体系中的实际实例
 
-```text
-llm-serving-diagnosis/
-├── docs/01-deployment-foundations/   13 个专题、原始框架图与适配/实验模板
-├── cases/
-│   └── llama-cpp-flash-attention/    独立 Case：教程、脚本、数据、截图、汇总
-├── templates/                       部署项目复盘模板
-└── tools/                           知识地图的生成脚本
-```
+| 平台与记录 | 主要学习内容 |
+| --- | --- |
+| A10 24GB、llama.cpp、27B Q4 | 模型校验、固定版本构建、API、FA 对照、结果报告 |
+| DGX Spark GB10、vLLM | ARM64 与新架构编译、FP8、200 请求压力、MTP 与 DFlash 对照条件 |
+| Intel Core Ultra / Arc、OpenVINO | INT4/INT8 制品、Vulkan/SYCL 路线、NPU 编译失败 |
+| Apple Silicon、Metal/MLX/oMLX | 模型类型、文本与视觉能力、并发吞吐与单请求延迟 |
+| AMD 集显、ROCm/HIP、多机 RPC | gfx 识别、运行时内存上限、分布式容量与通信 |
+| 双 RTX 4080、vLLM Docker | 模型挂载、双卡拓扑、并发与调度配置 |
 
-Case 的运行文件全部放在自己的目录中。以后新增实验，在 `cases/` 下新建目录，分别保存环境、参数、输入和结果，避免混用不同实验的模型或指标。
+实例取自作者的 FlowUs 部署技术笔记及仓库原有材料。正文区分历史实测、命令模板、教学估算与待验证项；技术数据以脱敏转录形式提供。来源及可复查范围见[证据说明](docs/01-deployment-foundations/evidence/README.md)。
 
-## 获取与运行
+## 获取与使用
 
 ```bash
 git clone https://github.com/qiyuefffs/llm-serving-diagnosis.git
 cd llm-serving-diagnosis
 ```
 
-基础章节可以直接阅读。运行现有 Case 时，进入 `cases/llama-cpp-flash-attention/`，再按其中的 [CASE.md](cases/llama-cpp-flash-attention/CASE.md) 执行。该 Case 需要 Linux GPU Notebook；本仓库不包含模型权重、CUDA 工具链和构建缓存。
+初次学习从 [01 明确部署目标](docs/01-deployment-foundations/01-engineering-and-request.md) 开始。只想核对已有公开记录，可在仓库根目录运行：
 
-## 当前实战的证据状态
+```bash
+python docs/01-deployment-foundations/examples/verify_records.py
+```
 
-llama.cpp Case 来自 A10 24GB 上的实测，公开材料含 8 张核验截图和 12 组汇总转录。成功编译的完整日志、全新实例从头复现记录，以及完整逐请求原始证据尚未齐备，仍标为教程草稿。基础章节介绍的其他平台和优化技术是知识整理，不表示作者已逐项实测。
+这条命令仅核对输入哈希、记录数量和指标计算，不下载模型、不运行 GPU 推理。需要实际部署时，先按章节确认系统与设备前提，再运行对应命令；不同平台不能共用所有安装步骤。
 
-知识章节更新于 **2026-10-18**。本次重写参考了 FlowUs 公开知识页[《大模型适配知识框架体系》](https://flowus.cn/share/899b7f52-0462-440e-b862-ed7616314dba)以及本仓库已有实践材料；只保留部署工程相关内容，不读取或提交敏感信息。参考资料集中列在章节末尾。框架支持和参数默认值会变化，具体项目应固定版本后再验证。
+## 仓库结构
+
+```text
+llm-serving-diagnosis/
+├── docs/01-deployment-foundations/
+│   ├── 01-...md ～ 13-...md     按工程流程编排的正文
+│   ├── assets/                 阅读路线图与原始知识框架图
+│   ├── evidence/               可公开的技术测量转录与来源说明
+│   ├── examples/               离线核对与设备通信示例
+│   └── templates/              适配和实验记录模板
+├── cases/llama-cpp-flash-attention/
+│                               原有独立 Case：教程、脚本、输入、截图、汇总
+├── templates/                  项目复盘模板
+└── tools/                      图片生成脚本
+```
+
+## 版本与证据边界
+
+知识章节更新于 **2026-10-18**。本轮完成笔记整理、命令核对、文档检查和离线算术核查，没有重新运行各平台的 GPU 实验。原有 Case 的完整成功构建日志、第二个干净实例复建记录和完整公开逐请求证据仍待补充。其他平台记录也按各章说明保留材料缺口。
+
+原始知识框架图保留在[知识目录](docs/01-deployment-foundations/README.md)中。格式分类、后端支持和性能口径按当前正文解释；版本变化后应在目标设备重新验证。

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="940" viewBox="0 0 1440 940" role="img" aria-labelledby="title desc">
+<title id="title">大模型部署适配工程阅读路线</title>
+<desc id="desc">从目标、环境、模型和内存开始，经过服务、迁移、测量、优化和排障，最终完成交付。</desc>
+<rect width="1440" height="940" fill="#f8fafc"/>
+<g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif">
+<text x="40" y="77" font-size="42" fill="#0f172a">大模型部署适配：从设备到可交付服务</text>
+<text x="42" y="128" font-size="24" fill="#475569">按操作顺序学习，每一步都留下文件、日志或可复查的结果。</text>
+<rect x="40" y="175" width="310" height="65" rx="14" fill="#2563eb" stroke="#2563eb"/>
+<text x="62" y="217" font-size="28" fill="#ffffff">准备</text>
+<rect x="40" y="263" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="58" y="297" font-size="22" fill="#2563eb">01</text>
+<text x="98" y="297" font-size="24" fill="#0f172a">明确部署目标</text>
+<text x="59" y="341" font-size="20" fill="#475569">设备、任务、验收</text>
+<rect x="40" y="392" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="58" y="426" font-size="22" fill="#2563eb">02</text>
+<text x="98" y="426" font-size="24" fill="#0f172a">检查设备与环境</text>
+<text x="59" y="470" font-size="20" fill="#475569">驱动、工具链、后端</text>
+<rect x="40" y="521" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="58" y="555" font-size="22" fill="#2563eb">03</text>
+<text x="98" y="555" font-size="24" fill="#0f172a">准备模型制品</text>
+<text x="59" y="599" font-size="20" fill="#475569">格式、量化、哈希</text>
+<rect x="40" y="650" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="58" y="684" font-size="22" fill="#2563eb">04</text>
+<text x="98" y="684" font-size="24" fill="#0f172a">计算内存预算</text>
+<text x="59" y="728" font-size="20" fill="#475569">权重、KV、并发</text>
+<text x="358" y="214" font-size="24" fill="#64748b">→</text>
+<rect x="390" y="175" width="310" height="65" rx="14" fill="#0f766e" stroke="#0f766e"/>
+<text x="412" y="217" font-size="28" fill="#ffffff">跑通</text>
+<rect x="390" y="263" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="408" y="297" font-size="22" fill="#0f766e">05</text>
+<text x="448" y="297" font-size="24" fill="#0f172a">建立单机服务</text>
+<text x="409" y="341" font-size="20" fill="#475569">构建、加载、API</text>
+<rect x="390" y="392" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="408" y="426" font-size="22" fill="#0f766e">06</text>
+<text x="448" y="426" font-size="24" fill="#0f172a">迁移目标设备</text>
+<text x="409" y="470" font-size="20" fill="#475569">AMD、Intel、Mac</text>
+<rect x="390" y="521" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="408" y="555" font-size="22" fill="#0f766e">07</text>
+<text x="448" y="555" font-size="24" fill="#0f172a">配置服务调度</text>
+<text x="409" y="599" font-size="20" fill="#475569">批处理、缓存、长度</text>
+<text x="708" y="214" font-size="24" fill="#64748b">→</text>
+<rect x="740" y="175" width="310" height="65" rx="14" fill="#7c3aed" stroke="#7c3aed"/>
+<text x="762" y="217" font-size="28" fill="#ffffff">验证与优化</text>
+<rect x="740" y="263" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="758" y="297" font-size="22" fill="#7c3aed">08</text>
+<text x="798" y="297" font-size="24" fill="#0f172a">保存性能基线</text>
+<text x="759" y="341" font-size="20" fill="#475569">输入、延迟、质量</text>
+<rect x="740" y="392" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="758" y="426" font-size="22" fill="#7c3aed">09</text>
+<text x="798" y="426" font-size="24" fill="#0f172a">开展对照实验</text>
+<text x="759" y="470" font-size="20" fill="#475569">假设、单变量、代价</text>
+<rect x="740" y="521" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="758" y="555" font-size="22" fill="#7c3aed">10</text>
+<text x="798" y="555" font-size="24" fill="#0f172a">按阶段排障</text>
+<text x="759" y="599" font-size="20" fill="#475569">日志、最小复现</text>
+<rect x="740" y="650" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="758" y="684" font-size="22" fill="#7c3aed">11</text>
+<text x="798" y="684" font-size="24" fill="#0f172a">按需求扩展设备</text>
+<text x="759" y="728" font-size="20" fill="#475569">通信、切分、容量</text>
+<text x="1058" y="214" font-size="24" fill="#64748b">→</text>
+<rect x="1090" y="175" width="310" height="65" rx="14" fill="#b45309" stroke="#b45309"/>
+<text x="1112" y="217" font-size="28" fill="#ffffff">交付</text>
+<rect x="1090" y="263" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="1108" y="297" font-size="22" fill="#b45309">12</text>
+<text x="1148" y="297" font-size="24" fill="#0f172a">交付可用服务</text>
+<text x="1109" y="341" font-size="20" fill="#475569">启停、监控、恢复</text>
+<rect x="1090" y="392" width="310" height="110" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+<text x="1108" y="426" font-size="22" fill="#b45309">13</text>
+<text x="1148" y="426" font-size="24" fill="#0f172a">查词与查证据</text>
+<text x="1109" y="470" font-size="20" fill="#475569">来源、口径、限制</text>
+<rect x="40" y="827" width="1360" height="74" rx="14" fill="#e2e8f0" stroke="#e2e8f0"/>
+<text x="63" y="871" font-size="24" fill="#0f172a">记录原则：固定版本与输入  ·  实测、估算、待验证分清  ·  原始证据可追溯</text>
+</g></svg>

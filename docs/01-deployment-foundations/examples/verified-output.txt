@@ -1,0 +1,12 @@
+Offline record checks (no GPU inference)
+Public workload: 8 prompts; SHA256 verified
+A10 transcribed summary: 12 groups
+A10 long/c2, 20 requests/group: TTFT P95 reduction = 12.03%
+A10 long/c2, 20 requests/group: output throughput gain = 4.95%
+DGX FP8: 25600/297.46 = 86.06 output token/s
+Intel OpenVINO: INT4/INT8 throughput ratio = 2.09x
+Gemma MTP c1: transcribed output throughput gain = 44.76%
+Gemma MTP c2: transcribed output throughput gain = 32.68%
+Gemma MTP c4: transcribed output throughput gain = 53.19%
+DFlash configurations: observed throughput ratio = 2.03x (multiple parameters differ)
+PASS: arithmetic and stated counts are consistent; source authenticity/quality require original runs.

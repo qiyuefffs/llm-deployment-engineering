@@ -1,0 +1,240 @@
+{
+  "provenance": {
+    "type": "Author FlowUs technical-note transcription, not a new inference run",
+    "transcribed_on": "2026-10-18",
+    "redaction": "Private URLs, credentials, personal paths, machine identities and internal addresses omitted",
+    "limits": "Original per-request artifacts are not included; numbers are historical observations, not guaranteed reproduction targets"
+  },
+  "dgx_qwen_fp8": {
+    "source_title": "DGX Spark适配编译vllm部署Qwen3.6-35B-A3B模型（bf16/fp8精度）",
+    "environment": {
+      "device": "DGX Spark GB10",
+      "memory_gb": 128,
+      "os": "Ubuntu 24.04",
+      "vllm": "0.19.1rc1.dev337+g17d87168d.cu130",
+      "cuda": "13.0"
+    },
+    "model": "Qwen3.6-35B-A3B-FP8",
+    "server_max_num_seqs": 4,
+    "requested_input_tokens": 2048,
+    "max_output_tokens": 128,
+    "request_rate": "inf",
+    "requests": 200,
+    "successes": 200,
+    "failures": 0,
+    "duration_s": 297.46,
+    "input_tokens": 411678,
+    "generated_tokens": 25600,
+    "output_token_per_s": 86.06,
+    "mean_ttft_ms": 148430.7,
+    "p99_ttft_ms": 293115.24,
+    "mean_tpot_ms": 35.79,
+    "mean_itl_ms": 35.51,
+    "limits": "Burst workload; FP8 text results only; model revision and original result JSON not available in this transcription"
+  },
+  "intel_openvino": {
+    "source_title": "Qwen3.5-9B Intel openvino 平台推理对比报告",
+    "date": "2026-07-15",
+    "device": "Core Ultra 7 256V / Intel Arc Lunar Lake / 16GB unified memory",
+    "runtime": "OpenVINO 2026.2.1 / GenAI 2026.2.1.0",
+    "input_tokens": 19,
+    "generated_tokens": 128,
+    "int4": {
+      "model": "OpenVINO/Qwen3.5-9B-int4-ov",
+      "revision": "3f31fc1609edb0cbc8b131bc4c291f1b15cb0676",
+      "files": 24,
+      "bytes": 6129582094,
+      "ttft_ms": 184.02,
+      "tpot_ms": 47.26,
+      "throughput_token_per_s": 21.1599
+    },
+    "int8": {
+      "model": "OpenVINO/Qwen3.5-9B-int8-ov",
+      "revision": "3054198f70b6d50b97fa17ae80314e590c57def0",
+      "files": 24,
+      "bytes": 9457724353,
+      "ttft_ms": 169.73,
+      "tpot_ms": 98.96,
+      "throughput_token_per_s": 10.1047
+    },
+    "vulkan": {
+      "mesa": "26.1.4",
+      "gpu_layers": 23,
+      "cpu_layers": 10,
+      "benchmark": "pp512/tg128, 3 rounds",
+      "generation_token_per_s": 11.54,
+      "stddev_token_per_s": 0.13,
+      "http_generation_token_per_s": 11.38
+    },
+    "sycl": {
+      "compiler": "oneAPI 2026.1.0",
+      "gpu_layers": 23,
+      "cpu_layers": 10,
+      "benchmark": "pp512/tg128, 3 rounds",
+      "generation_token_per_s": 10.22,
+      "stddev_token_per_s": 0.19
+    },
+    "npu_int4": "Compiler failure before generation",
+    "npu_int8": "Compilation terminated after 420s, exit 124; no inference throughput",
+    "limits": "INT4/INT8 outputs reached token limit during reasoning; no completed-answer quality result. Different engines use different timing boundaries; llama.cpp commit unknown in original snapshot."
+  },
+  "omlx_concurrency": {
+    "source_title": "oMLX 推理框架性能测试报告与压测流程",
+    "model": "DeepSeek-V4-Flash-4bit",
+    "tool": "EvalScope 1.7.0",
+    "requested_input_tokens": 128,
+    "max_output_tokens": 256,
+    "rows": [
+      {
+        "concurrency": 1,
+        "requests": 20,
+        "mean_latency_s": 7.582,
+        "p99_latency_s": 8.58,
+        "ttft_ms": 25.0,
+        "tpot_ms": 34.2,
+        "output_token_per_s": 29.38
+      },
+      {
+        "concurrency": 2,
+        "requests": 10,
+        "mean_latency_s": 10.257,
+        "p99_latency_s": 12.8,
+        "ttft_ms": 3.2,
+        "tpot_ms": 47.5,
+        "output_token_per_s": 41.11
+      },
+      {
+        "concurrency": 4,
+        "requests": 10,
+        "mean_latency_s": 13.459,
+        "p99_latency_s": 19.34,
+        "ttft_ms": 3.7,
+        "tpot_ms": 69.8,
+        "output_token_per_s": 55.15
+      }
+    ],
+    "limits": "Small samples with different request counts; cache state and complete environment not recoverable from this page alone; do not infer stable p99 or a cache speedup."
+  },
+  "gemma_mtp": {
+    "source_titles": [
+      "DGX Spark GB10部署gemma-4系列模型及关闭MTP推理加速",
+      "DGX Spark GB10部署gemma-4系列模型及MTP推理加速"
+    ],
+    "model": "gemma-4-26B-A4B-it",
+    "image_tag": "vllm/vllm-openai:gemma4-0505-cu130",
+    "requested_input_tokens": 512,
+    "max_output_tokens": 256,
+    "draft_tokens_setting": 3,
+    "base": [
+      {
+        "concurrency": 1,
+        "requests": 20,
+        "duration_s": 245.92,
+        "output_token_per_s": 20.82,
+        "mean_ttft_ms": 488.14,
+        "mean_tpot_ms": 46.3,
+        "mean_itl_ms": 46.12
+      },
+      {
+        "concurrency": 2,
+        "requests": 40,
+        "duration_s": 277.7,
+        "output_token_per_s": 36.87,
+        "mean_ttft_ms": 352.24,
+        "mean_tpot_ms": 53.06,
+        "mean_itl_ms": 52.85
+      },
+      {
+        "concurrency": 4,
+        "requests": 80,
+        "duration_s": 415.19,
+        "output_token_per_s": 49.33,
+        "mean_ttft_ms": 562.37,
+        "mean_tpot_ms": 79.19,
+        "mean_itl_ms": 78.88
+      }
+    ],
+    "mtp": [
+      {
+        "concurrency": 1,
+        "requests": 20,
+        "duration_s": 169.88,
+        "output_token_per_s": 30.14,
+        "mean_ttft_ms": 462.9,
+        "mean_tpot_ms": 31.49,
+        "mean_itl_ms": 78.27,
+        "acceptance_percent": 38.07
+      },
+      {
+        "concurrency": 2,
+        "requests": 40,
+        "duration_s": 209.31,
+        "output_token_per_s": 48.92,
+        "mean_ttft_ms": 608.22,
+        "mean_tpot_ms": 38.38,
+        "mean_itl_ms": 99.52,
+        "acceptance_percent": 40.77
+      },
+      {
+        "concurrency": 4,
+        "requests": 80,
+        "duration_s": 271.0,
+        "output_token_per_s": 75.57,
+        "mean_ttft_ms": 596.33,
+        "mean_tpot_ms": 50.41,
+        "mean_itl_ms": 131.48,
+        "acceptance_percent": 41.16
+      }
+    ],
+    "limits": "Historical summaries only; image digest and original per-request data unavailable. Reported peak concurrency/peak throughput fields have unexplained inconsistencies; excluded from comparisons. Quality equivalence not tested here."
+  },
+  "amd_rpc": {
+    "source_title": "AMD Strix Halo 395 五机 HIP RPC 串联部署 Kimi-K2.5-Q2 实战文档",
+    "hardware": "5 x Ryzen AI Max+ 395 / Radeon 8060S",
+    "runtime": "ROCm 7.2.1 / HIP 7.2.53211-e1a6bc5663",
+    "kernel": "6.17.0-35-generic",
+    "llama_cpp": "b9557-0f7fada56",
+    "incorrect_device_total_mib": 63215,
+    "target_device_total_mib": 120000,
+    "failed_allocation_bytes": 87013675008,
+    "gtt_requested_bytes": 125829120000,
+    "ttm_actual_bytes": 66286690304,
+    "kimi_small_context": {
+      "prompt_token_per_s": 19.3,
+      "generation_token_per_s": 8.2
+    },
+    "qwen_smoke": {
+      "prompt_token_per_s": 40.3,
+      "generation_token_per_s": 21.3
+    },
+    "limits": "Small-context engine observations; no single-machine baseline or long-running API SLO record. Suggested 32768-token service command is not a measured large-context result."
+  },
+  "dflash_observation": {
+    "source_title": "DGX Spark GB10编译DFlash推理加速模块集成到vllm中",
+    "model": "Qwen3.6-35B-A3B",
+    "dataset": "spec_bench",
+    "requests": 50,
+    "client_concurrency": 1,
+    "input_tokens": 13655,
+    "generated_tokens": 12800,
+    "base": {
+      "duration_s": 594.69,
+      "output_token_per_s": 21.52,
+      "max_model_len": 32768,
+      "max_num_seqs": 1,
+      "gpu_memory_utilization": 0.7,
+      "enforce_eager": true
+    },
+    "dflash": {
+      "duration_s": 292.62,
+      "output_token_per_s": 43.74,
+      "max_model_len": 8192,
+      "max_num_seqs": 8,
+      "gpu_memory_utilization": 0.85,
+      "enforce_eager": "not explicitly set",
+      "num_speculative_tokens": 5,
+      "acceptance_percent": 48.15
+    },
+    "limits": "Multiple server parameters differ. Observed 2.03x ratio is not isolated causal DFlash speedup. Original dataset revision, per-request results and quality comparison not provided."
+  }
+}
