@@ -76,3 +76,21 @@
 | Ray/vLLM多节点 | [vLLM分布式服务文档](https://docs.vllm.ai/en/latest/serving/distributed_serving/) |
 
 以上latest/main/master链接用于继续查阅；正文实测仍按标明的历史日期与版本阅读。复现实验应把所用Notebook/代码也固定到具体commit，不能用今天的默认分支覆盖原来的支持条件。
+
+## B.6 硬件与计算软件栈基础
+
+这些资料用于理解组件职责；具体安装仍按目标硬件、OS和引擎的配套版本执行。
+
+| 平台/主题 | 官方资料 | 核对内容 |
+| --- | --- | --- |
+| CUDA平台 | [CUDA Platform](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html) | 驱动、Driver API、Runtime与Toolkit的关系 |
+| NVIDIA矩阵库 | [cuBLAS/cuBLASLt](https://docs.nvidia.com/cuda/cublas/index.html) | 矩阵计算、布局、数据类型与算法 |
+| NVIDIA通信 | [NCCL](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/overview.html) | 集合通信与互联 |
+| AMD平台 | [What is ROCm](https://rocm.docs.amd.com/en/latest/what-is-rocm.html) | 编译器、运行时、计算库与工具 |
+| AMD设备支持 | [ROCm on Radeon/Ryzen](https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/) | 精确型号、OS和软件覆盖 |
+| AMD通信 | [RCCL](https://rocm.docs.amd.com/projects/rccl/en/latest/) | 多GPU/多节点集合通信 |
+| Apple GPU接口 | [Metal](https://developer.apple.com/metal/) | GPU命令、shader与计算执行 |
+| Apple机器学习框架 | [MLX](https://ml-explore.github.io/mlx/build/html/index.html) / [统一内存](https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html) | 数组、CPU/GPU、共享内存、惰性求值 |
+| Apple文本模型 | [MLX-LM](https://github.com/ml-explore/mlx-lm) | 在MLX之上提供模型实现与生成工具 |
+| Intel开发栈 | [oneAPI](https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html) / [OpenVINO](https://docs.openvino.ai/) | 开发工具、计算库、推理Runtime与生成式管线 |
+| 昇腾软件栈 | [CANN](https://www.hiascend.com/en/software/cann) | 运行时、算子、开发工具和上层配套 |

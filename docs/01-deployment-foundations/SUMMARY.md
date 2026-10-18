@@ -1,8 +1,8 @@
-# 大模型部署适配知识体系目录
+# 大模型部署知识体系目录
 
-六部分、五层能力与原节编号保持对应。主框架负责技术关系、组件与参数；每个平台下的工程实例保留完整部署适配、加速过程及FlowUs技术原文。
+六部分、五层能力与原节编号保持对应。从硬件、运行时与模型基础开始，逐步进入引擎执行、性能优化和服务交付；平台操作和完整实测记录用于补充具体工程问题。
 
-## 总览与工程入口
+## 总览与阅读入口
 
 - [知识体系首页与框架图](README.md)
 - [工程资料约定与执行基线](00-preface.md)
@@ -11,25 +11,25 @@
 
 ## 第一部分：整体知识体系地图
 
-- [七个工程模块与五层能力](01-knowledge-map.md)
+- [模型、硬件与引擎的关系及工程模块](01-knowledge-map.md)
 
 ## 第二部分：五层能力详细框架
 
 - [五层框架索引](02-capability-layers/README.md)
-- [第1层：硬件后端适配层（1.1—1.4）](02-capability-layers/01-hardware-backends.md)
-  - [NVIDIA：驱动、CUDA、构建与架构](chapters/hardware/nvidia.md)
+- [第1层：硬件、运行时与计算后端（1.1—1.4）](02-capability-layers/01-hardware-backends.md)
+  - [NVIDIA：GPU与CUDA、计算库、部署](chapters/hardware/nvidia.md)
     - [RTX2060：混合卸载与Qwen3量化推理](engineering/nvidia-rtx2060.md)
     - [RTX4080/A6000：双卡部署与调参](engineering/nvidia-dual-gpu.md)
     - [GB10：ARM64、FP8、AWQ、MTP与DFlash](engineering/nvidia-gb10.md)
     - [GB10多模态：VL、Omni与Docling](engineering/nvidia-gb10-multimodal.md)
-  - [AMD：ROCm、HIP、Vulkan与共享内存](chapters/hardware/amd.md)
+  - [AMD：GPU与ROCm、HIP、计算库、部署](chapters/hardware/amd.md)
     - [780M：Windows HIP与Ollama完整适配](engineering/amd-780m.md)
     - [8060S：Vulkan卸载与Q4/BF16优化](engineering/amd-8060s.md)
     - [395五机：HIP RPC与GTT修复](engineering/amd-395-rpc.md)
     - [W7900：单机多卡、Ray与TP/PP](engineering/amd-w7900.md)
-  - [Intel：GPU、NPU、SYCL与IR](chapters/hardware/intel.md)
+  - [Intel：硬件、oneAPI、OpenVINO与部署](chapters/hardware/intel.md)
     - [Arc/NPU：三后端与ASR/TTS完整实测](engineering/intel-arc-npu.md)
-  - [Apple：Metal、MLX与功能边界](chapters/hardware/apple.md)
+  - [Mac：统一内存、Metal、MLX与部署](chapters/hardware/apple.md)
     - [M3 Ultra：Metal构建与GGUF排错](engineering/apple-metal.md)
     - [M3 Ultra：MLX、APC与oMLX并发](engineering/apple-mlx.md)
   - [昇腾：芯片、CANN、插件与测试](chapters/hardware/ascend.md)

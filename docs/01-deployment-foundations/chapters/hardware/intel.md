@@ -1,10 +1,49 @@
-# 1.2.3 Intel：GPU、NPU与执行制品
+# 1.2.3 Intel硬件、oneAPI与OpenVINO
 
-**完整工程记录：** [Arc GPU三后端、NPU、ASR/TTS完整部署与测试原文](../../engineering/intel-arc-npu.md)
+[总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
 
-## 本节概览
+## 硬件基础
 
-一台Intel设备可能同时提供CPU、GPU和NPU。它们使用的执行插件、支持算子和制品条件不同。本节依据16GB Lunar Lake工程说明怎样选择和验证路线，完整IR运行在框架章展开。
+Intel平台可能提供CPU、集成GPU、Arc独立GPU和NPU。CPU负责通用工作；GPU适合并行模型计算；NPU面向支持的神经网络工作负载。Core Ultra是处理器产品系列名称，不能单凭名称确定GPU/NPU代际或大模型支持范围。
+
+| 设备 | 内存与计算特点 | 部署重点 |
+| --- | --- | --- |
+| CPU | 使用系统RAM，通过支持的向量/矩阵指令计算 | 指令集、线程、内存通道、NUMA与算子库 |
+| 集成GPU | 使用共享系统内存 | 带宽、设备预算、CPU/GPU争用与驱动 |
+| Arc独立GPU | 通常有独立显存 | 型号、显存、驱动、支持的kernel与精度 |
+| NPU | 通常依赖专用编译与执行插件 | 模型图、shape、算子、精度和编译时间 |
+
+GPU设备可用不表示NPU插件可用，NPU能执行某个语音模型也不表示能直接执行任意LLM。
+
+## oneAPI、SYCL和OpenVINO是什么
+
+| 组件 | 职责 | 与大模型部署的关系 |
+| --- | --- | --- |
+| oneAPI | 跨架构开发的软件规范与工具/库生态 | 提供编译器、计算库、分析工具等，不是单个运行时 |
+| SYCL | 基于C++的异构并行编程标准 | llama.cpp SYCL等后端的开发与执行路线 |
+| Level Zero | Intel GPU的底层设备访问与执行接口 | 常用于相应SYCL运行时的GPU路径 |
+| oneDNN / oneMKL | 深度学习算子和数学计算库 | 按设备与框架版本提供相应计算实现 |
+| OpenVINO Runtime | 加载模型、编译图并通过设备插件执行 | 按CPU/GPU/NPU目标验证模型与算子 |
+| OpenVINO GenAI | 基于Runtime提供生成式模型管线 | 分词、生成、KV与对应多模态能力 |
+
+```text
+GGUF → llama.cpp SYCL后端 → SYCL运行时/Level Zero → Intel GPU
+IR及配套文件 → OpenVINO GenAI → Runtime设备插件 → CPU/GPU/NPU
+```
+
+Vulkan是另一条GPU计算路线；PyTorch XPU也有自身的包、算子与后端要求。这些路线的制品、内存管理和计时边界不同，不能只根据设备品牌互换。
+
+## 选型和优化先看什么
+
+本地文本先选模型实现完整、输出正确的后端，再比较加载、首token、decode和资源。需要NPU时，先检查模型图、shape和编译约束；不要仅凭TOPS或低功耗宣传决定整条链路。
+
+集成GPU和NPU都可能与CPU共享内存，图像、音频预处理与多个管线也会占用系统资源。混合执行应记录每个模块实际用的设备，端到端结果包含预处理、执行和后处理。
+
+基础资料：[oneAPI](https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html) · [OpenVINO](https://docs.openvino.ai/)。
+
+## 部署操作与工程参考
+
+下面以设备枚举、三种GPU后端和NPU管线解释检查方法。完整历史记录见[Arc GPU、NPU与ASR/TTS](../../engineering/intel-arc-npu.md)。
 
 ## 一、三条常见路线
 

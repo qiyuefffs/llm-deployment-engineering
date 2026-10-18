@@ -1,14 +1,15 @@
-# 大模型部署适配与推理优化
+# 大模型部署知识体系
 
 ![大模型部署适配知识体系框架](docs/01-deployment-foundations/assets/edge-llm-deployment-framework-original.png)
 
-这是面向部署工程师的模型适配、推理优化和多硬件交付资料库。当前版本把知识体系、硬件工程记录、可复现实例和独立 Case 分开组织，GitHub 中的 `README.md` 是项目总入口。
+面向部署工程师，介绍从硬件与运行时、模型与量化、推理引擎，到性能优化和服务交付的通用知识。先理解每层软件负责什么、一次推理怎样执行，再进入平台配置与实际工程实例。
 
 ## 从这里开始
 
 | 内容 | 入口 | 说明 |
 | --- | --- | --- |
-| **最新知识体系** | [大模型部署适配知识体系](docs/01-deployment-foundations/README.md) | 当前版本的主页面，含框架图、能力层和硬件入口 |
+| **最新知识体系** | [大模型部署知识体系](docs/01-deployment-foundations/README.md) | 硬件与软件栈入门、五层知识框架和技术专题 |
+| 硬件与运行时入门 | [CPU/GPU/NPU与软件调用关系](docs/01-deployment-foundations/02-capability-layers/01-hardware-backends.md) | 从驱动、运行时、计算库理解部署环境 |
 | 完整目录 | [五层能力目录](docs/01-deployment-foundations/SUMMARY.md) | 按硬件、模型、框架、性能和交付查看全部章节 |
 | 硬件工程实例 | [GPU / NPU / Apple 实例矩阵](docs/01-deployment-foundations/engineering/README.md) | 每个平台按适配、基线、优化、结果和限制组织 |
 | 独立 Case | [Case 目录](cases/README.md) | Case 的教程、脚本、输入、截图和结果单独保存 |
@@ -16,8 +17,8 @@
 
 ## 内容范围
 
-- 五层工程主线：硬件后端、模型格式与量化、推理框架、显存与性能、工程交付。
-- 多平台记录：NVIDIA、AMD、Intel、Apple、昇腾、MUSA 和 CPU。
+- 五层工程主线：硬件与运行时、模型格式与量化、推理框架、显存与性能、工程交付。
+- 平台基础：[NVIDIA与CUDA](docs/01-deployment-foundations/chapters/hardware/nvidia.md)、[AMD与ROCm](docs/01-deployment-foundations/chapters/hardware/amd.md)、[Mac/Metal/MLX](docs/01-deployment-foundations/chapters/hardware/apple.md)、[Intel与OpenVINO](docs/01-deployment-foundations/chapters/hardware/intel.md)、[昇腾与CANN](docs/01-deployment-foundations/chapters/hardware/ascend.md)。
 - 每个硬件入口都记录环境、模型制品、启动参数、基线、优化实验、性能数据、失败原因和验收边界。
 - FlowUs 中整理出的公开技术记录保留在对应实例中；私人路径、账号、凭据和内部地址已移除。
 

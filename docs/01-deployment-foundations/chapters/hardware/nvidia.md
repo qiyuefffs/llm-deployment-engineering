@@ -1,10 +1,57 @@
-# 1.2.1 NVIDIA：从环境检查到CUDA执行
+# 1.2.1 NVIDIA GPU与CUDA软件栈
 
-**完整工程记录：** [RTX2060混合卸载](../../engineering/nvidia-rtx2060.md) · [RTX4080/A6000双卡](../../engineering/nvidia-dual-gpu.md) · [GB10量化与推测解码](../../engineering/nvidia-gb10.md) · [GB10多模态](../../engineering/nvidia-gb10-multimodal.md)
+[总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
 
-## 本节概览
+## 硬件基础
 
-NVIDIA部署需要同时确认CPU架构、驱动、CUDA工具链、框架和GPU计算能力。本节依据作者RTX4090源码构建与GB10 vLLM工程，先讲检查方法，再用真实错误说明排查顺序。
+NVIDIA GPU通过大量并行计算单元执行矩阵和向量运算。CUDA是调用这些设备进行通用计算的软件平台，既用于训练，也用于推理。
+
+| 硬件类别 | 常见部署特点 | 选型重点 |
+| --- | --- | --- |
+| GeForce RTX | 常用于个人工作站与本地推理，多为独立显存 | 显存、散热、实际精度支持、PCIe与供电 |
+| RTX专业卡 | 面向专业工作站，具体型号提供不同容量与专业功能 | 容量、驱动、可靠性要求、实际互联 |
+| 数据中心GPU | 面向服务器，部分型号采用HBM和高速互联 | 带宽、支持的低精度、多卡拓扑、服务器配套 |
+| CPU/GPU集成平台 | CPU架构、内存组织和软件包可能与普通PC不同 | ARM/x86、共享内存、编译目标和平台支持 |
+
+CUDA Core执行通用计算；Tensor Core加速支持的矩阵运算，支持哪些精度随架构变化。显卡“有Tensor Core”不代表任意INT4/FP8模型都能高效执行，还需要相应kernel、布局与形状。
+
+`compute capability`是GPU的计算能力版本，`sm_XX`是设备代码目标，与显存容量和CUDA Toolkit版本不是同一个概念。相同容量的两代显卡，支持的指令与kernel也可能不同。
+
+## CUDA各组件分别做什么
+
+```text
+模型/推理引擎 → PyTorch或引擎自带kernel
+             → CUDA Runtime/Driver API ＋ 计算库
+             → NVIDIA驱动 → GPU
+```
+
+| 组件 | 职责 | 部署时的含义 |
+| --- | --- | --- |
+| NVIDIA Driver | 管理设备并提供底层设备访问，包含CUDA Driver API支持 | 宿主必须有与硬件及程序兼容的驱动 |
+| CUDA Runtime | 提供内存分配、执行流、kernel启动与同步等API | 常见库名`libcudart`；可能由软件包或运行环境提供 |
+| CUDA Toolkit | 开发套件，包含`nvcc`、头文件、运行时、部分库和开发工具 | 编译CUDA程序或扩展时通常需要；运行现成程序未必需要完整套件 |
+| cuBLAS / cuBLASLt | 向量、矩阵乘法；Lt提供更灵活的布局与算法选择 | 模型线性层可能使用，也可能使用引擎的专用kernel |
+| cuDNN | 神经网络计算库，包含受支持的算子和图执行能力 | 按引擎依赖使用，不是所有LLM部署都必须单独安装 |
+| NCCL | GPU间集合通信，如AllReduce、AllGather | 常用于多卡多机；通信效率还取决于拓扑和网络 |
+| attention/量化kernel | 实现注意力、反量化、融合计算等 | FlashAttention等属于算子实现，不是显卡驱动 |
+
+CUDA Runtime、cuBLAS、cuDNN、NCCL有各自的职责与版本；它们不一定随同一个安装包全部提供。PyTorch或容器携带的用户态依赖，也不能替代宿主驱动。
+
+## 怎样选择与理解性能
+
+先检查目标模型和引擎支持，再估算权重、KV和工作区。模型能全部常驻显存时，通常可以避免CPU卸载带来的额外数据路径；放不下时，再比较量化、小模型、卸载或多卡。
+
+长输入prefill、大批量矩阵运算可能更依赖计算吞吐；低批量decode常受权重与KV读取影响。张量计算能力、显存带宽、启动开销和通信都可能成为瓶颈，不能只按显卡峰值TFLOPS选型。
+
+有三种版本信息必须分开：`nvidia-smi`显示驱动及其CUDA兼容能力；`nvcc --version`显示当前编译工具链；`torch.version.cuda`显示该PyTorch构建对应的CUDA信息。它们不必完全相同，但必须满足兼容条件。
+
+基础资料：[CUDA平台](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html) · [兼容性](https://docs.nvidia.com/deploy/cuda-compatibility/) · [cuBLAS](https://docs.nvidia.com/cuda/cublas/index.html) · [NCCL](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/overview.html)。
+
+## 部署操作与工程参考
+
+下面从环境检查、源码构建和模型运行继续展开。历史设备只用于解释具体问题，版本与参数按该记录阅读。
+
+实例：[RTX2060混合卸载](../../engineering/nvidia-rtx2060.md) · [RTX4080/A6000双卡](../../engineering/nvidia-dual-gpu.md) · [GB10量化与推测解码](../../engineering/nvidia-gb10.md) · [GB10多模态](../../engineering/nvidia-gb10-multimodal.md)。
 
 ## 一、先建立环境记录
 

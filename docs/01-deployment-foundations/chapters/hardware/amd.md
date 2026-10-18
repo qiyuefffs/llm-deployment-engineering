@@ -1,10 +1,56 @@
-# 1.2.2 AMD：gfx、运行库与共享内存
+# 1.2.2 AMD GPU与ROCm软件栈
 
-**完整工程记录：** [780M Windows HIP](../../engineering/amd-780m.md) · [8060S Q4/BF16优化](../../engineering/amd-8060s.md) · [395五机RPC](../../engineering/amd-395-rpc.md) · [W7900多卡多机](../../engineering/amd-w7900.md)
+[总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
 
-## 本节概览
+## 硬件基础
 
-AMD适配先确认实际GPU目标，再确认系统、ROCm/HIP、算子库和框架后端。作者资料同时包含Windows集显社区路线和Linux395多机工程，本节将两条路线分开说明。
+AMD的大模型部署主要涉及Radeon独立显卡、Instinct数据中心加速卡，以及Ryzen处理器中的集成GPU。它们的内存组织、架构和软件支持范围不同，不能只看“AMD显卡”这一个标签。
+
+| 硬件类别 | 典型特点 | 部署重点 |
+| --- | --- | --- |
+| Radeon消费/专业独显 | 通常有独立显存，面向PC或工作站 | 型号与OS支持、显存、gfx目标、kernel覆盖 |
+| Instinct加速卡 | 面向计算与数据中心，部分采用HBM和xGMI互联 | ROCm配套、矩阵计算、带宽、RCCL与拓扑 |
+| Ryzen集成GPU/APU | CPU与GPU使用系统内存，容量受设备预算约束 | 共享内存带宽、可分配量、驱动、系统余量 |
+
+`gfx`是AMD GPU的代码目标标识。RDNA/CDNA等架构家族与精确gfx目标影响指令和预编译kernel；同系列产品也应读取实际设备信息。CUDA的`sm_XX`不能转换成一个通用的AMD编号。
+
+## ROCm与HIP是什么关系
+
+ROCm是一整套GPU计算软件平台，包括运行时、编译器、数学库、通信库和分析工具。HIP是其中常用的C++编程接口和kernel语言，用来申请设备内存、提交计算和进行同步；`hipcc`是编译驱动工具。
+
+```text
+模型/推理引擎 → PyTorch ROCm或HIP后端
+             → HIP运行时 ＋ 计算库
+             → 底层运行时/设备驱动 → AMD GPU
+```
+
+| 组件 | 职责 | 常见使用位置 |
+| --- | --- | --- |
+| amdgpu与相关设备接口 | Linux下的设备、内存和计算接入 | 主机驱动、容器设备访问；其他OS按对应驱动 |
+| ROCr/HSA Runtime | 支持平台上的底层执行与内存机制 | HIP等上层运行时的设备执行基础 |
+| HIP / hipcc | GPU编程API、kernel语言和编译入口 | llama.cpp HIP、PyTorch ROCm及源码扩展 |
+| rocBLAS / hipBLAS / hipBLASLt | BLAS矩阵运算、API接口与灵活GEMM | 模型线性层、受支持精度与布局 |
+| MIOpen | 深度学习算子库 | 框架所需神经网络算子，不代表所有LLM算子都由它实现 |
+| RCCL | 多GPU、多节点集合通信 | TP等并行执行中的AllReduce、AllGather等 |
+| 专用kernel与编译工具 | attention、MoE、量化和融合计算 | 由框架、配套库或项目实现，覆盖范围随版本变化 |
+
+HIP支持源码层面的可移植编程；已有CUDA二进制不会因为安装了ROCm就自动在AMD设备上运行。PyTorch ROCm仍沿用`torch.cuda`等接口名称，包的构建信息中则可检查`torch.version.hip`。
+
+## HIP、Vulkan与平台支持怎样选
+
+HIP路线使用ROCm/HIP及配套计算库；Vulkan路线通过Vulkan驱动与对应shader执行。二者是不同后端，Vulkan不要求先安装完整ROCm，但需要引擎实现该后端以及相应驱动能力。
+
+先查精确GPU、OS、ROCm/HIP与框架支持矩阵，再选择后端。Linux、Windows与WSL的驱动、库、框架和设备覆盖不能视为完全相同；社区补丁也应标明来源与适用版本。
+
+对于集成GPU，扩大可分配内存并不会增加内存带宽。模型虽然能加载，如果持续换页、CPU争用严重或某精度没有高效kernel，速度仍可能较低。量化和后端选择要同时比较容量、速度与输出质量。
+
+基础资料：[ROCm概览](https://rocm.docs.amd.com/en/latest/what-is-rocm.html) · [HIP](https://rocm.docs.amd.com/projects/HIP/en/latest/) · [Radeon/Ryzen支持](https://rocm.docs.amd.com/projects/radeon-ryzen/en/latest/) · [RCCL](https://rocm.docs.amd.com/projects/rccl/en/latest/)。
+
+## 部署操作与工程参考
+
+先确认设备目标和软件栈，再进行单机生成、内存预算和负载测试。以下保留Windows集显与Linux多机的不同操作路径。
+
+实例：[780M Windows HIP](../../engineering/amd-780m.md) · [8060S Q4/BF16优化](../../engineering/amd-8060s.md) · [395五机RPC](../../engineering/amd-395-rpc.md) · [W7900多卡多机](../../engineering/amd-w7900.md)。
 
 ## 一、理解软件层次
 

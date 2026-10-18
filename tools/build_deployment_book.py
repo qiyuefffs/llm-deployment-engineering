@@ -89,7 +89,7 @@ def render_book():
                             for label, anchor, level in headings)
         source_link = REMOTE + quote(source.relative_to(ROOT).as_posix())
         pages.append(f'<section class="chapter" id="{page_id}" data-index="{i}" hidden>'
-                     f'<div class="chapter-meta">部署适配知识体系 · {i + 1:02} / {len(paths):02}'
+                     f'<div class="chapter-meta">大模型部署知识体系 · {i + 1:02} / {len(paths):02}'
                      f'<a href="{source_link}" target="_blank" rel="noreferrer">Markdown 源文</a></div>'
                      f'<details class="local-toc"><summary>页内目录 · {len(headings)} 项</summary>{local_toc}</details>'
                      f'<article>{body}</article></section>')
@@ -105,7 +105,7 @@ def render_book():
                    f'{html.escape(entry["label"])}</a>')
     template = '''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>大模型部署适配知识体系 · 离线检索</title><link rel="icon" href="data:,"><style>
+<title>大模型部署知识体系 · 离线检索</title><link rel="icon" href="data:,"><style>
 :root{--ink:#202f31;--muted:#657475;--accent:#176d65;--paper:#fffefa;--line:#dfe6e2;--side:#f1f4ef}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}
@@ -123,8 +123,8 @@ pre{background:#f0f3f1;border:1px solid var(--line);border-left:3px solid #73a19
 @media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform .2s;width:290px}.sidebar.open{transform:translateX(0)}main{margin-left:0;padding:85px 25px 100px}.topbar{display:flex;position:fixed;inset:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:13px 20px;align-items:center;gap:18px;z-index:4;font-size:13px}.topbar button{border:1px solid var(--line);border-radius:5px;background:var(--side);padding:5px 12px;color:var(--ink)}.reader-footer{left:0;padding:14px 20px}.overlay.show{display:block;position:fixed;inset:0;background:#18282455;z-index:4}article{font-size:15px}article h1{font-size:26px}article h2{font-size:21px}pre{font-size:12px;padding:14px}.chapter-meta{margin-bottom:28px}}
 @media print{.sidebar,.topbar,.reader-footer,.local-toc,.search-results{display:none!important}main{margin:0;padding:0;max-width:none}.chapter[hidden]{display:block!important}.chapter{max-width:none;break-before:page}.table-scroll{overflow:visible}pre{white-space:pre-wrap;overflow:visible}.chapter-meta{margin-top:20px}article{font-size:11pt}article h1{font-size:23pt}article h2{font-size:17pt}a{color:inherit}}
 </style></head><body>
-<div class="topbar"><button id="menu" aria-label="打开目录">目录</button><span>大模型部署适配知识体系</span></div>
-<div class="overlay" id="overlay"></div><aside class="sidebar" aria-label="知识体系目录"><div class="eyebrow">DEPLOYMENT ENGINEERING</div><div class="brand">大模型部署适配<br>知识体系</div><div class="edition">六部分 · 五层框架 · 完整工程记录</div>
+<div class="topbar"><button id="menu" aria-label="打开目录">目录</button><span>大模型部署知识体系</span></div>
+<div class="overlay" id="overlay"></div><aside class="sidebar" aria-label="知识体系目录"><div class="eyebrow">DEPLOYMENT ENGINEERING</div><div class="brand">大模型部署<br>知识体系</div><div class="edition">硬件与运行时 · 模型与引擎 · 优化与交付</div>
 <input id="search" aria-label="搜索知识体系" placeholder="搜索设备、参数、错误或命令…" type="search"><nav>__NAV__</nav></aside>
 <main><div class="search-results" id="search-results" hidden aria-live="polite"></div>__PAGES__
 <noscript>请启用浏览器JavaScript以使用章节导航，或直接阅读仓库Markdown。</noscript></main>
@@ -146,7 +146,7 @@ function show(){
   document.querySelectorAll('.toc-link').forEach(a=>{const on=a.hash==='#'+page.id;a.classList.toggle('active',on);on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
   for(const [key,index] of [['prev',current-1],['next',current+1]]){const link=document.getElementById(key);link.style.visibility=data[index]?'visible':'hidden';if(data[index]){link.href='#'+data[index].id;link.textContent=(key==='prev'?'← ':'')+data[index].title+(key==='next'?' →':'')}}
   document.getElementById('progress').textContent=(current+1)+' / '+data.length;
-  document.title=data[current].title+' · 大模型部署适配知识体系';closeMenu();
+  document.title=data[current].title+' · 大模型部署知识体系';closeMenu();
   requestAnimationFrame(()=>{if(target&&target!==page)target.scrollIntoView({block:'start'});else window.scrollTo(0,0)});
 }
 window.addEventListener('hashchange',show);

@@ -1,10 +1,64 @@
-# 1.2.4 Apple：Metal、MLX与功能验证
+# 1.2.4 Mac硬件、Metal与MLX
 
-**完整工程记录：** [M3 Ultra Metal构建与GGUF排错](../../engineering/apple-metal.md) · [MLX、APC与oMLX完整部署优化](../../engineering/apple-mlx.md)
+[总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
 
-## 本节概览
+## 硬件基础
 
-Apple Silicon的CPU和GPU共享物理内存，但框架、制品和任务仍有明确支持条件。本节把GGUF＋Metal、MLX与服务插件分开说明，并结合作者的实际失败记录解释验收边界。
+这里主要讨论Apple Silicon Mac。M系列SoC将CPU、GPU、Neural Engine等集成在同一平台，CPU与GPU共享物理内存。Intel Mac的软件与硬件条件不同，不能直接套用MLX/Apple Silicon部署路线。
+
+| 硬件组成 | 在大模型部署中的作用 | 需要知道的限制 |
+| --- | --- | --- |
+| CPU | 分词、预处理、应用控制，以及CPU算子 | 也会与GPU争用内存带宽和系统资源 |
+| GPU | 执行Metal/MLX等路线支持的矩阵与模型计算 | 算子、精度和模型实现由软件栈决定 |
+| 统一内存 | 供CPU/GPU直接访问的共享物理内存 | 系统、应用、权重、KV和工作区共同占用 |
+| Neural Engine | 专用神经网络加速单元 | MLX/Metal GPU推理不会自动使用它，需要相应执行路线与支持 |
+
+选型除了看统一内存容量，还要看内存带宽、GPU能力与散热。能放下更大的模型，不意味着其decode速度与独立显卡相同；不同M系列芯片也不能只按内存容量比较。
+
+## Metal、MLX、MLX-LM分别是什么
+
+**Metal是GPU计算接口；MLX是数组与机器学习框架；MLX-LM是基于MLX实现文本模型加载、生成和量化等功能的软件包。**
+
+```text
+文本应用 → MLX-LM → MLX数组/模型计算 → Metal（GPU执行）→ Apple GPU
+本地服务 → llama.cpp → GGML Metal后端 → Metal → Apple GPU
+```
+
+| 组件 | 软件层级与职责 | 常见使用方式 |
+| --- | --- | --- |
+| macOS驱动与Metal | GPU设备访问、命令提交、shader和计算执行 | 系统与开发工具提供，通常不单独安装CUDA式驱动包 |
+| Accelerate | Apple的CPU向量、矩阵等计算库 | CPU计算与引擎的CPU路径 |
+| MPS / MPSGraph | Metal上的高层计算组件 | 部分框架使用；PyTorch的`mps`是其设备后端名称 |
+| MLX | 数组、自动微分、计算图与CPU/GPU执行 | Apple Silicon机器学习代码的基础框架 |
+| MLX-LM / MLX-VLM | 在MLX上实现文本或视觉语言模型功能 | 模型加载、tokenizer/processor、生成和对应工具 |
+| Core ML | 模型转换、优化与部署框架 | 在支持条件下使用CPU/GPU/Neural Engine等计算单元 |
+
+MLX与PyTorch是不同框架，不能把`device='cuda'`改成一个字符串就完成迁移。llama.cpp Metal也不要求安装MLX；GGUF和MLX兼容模型是两种制品路线。
+
+## 统一内存怎样影响部署
+
+MLX利用共享内存，让支持的CPU/GPU运算访问同一数据池，减少显式跨设备拷贝需求。数据依赖、执行同步、内存带宽和工作区仍有成本；模型文件大小也不是峰值内存。
+
+预算至少包括系统和桌面应用、权重、KV、预处理和临时空间。长上下文、多个并发请求和多模型常驻会继续增加需求。系统报告的memory pressure与swap比“总内存还有多少”更能说明运行是否已经受压。
+
+MLX采用惰性求值：构造数组表达式时，计算可能尚未完成。做小算子计时时要在计时边界内触发求值，例如`mx.eval(result)`，并按当前API完成同步；只测Python提交时间会高估执行速度。
+
+## 部署路线怎样选择
+
+| 需求 | 候选路线 | 首先核对 |
+| --- | --- | --- |
+| 已有GGUF、需要本地CLI/API | llama.cpp Metal或其上层应用 | GGUF张量类型、Metal kernel、模板与实际卸载 |
+| MLX生态模型与Python开发 | MLX-LM；视觉任务检查MLX-VLM | 架构实现、量化配置、processor与模型版本 |
+| PyTorch应用迁移 | 支持任务的PyTorch MPS | 算子、dtype、回退和应用代码兼容性 |
+| 原生应用、专用加速器部署 | 支持该模型的Core ML路线 | 转换、shape、compute units和实际执行设备 |
+
+以上是候选关系，不是速度排名。先验证任务、制品和资源，再用同一负载比较。
+
+基础资料：[Metal](https://developer.apple.com/metal/) · [MLX](https://ml-explore.github.io/mlx/build/html/index.html) · [统一内存](https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html) · [MLX-LM](https://github.com/ml-explore/mlx-lm)。
+
+## 部署操作与工程参考
+
+后续分别讲GGUF＋Metal构建、MLX服务和模型能力验证。实例：[M3 Ultra Metal构建与GGUF排错](../../engineering/apple-metal.md) · [MLX、APC与oMLX完整部署优化](../../engineering/apple-mlx.md)。
 
 ## 一、先区分模型路线
 

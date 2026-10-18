@@ -1,10 +1,22 @@
-# 大模型部署适配知识体系
+# 大模型部署知识体系
 
 ![大模型部署适配五层能力框架](assets/edge-llm-deployment-framework-original.png)
 
-面向大模型部署、端侧适配、推理优化与多硬件交付。按原框架的六部分、五层能力及 1.1～5.3 节编号组织；本页是当前版本的 GitHub 阅读入口。
+面向大模型部署、端侧推理、性能优化与服务交付。按六部分、五层能力及 1.1～5.3 节编号组织，先讲通用原理和选型，再讲平台操作与工程实例。
 
 **[完整目录](SUMMARY.md) · [硬件实例](engineering/README.md) · [环境与数据约定](00-preface.md) · [独立 Case](../../cases/README.md) · [仓库首页](../../README.md)**
+
+## 先认识硬件与计算软件栈
+
+| 平台 | 硬件和软件怎样配合 | 基础介绍 |
+| --- | --- | --- |
+| NVIDIA | GPU执行并行计算，CUDA平台提供运行时、工具与计算库 | [GPU、CUDA Runtime/Toolkit、cuBLAS、NCCL](chapters/hardware/nvidia.md) |
+| AMD | Radeon/Instinct/集成GPU通过ROCm/HIP或其他后端执行 | [GPU架构、ROCm、HIP、计算库与RCCL](chapters/hardware/amd.md) |
+| Mac | Apple Silicon共享内存；Metal调用GPU，MLX在其上实现机器学习运算 | [统一内存、Metal、MLX与MLX-LM](chapters/hardware/apple.md) |
+| Intel | CPU/GPU/NPU通过对应工具链、运行时与设备插件执行 | [oneAPI、SYCL、Level Zero与OpenVINO](chapters/hardware/intel.md) |
+| 昇腾 | AI加速器通过CANN和上层框架/服务引擎执行 | [芯片、运行时、算子、HCCL与插件](chapters/hardware/ascend.md) |
+
+先看[CPU/GPU/NPU、内存与软件层级](02-capability-layers/01-hardware-backends.md)，再进入对应平台。CUDA、ROCm是计算软件平台；Metal是GPU API；MLX是机器学习框架，它们的层级和职责不同。
 
 ## 工程主线
 
@@ -14,13 +26,13 @@
  → 单项或组合优化 → API/监控 → 交付与回滚
 ```
 
-知识点记录机制、参数、作用阶段和诊断证据；硬件实例保留环境、命令、日志、性能表、失败与后续实验。最终交付应包括环境快照、模型身份、有效配置、服务接口、基线、优化实验和验收记录。
+知识体系回答“是什么、为什么、怎样选择、怎样执行、怎样判断效果”。平台操作解释环境与命令，硬件实例展示真实过程和结果。学习主线是硬件/软件栈 → 模型制品 → 推理执行 → 性能瓶颈 → 服务交付。
 
 ## 一、知识体系目录
 
 | 部分 | 阅读入口 | 内容 |
 | --- | --- | --- |
-| 第一部分 | [整体知识体系地图](01-knowledge-map.md) | 七个工程模块、阶段输入输出、交付关口 |
+| 第一部分 | [整体知识体系地图](01-knowledge-map.md) | 硬件、软件栈、模型与引擎的关系，一次生成的执行链 |
 | 第二部分 | [五层能力框架](02-capability-layers/README.md) | 硬件、模型、框架、性能、交付，细分入口见下表 |
 | 第三部分 | [核心概念解释库](03-core-concepts.md) | 十个核心机制及参数影响 |
 | 第四部分 | [项目复盘模板](04-project-review.md) | 环境、部署、排错、优化和验收十项记录 |
@@ -31,7 +43,7 @@
 
 | 能力层 | 重点 | 详细专题 |
 | --- | --- | --- |
-| [1. 硬件后端适配](02-capability-layers/01-hardware-backends.md) | 驱动、SDK、编译目标、后端、通信 | [NVIDIA](chapters/hardware/nvidia.md) / [AMD](chapters/hardware/amd.md) / [Intel](chapters/hardware/intel.md) / [Apple](chapters/hardware/apple.md) / [昇腾](chapters/hardware/ascend.md) |
+| [1. 硬件与运行时](02-capability-layers/01-hardware-backends.md) | CPU/GPU/NPU、容量与带宽、驱动、Runtime、计算库 | [NVIDIA](chapters/hardware/nvidia.md) / [AMD](chapters/hardware/amd.md) / [Intel](chapters/hardware/intel.md) / [Apple](chapters/hardware/apple.md) / [昇腾](chapters/hardware/ascend.md) |
 | [2. 模型格式与量化](02-capability-layers/02-model-formats-quantization.md) | 制品身份、HF/GGUF/IR、W/A/KV 精度、质量 | [GGUF 转换](chapters/models/gguf-conversion.md) / [量化选择](chapters/models/quantization.md) / [Ollama 操作](engineering/gguf-ollama.md) |
 | [3. 推理框架](02-capability-layers/03-inference-frameworks.md) | 构建、加载、上下文、调度、API | [vLLM](chapters/frameworks/vllm-service.md) / [llama.cpp](chapters/frameworks/llama-cpp.md) / [OpenVINO](chapters/frameworks/openvino.md) |
 | [4. 显存与性能优化](02-capability-layers/04-memory-performance.md) | KV、prefill/decode、并发、延迟、吞吐 | [压测](chapters/performance/benchmarking.md) / [缓存与调度](chapters/performance/cache-scheduling.md) / [多卡多机](chapters/performance/parallelism.md) / [推测解码](chapters/performance/speculative-decoding.md) |
