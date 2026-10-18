@@ -25,8 +25,8 @@
 ## 获取仓库
 
 ```bash
-git clone https://github.com/qiyuefffs/llm-serving-diagnosis.git
-cd llm-serving-diagnosis
+git clone https://github.com/qiyuefffs/llm-deployment-engineering.git
+cd llm-deployment-engineering
 ```
 
 源码和 Markdown 页面适合直接在 GitHub 阅读。`docs/01-deployment-foundations/book.html` 是可下载后离线检索的单文件版本；模型权重、缓存和运行日志不随仓库提交。

@@ -12,7 +12,7 @@ from markdown_it import MarkdownIt
 
 ROOT = Path(__file__).resolve().parents[1]
 BOOK = ROOT / 'docs/01-deployment-foundations'
-REMOTE = 'https://github.com/qiyuefffs/llm-serving-diagnosis/blob/main/'
+REMOTE = 'https://github.com/qiyuefffs/llm-deployment-engineering/blob/main/'
 
 
 def slug(text):

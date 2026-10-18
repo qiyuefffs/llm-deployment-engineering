@@ -39,8 +39,8 @@ practice/first-service/
 在PowerShell执行。若已经克隆仓库，从已有目录进入即可：
 
 ```powershell
-git clone https://github.com/qiyuefffs/llm-serving-diagnosis.git
-cd llm-serving-diagnosis
+git clone https://github.com/qiyuefffs/llm-deployment-engineering.git
+cd llm-deployment-engineering
 cd docs/01-deployment-foundations/practice/first-service
 python --version
 ```
