@@ -4,6 +4,8 @@
 
 项目复盘用于保存可继续工作的工程事实：当时的目标、运行组合、遇到的问题、修改依据和最终边界。按原稿的十项结构填写，命令和数字链接真实文件。
 
+填写时可复制[部署项目复盘模板](templates/deployment-review.md)，与[适配记录](templates/adaptation-record.md)、[实验记录](templates/experiment-record.md)放在同一项目目录。
+
 ## 4.1 标准项目复盘
 
 ### 一、项目背景

@@ -2,12 +2,11 @@
 
 ![大模型部署适配五层能力框架](assets/edge-llm-deployment-framework-original.png)
 
-图注：作者原始框架。目录沿用六部分、五层能力及1.1～5.3节编号；图中的格式、精度、量化与后端分类以正文技术说明为准。
+面向大模型部署、端侧适配、推理优化与多硬件交付。按原框架的六部分、五层能力及 1.1～5.3 节编号组织；本页是当前版本的 GitHub 阅读入口。
 
-> 适用方向：大模型部署、端侧适配、推理优化、多硬件工程交付。
-> 核心产物：可追溯环境、可加载模型、可调用服务、可对照基线、优化实验、验收与回滚记录。
+**[完整目录](SUMMARY.md) · [硬件实例](engineering/README.md) · [环境与数据约定](00-preface.md) · [独立 Case](../../cases/README.md) · [仓库首页](../../README.md)**
 
-## 0. 总体定位
+## 工程主线
 
 ```text
 模型选择 → 格式转换/量化 → 硬件后端适配 → 引擎构建与部署
@@ -15,45 +14,89 @@
  → 单项或组合优化 → API/监控 → 交付与回滚
 ```
 
-知识点按“机制、参数、执行阶段、诊断证据”组织；平台工程保存完整操作链路。历史FlowUs技术文章直接写入对应实例，保留命令、日志、性能表、失败和后续实验，不用摘要替代过程。
+知识点记录机制、参数、作用阶段和诊断证据；硬件实例保留环境、命令、日志、性能表、失败与后续实验。最终交付应包括环境快照、模型身份、有效配置、服务接口、基线、优化实验和验收记录。
 
-**[五层框架与完整目录](SUMMARY.md) · [各GPU部署优化实例](engineering/README.md) · [环境与数据约定](00-preface.md) · [可离线搜索的页面](book.html)**
+## 一、知识体系目录
 
-## 第一部分：整体知识体系地图
-
-[七个工程模块与五层能力](01-knowledge-map.md)：任务约束、阶段输入输出、交付关口与项目目录。
-
-## 第二部分：五层能力详细框架
-
-| 能力层 | 核心技术 | 主要参数 / 产物 |
+| 部分 | 阅读入口 | 内容 |
 | --- | --- | --- |
-| [1.硬件后端适配](02-capability-layers/01-hardware-backends.md) | CUDA/HIP/SYCL/Vulkan/Metal/CANN/MUSA、驱动与编译、通信 | arch/gfx/ABI、CMakeCache、镜像digest、最小设备执行 |
-| [2.模型格式与量化](02-capability-layers/02-model-formats-quantization.md) | HF/GGUF/IR、W/A/KV精度、AWQ/GPTQ、分组/尺度/kernel | revision、SHA256、quantization_config、模板、质量基线 |
-| [3.推理框架](02-capability-layers/03-inference-frameworks.md) | vLLM、llama.cpp、OpenVINO、MLX、加载与调度 | max-model-len、seqs、batched-tokens、ngl、b/ub、API |
-| [4.显存与性能](02-capability-layers/04-memory-performance.md) | KV、prefill/decode、缓存、并发、TP/PP/EP、MTP/DFlash | TTFT/TPOT/ITL、吞吐、p95/p99、内存峰值、质量 |
-| [5.工程交付](02-capability-layers/05-engineering-delivery.md) | 容器/环境、SSE、监控、限流、验收、回滚 | run-id、有效命令、逐请求数据、部署/恢复入口 |
+| 第一部分 | [整体知识体系地图](01-knowledge-map.md) | 七个工程模块、阶段输入输出、交付关口 |
+| 第二部分 | [五层能力框架](02-capability-layers/README.md) | 硬件、模型、框架、性能、交付，细分入口见下表 |
+| 第三部分 | [核心概念解释库](03-core-concepts.md) | 十个核心机制及参数影响 |
+| 第四部分 | [项目复盘模板](04-project-review.md) | 环境、部署、排错、优化和验收十项记录 |
+| 第五部分 | [个人知识库目录设计](05-knowledge-base.md) | 八个主题目录与工程资料组织 |
+| 第六部分 | [故障排查速查表](06-troubleshooting.md) | 按失败阶段定位、验证和回归 |
 
-## 各硬件完整工程实例
+### 五层能力与技术专题
 
-| 硬件 | 完整部署适配与加速优化 |
+| 能力层 | 重点 | 详细专题 |
+| --- | --- | --- |
+| [1. 硬件后端适配](02-capability-layers/01-hardware-backends.md) | 驱动、SDK、编译目标、后端、通信 | [NVIDIA](chapters/hardware/nvidia.md) / [AMD](chapters/hardware/amd.md) / [Intel](chapters/hardware/intel.md) / [Apple](chapters/hardware/apple.md) / [昇腾](chapters/hardware/ascend.md) |
+| [2. 模型格式与量化](02-capability-layers/02-model-formats-quantization.md) | 制品身份、HF/GGUF/IR、W/A/KV 精度、质量 | [GGUF 转换](chapters/models/gguf-conversion.md) / [量化选择](chapters/models/quantization.md) / [Ollama 操作](engineering/gguf-ollama.md) |
+| [3. 推理框架](02-capability-layers/03-inference-frameworks.md) | 构建、加载、上下文、调度、API | [vLLM](chapters/frameworks/vllm-service.md) / [llama.cpp](chapters/frameworks/llama-cpp.md) / [OpenVINO](chapters/frameworks/openvino.md) |
+| [4. 显存与性能优化](02-capability-layers/04-memory-performance.md) | KV、prefill/decode、并发、延迟、吞吐 | [压测](chapters/performance/benchmarking.md) / [缓存与调度](chapters/performance/cache-scheduling.md) / [多卡多机](chapters/performance/parallelism.md) / [推测解码](chapters/performance/speculative-decoding.md) |
+| [5. 工程交付](02-capability-layers/05-engineering-delivery.md) | 环境封装、接口、监控、验收、回滚 | [环境与启停](chapters/delivery/environment-operations.md) / [API 与监控](chapters/delivery/api-monitoring.md) |
+
+## 二、硬件部署适配与优化实例
+
+完整测试条件和证据状态见[实例矩阵](engineering/README.md)。每个入口集中保存同一平台的部署、参数调整、实际结果和限制。
+
+| 平台 | 实例入口 | 工程重点 |
+| --- | --- | --- |
+| NVIDIA | [RTX2060](engineering/nvidia-rtx2060.md) | CUDA、量化制品、CPU/GPU 混合卸载 |
+| NVIDIA | [RTX4080 / A6000 双卡](engineering/nvidia-dual-gpu.md) | TP、PCIe、显存预算、服务调参 |
+| NVIDIA | [GB10 文本推理](engineering/nvidia-gb10.md) | ARM64 构建、FP8、AWQ、MTP、DFlash |
+| NVIDIA | [GB10 多模态](engineering/nvidia-gb10-multimodal.md) | VL、Omni、Docling、输入预算 |
+| AMD | [Radeon 780M](engineering/amd-780m.md) | Windows HIP、Ollama、回退与共享内存 |
+| AMD | [Radeon 8060S](engineering/amd-8060s.md) | Vulkan、Q4/BF16、CPU→GPU→参数优化 |
+| AMD | [395 五机 RPC](engineering/amd-395-rpc.md) | HIP RPC、GTT/TTM、构建分发与权重切分 |
+| AMD | [W7900 多卡多节点](engineering/amd-w7900.md) | ROCm/RCCL、Ray、TP/PP、通信排查 |
+| Intel | [Arc GPU / NPU](engineering/intel-arc-npu.md) | Vulkan/SYCL/IR 对照、ASR/TTS、设备分工 |
+| Apple | [M3 Ultra Metal](engineering/apple-metal.md) | GGUF、Metal 构建、制品兼容性排错 |
+| Apple | [M3 Ultra MLX / oMLX](engineering/apple-mlx.md) | 模板、APC、视觉、并发对照 |
+| 昇腾 | [310P3](engineering/ascend-310p.md) | CANN、模型插件、FP16/TP2、压测 |
+| MUSA | [适配与优化流程](engineering/musa.md) | Toolkit、构建、GPU 卸载、API；待设备实测 |
+| CPU | [Windows 顺序演练](practice/first-service/README.md) | 固定制品、完整服务、功能/异常/性能验收 |
+
+## 三、命令、模板与证据
+
+| 用途 | 入口 |
 | --- | --- |
-| NVIDIA | [RTX2060混合卸载](engineering/nvidia-rtx2060.md) · [RTX4080/A6000双卡](engineering/nvidia-dual-gpu.md) · [GB10构建、FP8、AWQ、MTP与DFlash](engineering/nvidia-gb10.md) · [GB10多模态](engineering/nvidia-gb10-multimodal.md) |
-| AMD | [780M Windows HIP](engineering/amd-780m.md) · [8060S Vulkan Q4/BF16](engineering/amd-8060s.md) · [395五机HIP RPC](engineering/amd-395-rpc.md) · [W7900单机/多节点](engineering/amd-w7900.md) |
-| Intel | [Arc GPU三后端、NPU、ASR/TTS完整记录](engineering/intel-arc-npu.md) |
-| Apple | [M3 Ultra Metal/GGUF](engineering/apple-metal.md) · [MLX、APC、oMLX并发](engineering/apple-mlx.md) |
-| 昇腾 | [310P3 CANN、Qwen3、插件与压测](engineering/ascend-310p.md) |
-| MUSA | [设备适配、构建、API与优化验证流程](engineering/musa.md)，待设备实测 |
-| CPU | [固定Windows完整运行与实际结果](practice/first-service/README.md) |
+| 执行前核对 | [环境与数据约定](00-preface.md) |
+| 命令查询 | [常用命令](appendices/commands.md) / [压测工具与完整命令](engineering/benchmark-tools.md) |
+| 工程记录 | [适配模板](templates/adaptation-record.md) / [实验模板](templates/experiment-record.md) / [复盘模板](templates/deployment-review.md) |
+| 历史数据 | [测量条件与说明](evidence/README.md) / [测量 JSON](evidence/measurements.json) |
+| 数据核算 | [核算程序](examples/verify_records.py) / [核算输出](examples/verified-output.txt) |
+| 来源追溯 | [文章与章节映射](evidence/chapter-sources.md) / [50 份技术记录清单](evidence/source-coverage.json) |
+| 参考资料 | [官方文档与技术修订](appendices/references.md) |
 
-## 第三至六部分
+## 四、目录结构与阅读方式
 
-- [第三部分：核心概念解释库](03-core-concepts.md)：十个核心机制及参数影响。
-- [第四部分：项目复盘模板](04-project-review.md)：硬件、制品、部署、排错、实验、验收十项记录。
-- [第五部分：个人知识库目录设计](05-knowledge-base.md)：八个主题目录与工程资料组织。
-- [第六部分：故障排查速查表](06-troubleshooting.md)：按失败阶段定位、验证和回归。
+```text
+01-deployment-foundations/
+├── README.md               当前版本首页
+├── SUMMARY.md              详细目录
+├── 00-preface.md            环境与数据约定
+├── 01-knowledge-map.md      工程地图
+├── 02-capability-layers/    五层能力框架
+├── 03～06-*.md             概念、复盘、资料组织、排错
+├── chapters/               各技术专题
+├── engineering/            各硬件完整工程记录
+├── practice/               顺序演练与实际结果
+├── templates/              适配、实验、复盘模板
+├── evidence/               来源与测量数据
+├── examples/               辅助程序
+├── assets/                 框架图与公开样例
+├── appendices/             命令与参考资料
+└── book.html               可下载的离线检索版
+```
 
-## 完整材料与证据
+GitHub 阅读从本页和[完整目录](SUMMARY.md)进入。离线检索可下载 [book.html](book.html) 后用浏览器打开；正文更新后按[构建说明](../../tools/README.md)重新生成。
 
-[50份源文保留清单](evidence/source-coverage.json) · [章节与文章映射](evidence/chapter-sources.md) · [历史测量JSON](evidence/measurements.json) · [离线核算程序](examples/verify_records.py) · [参考资料](appendices/references.md)
+独立 Case 的正文、脚本、输入、截图与结果统一放在仓库的 [`cases/`](../../cases/README.md)，从[Case 目录](../../cases/README.md)访问。
 
-技术记录保留可公开设备、版本、配置、性能和错误。私人路径、节点、认证及附件地址脱敏。历史GPU/NPU成绩标明测试条件，本轮未重新运行；资料缺项与失败不会改写成成功。
+## 资料状态
+
+50 份技术记录保留可公开的操作步骤、版本、参数、日志和测试表，私人路径、节点与认证信息脱敏。GPU/NPU 的历史成绩按原条件引用，缺失证据和失败保留说明；MUSA 尚无实测记录。框架图中的分类与简写以[技术修订](appendices/references.md)为准。
+
+更新时间：**2026-10-18**
