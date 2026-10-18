@@ -1,4 +1,5 @@
 # 大模型部署知识体系
+**简体中文** | [English](README.en.md)
 
 ![大模型部署适配知识体系框架](docs/01-deployment-foundations/assets/edge-llm-deployment-framework-original.png)
 

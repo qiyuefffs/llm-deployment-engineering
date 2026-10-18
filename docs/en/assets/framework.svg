@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title description">
+<title id="title">LLM Deployment Engineering: Five-Layer Knowledge Framework</title>
+<desc id="description">Hardware and runtimes, models and quantization, inference engines, memory and performance, and engineering delivery. Six parts connect general principles to platform procedures and measured examples.</desc>
+<rect width="1440" height="1040" fill="#f5f7f3"/>
+<g font-family="Segoe UI,Arial,sans-serif" fill="#183d3a">
+<text x="76" y="72" font-size="18" font-weight="700" letter-spacing="2">LLM DEPLOYMENT ENGINEERING</text>
+<text x="76" y="128" font-size="40" font-weight="700">Five layers, one deployment workflow</text>
+<text x="76" y="168" font-size="21" fill="#516b67">Understand the platform → prepare the model → run inference → optimize → deliver</text>
+<rect x="72" y="210" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="210" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="210" width="14" height="108" fill="#176d65"/>
+<text x="110" y="275" text-anchor="middle" font-size="28" font-weight="700" fill="white">01</text>
+<text x="178" y="254" font-size="27" font-weight="700">Hardware &amp; runtimes</text>
+<text x="178" y="288" font-size="18" fill="#516b67">CPU / GPU / NPU | memory capacity &amp; bandwidth</text>
+<text x="730" y="272" font-size="17" fill="#385c55">Drivers, CUDA, ROCm/HIP, Metal, oneAPI, CANN</text>
+<rect x="72" y="335" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="335" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="335" width="14" height="108" fill="#176d65"/>
+<text x="110" y="400" text-anchor="middle" font-size="28" font-weight="700" fill="white">02</text>
+<text x="178" y="379" font-size="27" font-weight="700">Models &amp; quantization</text>
+<text x="178" y="413" font-size="18" fill="#516b67">Architecture, weights, tokenizer, chat template</text>
+<text x="730" y="397" font-size="17" fill="#385c55">HF / GGUF / IR | precision, quantization, quality</text>
+<rect x="72" y="460" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="460" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="460" width="14" height="108" fill="#176d65"/>
+<text x="110" y="525" text-anchor="middle" font-size="28" font-weight="700" fill="white">03</text>
+<text x="178" y="504" font-size="27" font-weight="700">Inference engines</text>
+<text x="178" y="538" font-size="18" fill="#516b67">Load → prefill → decode → sample → return output</text>
+<text x="730" y="522" font-size="17" fill="#385c55">vLLM, llama.cpp, MLX-LM, OpenVINO GenAI</text>
+<rect x="72" y="585" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="585" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="585" width="14" height="108" fill="#176d65"/>
+<text x="110" y="650" text-anchor="middle" font-size="28" font-weight="700" fill="white">04</text>
+<text x="178" y="629" font-size="27" font-weight="700">Memory &amp; performance</text>
+<text x="178" y="663" font-size="18" fill="#516b67">Weights + KV/state + workspace + runtime overhead</text>
+<text x="730" y="647" font-size="17" fill="#385c55">TTFT / TPOT / throughput | caching, scheduling, parallelism</text>
+<rect x="72" y="710" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="710" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="710" width="14" height="108" fill="#176d65"/>
+<text x="110" y="775" text-anchor="middle" font-size="28" font-weight="700" fill="white">05</text>
+<text x="178" y="754" font-size="27" font-weight="700">Engineering delivery</text>
+<text x="178" y="788" font-size="18" fill="#516b67">Environment, APIs, monitoring, capacity, recovery</text>
+<text x="730" y="772" font-size="17" fill="#385c55">Functional + quality + performance + operational acceptance</text>
+<rect x="72" y="856" width="1296" height="122" rx="14" fill="#e4ede7"/>
+<text x="100" y="894" font-size="22" font-weight="700">Six parts</text>
+<text x="100" y="928" font-size="19">Knowledge map · Five capability layers · Core concepts</text>
+<text x="100" y="956" font-size="19">Project retrospectives · Knowledge organization · Troubleshooting</text>
+<text x="1356" y="1015" text-anchor="end" font-size="15" fill="#617871">English rendering of the Chinese knowledge framework · 2026-10-18</text>
+</g></svg>
