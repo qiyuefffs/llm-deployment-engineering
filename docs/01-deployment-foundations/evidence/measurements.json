@@ -236,5 +236,42 @@
       "acceptance_percent": 48.15
     },
     "limits": "Multiple server parameters differ. Observed 2.03x ratio is not isolated causal DFlash speedup. Original dataset revision, per-request results and quality comparison not provided."
+  },
+  "gemma_awq": {
+    "source_title": "DGX Spark GB10 Gemma-4 AWQ 4bit/8bit deployment and serving benchmark record",
+    "device": "DGX Spark GB10 / 128GB / Ubuntu 24.04",
+    "vllm": "0.19.0+cu130",
+    "model_family": "gemma-4-26B-A4B-it",
+    "max_model_len": 16384,
+    "max_num_seqs": 2,
+    "max_num_batched_tokens": 4096,
+    "gpu_memory_utilization": 0.65,
+    "prefix_cache": true,
+    "enforce_eager": true,
+    "requests": 200,
+    "successes": 200,
+    "failures": 0,
+    "client_concurrency": 2,
+    "requested_input_tokens": 1024,
+    "max_output_tokens": 128,
+    "random_range_ratio": 0.1,
+    "warmups": 10,
+    "input_tokens": 206139,
+    "generated_tokens": 25696,
+    "awq4": {
+      "duration_s": 427.7,
+      "output_token_per_s": 60.08,
+      "mean_ttft_ms": 272.97,
+      "p95_ttft_ms": 283.52,
+      "mean_tpot_ms": 31.32
+    },
+    "awq8": {
+      "duration_s": 537.49,
+      "output_token_per_s": 47.81,
+      "mean_ttft_ms": 338.92,
+      "p95_ttft_ms": 359.94,
+      "mean_tpot_ms": 39.39
+    },
+    "limits": "Historical summary only; model revisions, calibration, per-request files and quality comparison not available. Peak concurrency field conflicts with configured maximum and is excluded. Shared engine memory pool budget is not weight size."
   }
 }

@@ -1,67 +1,93 @@
-# 技术记录来源与证据边界
+# 工程来源与实测转录
 
-[返回总目录](../README.md) · [术语与参考资料](../13-glossary-and-references.md)
+[总目录](../README.md) · [参考资料](../appendices/references.md) · [离线核算](../examples/verify_records.py)
 
-本目录保存从作者部署技术笔记中筛选的可公开测量字段，供正文解释实际问题及离线核算。它不是原始 FlowUs 空间导出，也不是本轮重新执行各平台推理的结果。
+本目录集中说明正文实例的来源、条件与证据缺口。来源为作者FlowUs空间中的部署技术文章；公开材料仅提取工程必要字段，不发布原始空间导出、私人页面地址或账号信息。
 
-## 1. 材料是怎样整理的
+## 1. 整理范围与方法
 
-本次先核对空间目录并检索部署、编译、压测、推理等主题，再阅读相关目录与文章。文章中涉及具体设备、版本、命令、报错和输出的部分，用来组织 01～13 章。
+本次依据空间技术目录和模型部署、编译、推理、量化、压测等主题检索，核对相关目录与多篇工程文章。原《大模型部署适配交付知识体系框架》决定六部分与五层结构，具体工程内容从各平台部署、转换、服务和测试记录提取。
 
-公开时只转录需要的工程信息。私人页面地址、账号、个人目录、内部设备地址、凭据和签名附件地址未纳入仓库。没有将空间缓存、授权信息或整篇原始私有文章上传。
+知识框架用于组织关系，运行命令与输出用于支撑实例。有命令不等于已执行；有成功标题也不能覆盖后续明确失败。文章中的建议命令、早期结论、失败日志和实测汇总分别判断。
 
-同一篇文章可能同时包含早期结论、后续失败和计划命令。正文优先采用能对应到具体版本与输出的证据；存在冲突时明确说明，不把标题或开头结论直接视为成功记录。
+正文保留通用设备型号、版本、模型、参数、数值与必要错误；账号、凭据、私人路径、节点地址、业务样本和签名附件链接不转录。源笔记图片未取得适合公开的完整材料时，不下载转存或重绘成运行截图。
 
-## 2. 主要来源与用法
+## 2. 来源编号
 
-以下使用技术笔记标题标识来源，不提供私人知识库页面链接。
+以下技术标题用于标识作者记录，不提供私有空间链接；相近记录合并说明。
 
-| 技术笔记或记录 | 采用内容 | 正文章节 |
+| 编号 | 技术记录 | 正文采用内容 | 证据边界 |
+| --- | --- | --- | --- |
+| E01 | DGX Spark适配编译vLLM部署Qwen3.6-35B-A3B（BF16/FP8） | ARM64/CUDA配套、架构编译错误、FP8服务与200请求 | FP8有汇总；BF16只有命令，未作性能比较 |
+| E02 | Qwen3.5-9B Intel OpenVINO平台推理对比报告 | IR revision、INT4/INT8、Vulkan/SYCL、NPU失败 | GPU输出在思考阶段截断；不同引擎计时不混用 |
+| E03 | AMD Strix Halo 395五机HIP RPC部署Kimi-K2.5-Q2 | gfx/ROCm、GTT/TTM排障、小上下文RPC | 缺单机基线和长期API验收，未证明长上下文性能 |
+| E04 | AMD 780M-GPU适配教程及配套配置记录 | Windows社区运行库、gfx、版本隔离与验证 | 历史社区路线，不作为所有新设备支持承诺 |
+| E05 | Mac Metal编译与vllm-metal部署记录 | 特殊GGUF类型失败、文本与视觉能力区别 | 特定版本/制品组合，不推广为全平台结论 |
+| E06 | oMLX推理框架性能测试报告与压测流程 | 并发1/2/4的延迟、TPOT与输出吞吐 | 样本小、请求数不一致、缓存状态与环境不全 |
+| E07 | GB10 Gemma系列关闭/开启MTP推理加速两篇记录 | 并发分组、吞吐、TTFT/TPOT/ITL、接受率 | 缺原始逐请求文件和质量等价，剔除矛盾峰值字段 |
+| E08 | GB10编译DFlash并集成vLLM | 两套服务参数与spec_bench汇总 | 多变量变化，观察比值不能单项归因 |
+| E09 | GB10 Gemma-4 AWQ 4bit/8bit部署与压测 | 同26B-A4B系列的配置、token和性能 | 缺revision/校准/质量；峰值并发与配置冲突 |
+| E10 | GB10 llama.cpp构建、Qwen转GGUF、量化与Ollama导入 | 转换链、构建目标、CURL依赖、格式检查 | 每种模型/转换器仍需独立验证 |
+| E11 | 双RTX4080 vLLM Docker部署记录 | 容器、模型挂载、多卡和参数管理 | NVLink说法已修正；速度口径不完整，不作严谨收益表 |
+| E12 | 昇腾310P部署与压测记录 | 芯片/插件/镜像配套、实际样本量检查 | 一条请求不证明配置的十并发；旧参数不是当前默认值 |
+| E13 | RTX2060 Qwen3 Q6/Q5混合推理记录 | CPU/GPU卸载、主机内存和swap | 单次引擎观测，不当HTTP吞吐或稳定成绩 |
+| E14 | Intel Windows OpenVINO视觉部署记录 | GPU驱动、IR与视觉功能单独验证 | 原图片样本无公开授权链，不转存或当质量真值 |
+
+其他概念笔记包括KV、Prefill、Prefix Cache、ROCm/PyTorch、CUDA/Vulkan构建与环境封装，解释已按官方概念修订。没有形成完整公开记录的平台保留为适配方法，不补造运行成绩。
+
+## 3. 可公开的测量字段
+
+[measurements.json](measurements.json)保存七组结构化历史转录。数字保持源单位，字段按白名单手工整理；缺失数据不猜测补全。
+
+| 数据键 | 关键条件与结果 | 阅读位置 |
 | --- | --- | --- |
-| AMD 780M-GPU 适配教程、780M 配置与 890M 记录 | gfx、系统、运行库和后端条件 | 02、06、10 |
-| ROCm 与 PyTorch 适配、AMD ROCm vLLM 编译 | PyTorch/HIP、源码编译与最小验证 | 02、06 |
-| Linux CUDA、Flash Attention、CUDA/Vulkan 编译记录 | 驱动、Toolkit、wheel 与构建目录的区分 | 02、05、10 |
-| 双 RTX 4080 vLLM Docker 部署记录 | 模型路径、容器挂载、双卡配置 | 07、11 |
-| DGX Spark适配编译vllm部署Qwen3.6-35B-A3B模型（bf16/fp8精度） | GB10 编译错误、FP8 服务、200 请求输出 | 02、07、08、10 |
-| DGX Spark GB10部署gemma-4系列模型及关闭MTP推理加速 | MTP 关闭时的并发分组 | 09 |
-| DGX Spark GB10部署gemma-4系列模型及MTP推理加速 | MTP 打开时的吞吐、TPOT、ITL 与接受率 | 09 |
-| DGX Spark GB10编译DFlash推理加速模块集成到vllm中 | 基线/DFlash 记录与服务参数差异 | 09 |
-| Qwen3.5-9B Intel openvino 平台推理对比报告 | 模型 revision、INT4/INT8、Vulkan/SYCL、NPU 失败 | 03、06、09、10 |
-| oMLX 推理框架性能测试报告与压测流程 | 并发 1/2/4 的吞吐与单请求延迟 | 08 |
-| Mac Metal 编译、vllm-metal 和 MLX 记录 | 特定模型类型、文本/视觉能力与错误 | 06、10 |
-| RTX 2060 Qwen3 Q6/Q5 混合推理记录 | 主机内存、交换、卸载与生成速度 | 04、10 |
-| AMD Strix Halo 395 五机 HIP RPC 串联部署 Kimi-K2.5-Q2 实战文档 | 运行时内存、GTT/TTM、RPC 小上下文结果 | 10、11 |
-| Prefill、Prefix Cache、KV Cache 学习记录 | 概念与工程检查，按官方实现修订 | 01、04、07 |
-| Conda / PyInstaller 打包记录 | 环境与应用封装的边界 | 12 |
+| `dgx_qwen_fp8` | GB10/128GB/CUDA13；200请求突发，25600输出token/297.46s | 第3层服务，第4层突发与排队 |
+| `intel_openvino` | 16GB/OV2026.2.1；IR固定revision；INT4/8与后端观察 | 第2层制品，第3层管线，第4层比较 |
+| `omlx_concurrency` | 输入目标128、输出上限256；c1/c2/c4 | 第4层并发权衡 |
+| `gemma_mtp` | 输入512、输出上限256；三组并发开/关MTP | 第4层推测解码 |
+| `dflash_observation` | spec_bench、50请求；上下文/序列/内存/eager同时改变 | 第4层控制变量 |
+| `amd_rpc` | 五机395、ROCm7.2.1、llama b9557；内存与短测 | 第1层兼容，第3层RPC，第4层预算 |
+| `gemma_awq` | GB10/vLLM0.19.0；200请求、c2；AWQ4/8 | 第4层量化组合观察 |
 
-## 3. measurements.json 包含什么
+### E01 完整条件
 
-[measurements.json](measurements.json)采用字段白名单转录，数值保持原单位；缺少的数据不补写。
+vLLM `0.19.1rc1.dev337+g17d87168d.cu130`，ctx16184、batched8192、seqs4、内存0.80、FP8 KV、FlashInfer、prefix与chunked prefill。随机输入目标2048、输出128、200请求、到达率inf、seed42。实际输入411678、输出25600，平均TTFT148430.70ms，P99为293115.24ms。
 
-| 数据项 | 保留内容 | 限制 |
-| --- | --- | --- |
-| `dgx_qwen_fp8` | 设备、版本、200 请求、输入/输出 token、TTFT 与吞吐 | 缺模型 revision 与原始逐请求文件；突发压力不能代表轻负载体验 |
-| `intel_openvino` | 模型 revision、体积、INT4/INT8 指标、Vulkan/SYCL、NPU 错误 | 两组输出停在思考阶段；不同引擎计时边界不能混用 |
-| `omlx_concurrency` | 并发 1/2/4、样本数、延迟与吞吐 | 样本少，缓存状态与完整环境不足；不能证明稳定 P99 |
-| `gemma_mtp` | 各并发下开关 MTP 的指标与接受率 | 镜像 digest、逐请求数据和质量等价未补齐；未采用可疑峰值字段 |
-| `dflash_observation` | 相同任务汇总与两边服务配置 | 同时改变上下文、活跃序列、内存比例和 eager 条件；2.03 倍观察比值不能归因于 DFlash 单项 |
-| `amd_rpc` | HIP/内核/源码版本、内存错误、小上下文速度 | 无单机基线、长上下文服务负载和稳定性验收；不能计算多机加速比 |
+源笔记没有模型revision和完整结果JSON。这些数字可核算，不能承诺另一环境精确复现；突发负载也不代表轻负载交互体验。
 
-## 4. A10 原有 Case 的公开证据
+### E02 模型与环境
 
-A10 资料继续保存在[独立 Case](../../../cases/llama-cpp-flash-attention/README.md)：
+Core Ultra7 256V、Arc Lunar Lake、16GB；Ubuntu24.04.4、Mesa26.1.4、oneAPI2026.1.0、OpenVINO2026.2.1、GenAI/Tokenizers2026.2.1.0。
 
-- [公开输入](../../../cases/llama-cpp-flash-attention/data/workload.jsonl)：8 条自制技术问题。
-- [汇总 CSV](../../../cases/llama-cpp-flash-attention/results/observed-summary.csv)：12 组历史汇总转录。
-- [8 张原有操作截图](../../../cases/llama-cpp-flash-attention/figures/00-workload-check.png)：从输入检查到最终报告，可从 Case 顺序查看。
-- [脚本与步骤](../../../cases/llama-cpp-flash-attention/CASE.md)：下载、构建、服务、功能、压测和报告。
+- INT4：`OpenVINO/Qwen3.5-9B-int4-ov`，revision `3f31fc1609edb0cbc8b131bc4c291f1b15cb0676`，24文件，6129582094字节。
+- INT8：`OpenVINO/Qwen3.5-9B-int8-ov`，revision `3054198f70b6d50b97fa17ae80314e590c57def0`，24文件，9457724353字节。
+- GPU管线19输入/128输出token；NPU INT4编译失败，INT8在420秒超时退出124。
+- Vulkan/SYCL为pp512/tg128三轮、GPU23/CPU10层，llama.cpp精确commit未在源快照固定。
 
-原有材料尚缺修正后完整成功构建日志、第二个干净实例复建记录和完整公开逐请求原始结果。知识章节引用这些产物，不补造缺失证据。
+### E03/E05 版本边界
 
-## 5. 本轮实际执行了什么
+E03为5台Ryzen AI Max+395/8060S，ROCm7.2.1、HIP7.2.53211-e1a6bc5663、内核6.17.0-35、llama.cpp b9557-0f7fada56、gfx1151。120000MiB是修复后的设备可见总量，不是任意机器的物理/可用内存。
 
-在本机运行了[离线核查脚本](../examples/verify_records.py)，检查公开输入哈希、样例数、分组数及部分算术关系；实际控制台输出保存在[verified-output.txt](../examples/verified-output.txt)。此外检查了文档链接、图片、代码语法与公开字段。
+E05的Metal失败组合为M3 Ultra512GB、macOS26.3、特定分支commit9d36408；vllm-metal另一个组合为0.2.0、vLLM0.21.0+cpu、MLX0.31.2、Python3.12.13。两套结果分别记录，不混为单一环境。
 
-本轮没有重新下载和执行这些平台的模型，没有把源笔记转录当成本轮 GPU 测试日志。离线脚本通过，只说明它覆盖的计数与计算一致；不会自动证明源记录真实性、回答质量、性能稳定性或跨设备可复现性。
+### E07/E08/E09 比较的限制
 
-继续补实验时，应把新结果放在独立 run 目录，保存固定版本、完整启动配置、负载、逐请求记录和资源采样，再用同一套验收口径更新结论。
+E07镜像标签为`vllm/vllm-openai:gemma4-0505-cu130`，digest未保存，MTP候选数3。E08同时改变ctx32768→8192、seqs1→8、内存0.70→0.85，基线显式eager、另一边未显式配置。E09目标输出128而实际总输出25696，按实际token核算；异常峰值字段不用于推导。
+
+## 4. 离线检查与本轮验证
+
+从仓库根目录运行：
+
+```bash
+python docs/01-deployment-foundations/examples/verify_records.py
+```
+
+脚本只读取本目录JSON，检查部分成功计数、token/时间与记录吞吐、并发组配对和比值；[实际控制台输出](../examples/verified-output.txt)随文保存。它不连接设备、下载模型或发起推理。
+
+本轮还检查文档相对链接、代码围栏与Python语法，并查看目录、代表章节与图片的渲染。通过这些检查说明公开材料内部一致，不证明历史记录的所有质量、稳定性或跨设备复现要求已满足。
+
+## 5. 后续怎样补齐证据？
+
+新实验保存完整环境与制品身份、最终命令、输入、逐请求响应、错误、资源采样和统计程序。把质量与性能分开验收，固定版本和负载后再做对照。
+
+原始文件未公开的历史笔记仍可作为工程知识参考，但不直接当作材料齐全的完整复现实战。需要提交实战时，按[工程交付清单](../02-capability-layers/05-engineering-delivery.md)逐项补齐。
