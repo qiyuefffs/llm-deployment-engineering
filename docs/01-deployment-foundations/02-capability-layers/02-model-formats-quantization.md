@@ -131,3 +131,7 @@ vLLM部分版本的GGUF支持按实际功能测试，不假设与llama.cpp相同
 | [Mac](../engineering/apple-mlx.md) | GGUF/Metal与MLX制品分路线，视觉不沿用文本结论 |
 
 原操作全文：[HF→GGUF→量化→Ollama](../engineering/gguf-ollama.md)。制品交付包含身份清单、完整文件、转换/量化记录、摘要、功能与质量结果。
+
+## 2026-10 工程更新
+
+继续阅读更新后的[量化工程](../chapters/models/quantization.md)：维护中的工具、W/A/KV、GPTQ导出、FP8/NVFP4/MXFP4与分组质量/资源验收。

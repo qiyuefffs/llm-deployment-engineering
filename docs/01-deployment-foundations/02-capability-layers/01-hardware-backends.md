@@ -175,3 +175,7 @@ assert y[0, 0].item() == 32
 输出：环境清单、构建日志、模型支持表、最小计算与目标任务结果、内存和通信证据。[适配记录模板](../templates/adaptation-record.md)。
 
 通用基础接续[模型格式与量化](02-model-formats-quantization.md)、[推理框架](03-inference-frameworks.md)和[内存与性能](04-memory-performance.md)。需要具体设备命令和历史结果时，再查[工程实例矩阵](../engineering/README.md)。
+
+## 2026-10 工程更新
+
+当前硬件补充：[DGX Spark / GB10](../chapters/hardware/dgx-spark.md)，重点核对ARM64、统一内存预算、带宽与精确kernel支持。

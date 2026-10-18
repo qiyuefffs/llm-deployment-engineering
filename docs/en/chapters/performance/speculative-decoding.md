@@ -1,4 +1,4 @@
-# Speculative decoding: verify speed, answer quality, and attribution
+# Speculative decoding: MTP, EAGLE, DFlash, and DSpark
 
 [简体中文](../../../01-deployment-foundations/chapters/performance/speculative-decoding.md) | **English**
 
@@ -11,6 +11,85 @@
 Predictive decoding attempts to come up with multiple candidates at a lower cost and then verify by the target model, reducing the gradually generated serial costs. Whether or not it will benefit depends on the candidate's quality, acceptance rate, verification costs, device resources and workload. It's not going to accelerate by switching on all models.
 
 This chapter combines MTP on/off and DFlash records in FlowUs. Historical throughput can be used to learn how to analyze, but the original request and quality evidence is incomplete and cannot be added to the optimization results of this round of reproduction.
+
+## Current engineering workflow
+
+Sources checked on 2026-10-18. The sections below describe current configurations; the original measurements later in this chapter retain their historical environments and evidence limits. See [DSpark](dspark.md) for its full llama.cpp procedure and adaptive verification.
+
+### MTP training is not automatically MTP inference
+
+MTP teaches prediction of several future positions. Inference acceleration requires published prediction layers or an assistant, engine support, and target verification. A paper using MTP does not establish that released weights contain the module.
+
+Check config, weight indexes, and the engine's exact model_type. Quantized repositories may omit MTP weights. A missing module cannot be repaired by adding `method=mtp`.
+
+| Route | Needs | Costs and constraints |
+| --- | --- | --- |
+| Native MTP | Prediction layers and engine implementation | Extra forward/state; quantization support varies |
+| Gemma assistant | Matching assistant checkpoint | Uses a dedicated MTP path despite the model field |
+| Standalone draft | A smaller compatible model | Weights, KV, drafting, vocabulary alignment |
+| EAGLE/DFlash/DSpark | Target-specific trained drafter | Features, conversion, and version requirements |
+| N-gram/suffix | Repeated input/history patterns | No large additional drafter; workload-dependent gains |
+
+### Minimal vLLM MTP reference
+
+The official example uses `XiaomiMiMo/MiMo-7B-Base`. In a compatible environment with complete local weights:
+
+```bash
+vllm serve /srv/models/MiMo-7B-Base \
+  --served-model-name mimo-mtp-lab \
+  --host 127.0.0.1 --port 8000 \
+  --tensor-parallel-size 1 \
+  --max-model-len 4096 --max-num-seqs 4 \
+  --max-num-batched-tokens 4096 --gpu-memory-utilization 0.80 \
+  --speculative-config '{"method":"mtp","num_speculative_tokens":1}'
+```
+
+This is a base model. Use an appropriate completion interface rather than assume a chat template:
+
+```bash
+curl --fail-with-body http://127.0.0.1:8000/v1/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"mimo-mtp-lab","prompt":"The capital of France is","temperature":0,"max_tokens":32}'
+```
+
+Start at K=1. For the baseline, preserve model, port, budgets, and sampling, and remove the whole speculative config. Start each group sequentially. Increase only K afterward and compare progress, verification cost, and total time.
+
+### Gemma assistants need an explicit method
+
+The current documented form is:
+
+```bash
+vllm serve /srv/models/gemma-4-E2B-it \
+  --tensor-parallel-size 1 --max-model-len 8192 \
+  --host 127.0.0.1 --port 8000 \
+  --speculative-config '{"method":"mtp","model":"/srv/models/gemma-4-E2B-it-assistant","num_speculative_tokens":1}'
+```
+
+Use paired artifacts and observe their license/access requirements. If logs identify the assistant as `draft_model`, the installed engine may lack the dedicated MTP path. Do not reuse the older historical image command that omits method; verify support and use a matching version.
+
+### Quantizing the draft output head
+
+Current developer documentation provides `draft_lm_head_quantization` with fp8 or nvfp4. It creates a quantized copy for an MTP drafter sharing an unquantized target lm_head; target verification retains its own head. This does not quantize the whole target.
+
+It requires Model Runner V2 and compatible kernels. The copy consumes memory and may change acceptance length. Evaluate it separately after ordinary MTP, especially for bandwidth-limited large-vocabulary workloads; measure draft time, acceptance, and remaining KV budget.
+
+### Dynamic SD versus adaptive verification
+
+Dynamic SD uses `num_speculative_tokens_per_batch_size` entries `[start_batch,end_batch,K]`. Derive intervals from your own workload. The reviewed documentation lists EAGLE, EAGLE-3, and DFlash testing; DP>1 disables the dynamic intervals and falls back to static K.
+
+Adaptive verification instead assigns budgets from request confidence and measured costs. Its FULL-graph requirements are separate; see [DSpark](dspark.md).
+
+### Run an interpretable experiment
+
+1. Save target/draft revisions, quantization, tokenizer, template, engine, and device.
+2. Without speculation, complete a quality set and record answers, termination, actual lengths, and resources.
+3. Add the shortest supported draft; verify mechanism activation through logs and acceptance counters.
+4. Fix inputs/sampling; sweep K and c1/c2/c4/c8 with at least three repetitions.
+5. Evaluate dynamic policies, quantization, and caching separately before combining changes.
+
+Distribution-preserving speculative sampling targets the distribution of the **given target model**. It does not restore pre-quantization information or guarantee identical strings across kernels, random streams, or batches. Verify rejection sampling, settings, and task quality; one matching answer is not statistical equivalence.
+
+Sources: [Pinned MTP documentation](https://github.com/vllm-project/vllm/blob/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/speculative_decoding/mtp.md) · [Pinned Dynamic SD](https://github.com/vllm-project/vllm/blob/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/speculative_decoding/dynamic_speculative_decoding.md).
 
 ## 1. Understand what happens in a round
 

@@ -146,3 +146,7 @@ SYCL,MUSA,CANN is prepared separately by the corresponding submission and manufa
 |Quick local management| Ollama/LM Studio |Backend, templates, APIs and maintenance costs|
 
 First, the hardware, artifact, functionality, three screens, and then the task quality, latency, resources and delivery costs are compared. Complete FlowUs framework/service articles are written in device instances, with no replacement deployment steps.
+
+## October 2026 engineering update
+
+[Current engine selection](../chapters/frameworks/serving-engines.md) updates V1 scheduling, SGLang, TensorRT-LLM entry points, model state, and version matching.

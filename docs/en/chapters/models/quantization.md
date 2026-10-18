@@ -1,8 +1,8 @@
-# Quantization Options: From Putting It Down to Using It Well
+# Quantization: capacity, quality, and actual execution
 
 [简体中文](../../../01-deployment-foundations/chapters/models/quantization.md) | **English**
 
-[Contents](../../SUMMARY.md) · [Headquarters](../../02-capability-layers/02-model-formats-quantization.md) · [Previous: GGUF conversion](gguf-conversion.md)
+[Contents](../../SUMMARY.md) · [Model layer](../../02-capability-layers/02-model-formats-quantization.md) · [Previous: GGUF conversion](gguf-conversion.md)
 
 ## Overview of this chapter
 
@@ -176,3 +176,157 @@ Gradual controlling can be done under three conditions: original precision, cand
 Each artifact saves the source model revision, conversion/quantization, tool commit, command, quantization configuration, calibration data description, file summary, permission and acceptance testing results. The name describes the series, size, quantization type and version, with no ambiguous final, new, best as the only identifier.
 
 Service configuration References to a specific version directory, and updates to pass acceptance testing are deleted by default. When decay occurs, restore the corresponding model, tokenizer, template and engine configuration, not only change the weights files, but retain the new template and incompatible cache.
+## 2026 update: current quantization engineering
+
+**Sources checked: 2026-10-18.** AutoAWQ is deprecated as a library; new projects should use maintained workflows such as LLM Compressor. This does not invalidate the AWQ algorithm or all existing AWQ weights. See the [source review](../../evidence/2026-10-refresh.md).
+
+## 11. Separate weights, activations, and KV
+
+W means weights, A activations, and KV generation state. W4A16 does not make every operation, accumulator, or cache 4-bit. W8A8 must distinguish INT8/FP8, scaling granularity, and kernels.
+
+| Route | Compressed component | Evaluate for | Verify |
+| --- | --- | --- | --- |
+| GGUF quant types | Tensor-specific weights | Local/multiple backends, mixed offload | Architecture, types, backend kernels |
+| GPTQ/AWQ W4A16 | Grouped integer weights | Capacity and low-batch bandwidth | Groups, zero points, permutations, kernels |
+| FP8 W8A8 | Weights and activations | Supported modern GPU execution | E4M3/E5M2, scales, dynamic/static |
+| MXFP4 | FP4 and microscaling metadata | Matching artifacts and kernels | Blocks, scales, layout, activation path |
+| NVFP4 | NVIDIA FP4 and hierarchical scaling | Supported Blackwell native paths | Exact architecture, export format, kernel |
+| KV quantization | Historical K/V | Long context/concurrent capacity | Attention, scales, quality |
+
+MXFP4 and NVFP4 differ in scaling and serialization. Renaming a file or dtype does not convert them. Scales, alignment, and higher-precision layers prevent an exact 4× artifact reduction.
+
+### 11.1 Replace obsolete tool workflows
+
+vLLM directs new AWQ work from AutoAWQ to LLM Compressor. Preserve an old environment for historical reproduction; pin a maintained tool, PyTorch, and export format for new work.
+
+GPTQ/AWQ are optimization methods, FP8/NVFP4 numerical schemes, and compressed-tensors/ModelOpt artifact conventions. They can be combined; GPTQ does not universally imply INT4.
+
+### 11.2 Native execution and fallback
+
+vLLM detects ModelOpt schemes through `hf_quant_config.json`. NVFP4 may select different linear backends. Supported configurations without a native FP4 GEMM can use a W4A16 route such as Marlin with a warning.
+
+Fallback can preserve executability without native-FP4 prefill gains. It does not establish universal older-GPU support. Inspect kernels, retained precision, preprocessing, and memory.
+
+Current configuration uses `--linear-backend`; `VLLM_NVFP4_GEMM_BACKEND` is deprecated. Start with auto, save logs, then fix a backend only for a specific experiment. Verify exact SM100/SM120/SM121 coverage.
+
+## 12. Complete W4A16 workflow
+
+This GPU reference procedure follows official LLM Compressor APIs and has not been executed for this repository. Qwen3-0.6B keeps the first experiment small; its quality does not generalize to larger models.
+
+### 12.1 Pin tools and calibration inputs
+
+Use a separate quantization environment. Prepare hardware-compatible PyTorch, then:
+
+```bash
+git clone https://github.com/vllm-project/llm-compressor.git
+git -C llm-compressor checkout f15ac1d2243c3fd60cd745cf4e735e2814142d76
+python -m pip install ./llm-compressor datasets huggingface_hub
+mkdir -p records/quant artifacts
+python -m pip freeze > records/quant/packages.txt
+```
+
+Download `Qwen3-0.6B` to `/srv/models/Qwen3-0.6B` with the revision-preserving approach in the [DSpark download procedure](../performance/dspark.md). Prepare UTF-8 `calibration.jsonl`, one object per line:
+
+```json
+{"messages":[{"role":"user","content":"说明模型权重和KV缓存的区别。"},{"role":"assistant","content":"权重是模型固定参数，KV缓存保存当前输入及生成历史对应的注意力状态。"}]}
+```
+
+Use authorized representative data. Start with 512 samples and 2048-token truncation; record source, language/task coverage, count, and preprocessing. Repeating the schema example 512 times is not representative calibration. Keep evaluation questions separate.
+
+### 12.2 Save quantize_w4a16.py
+
+```python
+import hashlib
+import json
+from pathlib import Path
+from datasets import load_dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from llmcompressor import oneshot
+from llmcompressor.modifiers.gptq import GPTQModifier
+
+source = "/srv/models/Qwen3-0.6B"
+calibration = Path("calibration.jsonl")
+output = Path("artifacts/Qwen3-0.6B-W4A16")
+if output.exists():
+    raise FileExistsError("Choose a new artifact directory")
+tokenizer = AutoTokenizer.from_pretrained(source, local_files_only=True)
+model = AutoModelForCausalLM.from_pretrained(
+    source, local_files_only=True, torch_dtype="auto")
+dataset = load_dataset("json", data_files=str(calibration), split="train")
+if len(dataset) < 512:
+    raise ValueError("Provide at least 512 representative calibration samples")
+dataset = dataset.shuffle(seed=42).select(range(512))
+
+def encode(row):
+    text = tokenizer.apply_chat_template(
+        row["messages"], tokenize=False, add_generation_prompt=False,
+        enable_thinking=False)
+    return tokenizer(text, max_length=2048, truncation=True,
+                     padding=False, add_special_tokens=False)
+
+dataset = dataset.map(encode, remove_columns=dataset.column_names)
+recipe = GPTQModifier(targets="Linear", scheme="W4A16", ignore=["lm_head"])
+oneshot(model=model, dataset=dataset, recipe=recipe,
+        max_seq_length=2048, num_calibration_samples=512)
+model.save_pretrained(output, save_compressed=True)
+tokenizer.save_pretrained(output)
+Path("records/quant/calibration.json").write_text(json.dumps({
+    "file_sha256": hashlib.sha256(calibration.read_bytes()).hexdigest(),
+    "samples": 512, "max_seq_length": 2048, "seed": 42,
+    "source": source, "artifact": str(output), "scheme": "W4A16",
+    "ignored": ["lm_head"], "enable_thinking": False,
+}, indent=2), encoding="utf-8")
+```
+
+```bash
+python quantize_w4a16.py > records/quant/quantize.log 2>&1
+find artifacts/Qwen3-0.6B-W4A16 -type f -exec sha256sum {} \; \
+  > records/quant/artifact-sha256.txt
+```
+
+Ignoring lm_head preserves that output layer. Inspect the exported quantization_config for actual targets, group size, and retained tensors. Quantization needs original weights, activations, and workspace; fitting the final 4-bit artifact does not establish sufficient conversion resources.
+
+### 12.3 Load in a separate inference environment
+
+```bash
+vllm serve artifacts/Qwen3-0.6B-W4A16 \
+  --served-model-name qwen-quant-lab \
+  --host 127.0.0.1 --port 8000 \
+  --max-model-len 4096 --max-num-seqs 4 \
+  --gpu-memory-utilization 0.80
+```
+
+Check detection of compressed-tensors and the actual kernel. Do not force `--quantization awq`: this example applies GPTQ and exports compressed-tensors.
+
+Run short prompts, fixed quality tests, 512-input/256-output performance, and long inputs. The original-precision baseline must retain the same source, template, thinking, sampling, and request set. Quantization-related kernel changes belong to the solution; avoid also changing concurrency, context, and graphs.
+
+## 13. FP8 and FP4 experiments
+
+FP8_DYNAMIC commonly uses per-channel weights and per-token dynamic activations. That specific flow can avoid activation calibration; not all FP8 methods can. Static scales and KV may need representative data.
+
+Start FP4 with an official matching prequantized model. For custom quantization, follow the exact model's current LLM Compressor/ModelOpt example and preserve transforms, calibration, retained layers, and export settings. A generic FP8 config snippet does not implement arbitrary FP4 adaptation.
+
+Compare BF16, W4A16, FP8, and hardware-supported FP4. Each candidate needs hashes, loading logs, peak memory, prefill/decode/HTTP results, and quality. Mark unsupported candidates with a reason, not a fictitious zero-speed result.
+
+## 14. Isolate KV precision
+
+| Group | Weights | KV | Purpose |
+| --- | --- | --- | --- |
+| A | Original | Original | Baseline |
+| B | Quantized | Original | Weight change |
+| C | Original | Candidate such as FP8 | KV change |
+| D | Quantized | Same as C | Combined behavior |
+
+`--kv-cache-dtype fp8` does not establish calibration. The reviewed no-calibration route uses scale 1.0; documentation recommends representative LLM Compressor calibration. Some per-head paths require a particular attention backend.
+
+FA3 with FP8 KV can also quantize Q, so computation is not necessarily unchanged. Newer `--kv-cache-dtype-skip-layers` can retain sensitive/sliding-window layers at native precision; verify installed support first.
+
+Test short tasks, retrieval at target length, multiple-hop relations, numbers/code, and stability near the limit. Record KV bytes, available blocks, successful lengths, and quality. Halving KV does not halve total device memory.
+
+## 15. Select the deployment
+
+For each row, record source revision, tool commit, W/A/KV, scales, artifact format, kernel, device, length/concurrency, actual outputs, quality, and performance.
+
+Apply predetermined quality, P95 latency, and error/OOM gates before choosing lower memory or higher goodput. Project-specific thresholds are not automatically production standards.
+
+Sources: [AutoAWQ deprecation](https://docs.vllm.ai/en/latest/features/quantization/auto_awq/) · [Scheme selection](https://docs.vllm.ai/projects/llm-compressor/en/latest/steps/choosing-scheme/) · [Pinned GPTQ example](https://github.com/vllm-project/llm-compressor/blob/f15ac1d2243c3fd60cd745cf4e735e2814142d76/examples/quantization_w4a16/llama3_example.py) · [ModelOpt](https://github.com/vllm-project/vllm/blob/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/quantization/modelopt.md) · [KV quantization](https://github.com/vllm-project/vllm/blob/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/quantization/quantized_kvcache.md).

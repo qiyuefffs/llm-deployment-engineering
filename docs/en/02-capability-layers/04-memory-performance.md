@@ -112,3 +112,7 @@ The controls must be fixed: model / revision, template, input/output, sample, re
 |NPU fast but wrong content|shape/operator/precision Repair or rollback|Double acceptance testing between performance and quality| [Intel full NPU TTS](../engineering/intel-arc-npu.md) |
 
 Experimental processes: baseline → bottleneck evidence→ assumptions→ changes→ the same workload Replication→ quality / resources → adoption or fallback. A single variable can be attributed and a multi-variable is retained as a combined observation. Unimproved results must also be saved, such as 8060S BF16 10.8→10.1 tokens/s after batch enlargement.
+
+## October 2026 engineering update
+
+[MTP and dynamic speculation](../chapters/performance/speculative-decoding.md), [DSpark](../chapters/performance/dspark.md), and [PD/MoE](../chapters/performance/disaggregated-serving.md) provide separate configurations, experiment matrices, and acceptance criteria.

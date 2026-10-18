@@ -94,3 +94,7 @@
 | Apple文本模型 | [MLX-LM](https://github.com/ml-explore/mlx-lm) | 在MLX之上提供模型实现与生成工具 |
 | Intel开发栈 | [oneAPI](https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html) / [OpenVINO](https://docs.openvino.ai/) | 开发工具、计算库、推理Runtime与生成式管线 |
 | 昇腾软件栈 | [CANN](https://www.hiascend.com/en/software/cann) | 运行时、算子、开发工具和上层配套 |
+
+## 2026-10 工程更新
+
+本轮官方资料、固定源码、概念修订和验证状态集中在[2026-10资料核查](../evidence/2026-10-refresh.md)。

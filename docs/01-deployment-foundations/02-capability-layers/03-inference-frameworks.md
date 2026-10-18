@@ -144,3 +144,7 @@ SYCL、MUSA、CANN按对应提交和厂商工具链单独准备，未知CMake变
 | 快速本地管理 | Ollama/LM Studio | 后端、模板、API与维护成本 |
 
 先通过硬件、制品、功能三个筛选，再比较同任务质量、延迟、资源与交付成本。完整FlowUs框架/服务文章写入各设备实例，不用选型表替代部署步骤。
+
+## 2026-10 工程更新
+
+[当前引擎选型](../chapters/frameworks/serving-engines.md)补充V1调度、SGLang、TensorRT-LLM入口、混合模型状态与版本配套。

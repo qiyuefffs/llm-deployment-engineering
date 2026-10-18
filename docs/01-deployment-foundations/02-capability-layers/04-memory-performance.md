@@ -110,3 +110,7 @@ KV bytes ≈ 2 × attention层数 × KV heads × head_dim
 | NPU快但内容错误 | shape/算子/精度修复或回滚 | 性能与质量双验收 | [Intel全NPU TTS](../engineering/intel-arc-npu.md) |
 
 实验流程：基线→瓶颈证据→假设→变更→同负载复测→质量/资源→采用或回退。单变量可分析归因，多变量保留为组合观察。结果未改善也必须保存，例如8060S BF16放大batch后10.8→10.1token/s。
+
+## 2026-10 工程更新
+
+[MTP与动态推测](../chapters/performance/speculative-decoding.md)、[DSpark](../chapters/performance/dspark.md)、[PD与MoE](../chapters/performance/disaggregated-serving.md)分别给出配置、实验矩阵和验收条件。

@@ -17,6 +17,15 @@ A practical knowledge base for deployment engineers, covering hardware and runti
 | Standalone cases | [Case directory](cases/README.en.md) | Tutorials, scripts, inputs, screenshots, and results kept with each project |
 | CPU walkthrough | [Run a complete inference service](docs/en/practice/first-service/README.md) | Artifact verification, API requests, load testing, and acceptance checks |
 
+## October 2026 technical update
+
+The original five-layer framework now includes current engineering procedures:
+
+- [MTP and dynamic speculation](docs/en/chapters/performance/speculative-decoding.md), and a [complete DSpark deployment](docs/en/chapters/performance/dspark.md).
+- [Quantization](docs/en/chapters/models/quantization.md): LLM Compressor, GPTQ, FP8, NVFP4/MXFP4, and KV precision.
+- [Current engines](docs/en/chapters/frameworks/serving-engines.md), [PD/MoE](docs/en/chapters/performance/disaggregated-serving.md), and [DGX Spark](docs/en/chapters/hardware/dgx-spark.md).
+- [Benchmark workflow](docs/en/chapters/performance/benchmarking.md) and [sources, snapshots, and validation status](docs/en/evidence/2026-10-refresh.md).
+
 ## Scope
 
 - Five engineering layers: hardware and runtimes; model formats and quantization; inference frameworks; memory and performance; engineering delivery.

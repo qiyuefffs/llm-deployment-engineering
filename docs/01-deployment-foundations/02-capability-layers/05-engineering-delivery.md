@@ -67,3 +67,7 @@ Intel全NPU TTS性能达标但内容错误，因此回滚；Kokoro CPU实时性�
 | 7.问题与优化结论 | 基线、变更、失败、回滚、限制和待测 | 解决了什么，在哪些条件成立 |
 
 结果目录以run-id区分。升级前保留旧组合，升级后重复相同输入与SLO检查；没有验证的功能标“未测”。模板：[适配记录](../templates/adaptation-record.md)、[实验记录](../templates/experiment-record.md)、[项目复盘](../04-project-review.md)。
+
+## 2026-10 工程更新
+
+交付中增加模型/配置清单与[统一压测矩阵](../chapters/performance/benchmarking.md)，明确区分plan_only与实际执行结果，质量和资源单独验收。

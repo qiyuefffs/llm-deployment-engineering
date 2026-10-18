@@ -69,3 +69,7 @@ Intel's full NPU TTS performance is upgraded but the content is incorrect, hence
 |7. Questions and Optimized Conclusions|Baseline, changes, failures, rollbacks, restrictions and pending testing|What is the solution and what are the conditions?|
 
 The resulting directory is distinguished by run-id. Keep old combinations before upgrading and repeat the same input with SLO checks after upgrading; Unverified functionality not tested. template : [Adapted records](../templates/adaptation-record.md), [Experimental records](../templates/experiment-record.md), [Project retrospective](../04-project-review.md).
+
+## October 2026 engineering update
+
+Preserve a model/configuration manifest and [repeatable benchmark matrix](../chapters/performance/benchmarking.md). Distinguish plan_only from executed results, and validate quality/resources separately.

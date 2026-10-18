@@ -200,3 +200,26 @@ Start with the historical configuration of GB10:ctx16184, seqs4, batched8192,FP8
 The first round fixed all the conditions, only changing the activity sequence 1/2/4, observing KV, output throughput and TTFT. The second round fixed the appropriate seqs, changed only the batched budget, observed the long input TTFT, short request ITL and workspace. The third round fixed workload, separately compared to the cold/hot cache. All operations retain the input and end causes, and quality failure operations are not involved in effective throughput.
 
 If the short request is slower after the batched budget is reduced, the long input of the first token is slower, it can be explained as scheduling substitution. If it all slows down, keep looking at the extra rounds, utilization rates and software costs. The goal of modeling is to find the work point to meet the task, not to maximize the value of each parameter.
+## 2026 update: caching, scheduling, and state transfers
+
+vLLM V1 enables chunked prefill where supported. Scheduling generally places decode first, then fills the remaining token budget with prefill. Smaller budgets can reduce streaming interference; larger ones may complete long inputs sooner. Inspect effective configuration before claiming a default feature as a new optimization.
+
+### Prefix reuse is not response reuse
+
+Prefix caching reuses state for matching tokens and still generates the new answer. Template, system text, tools, image processing, revision, and adapter can change identity. A variable timestamp at the beginning can destroy a reusable prefix.
+
+State the hit-rate denominator: requests, matching tokens, and blocks differ. Test cold A, matching-prefix B, different-prefix C, and eviction D. Save actual prefill tokens, counters, and TTFT rather than infer a hit from a faster second request.
+
+### When KV offloading helps
+
+Offloading can relieve long-session capacity limits, but the value depends on reuse, bytes, host memory, link bandwidth, and queues. Capacity expansion alone can admit more work into an inefficient transfer path.
+
+Persistent state must match model, template, positional encoding, dtype, layout, and engine. It is not a universal cache file. Validate restored answers and lengths; retain recomputation as a recovery path.
+
+### State is not always ordinary KV
+
+Hybrid attention/GDN/SSM can combine window caches, compressed state, and recurrent state. Branching, rejected drafts, cancellation, and PD transfers require correct save/restore support.
+
+Record each buffer and layer implementation. State does not universally grow linearly with all tokens, and one FlashAttention backend cannot serve every architecture.
+
+Continue with [engines and architectures](../frameworks/serving-engines.md), [PD/KV transfer](disaggregated-serving.md), and [separate weight/KV experiments](../models/quantization.md).

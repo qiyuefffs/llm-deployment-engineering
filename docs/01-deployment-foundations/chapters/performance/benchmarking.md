@@ -221,3 +221,53 @@ Intel的Whisper核心RTF0.0387、首轮进程8.97秒就是明显例子。用户�
 一份有用报告应能回答：现在推荐哪个配置、适合多长输入/输出和多大负载、超过边界会怎样、下一项最值得试什么。比如oMLX先补同样本量并发曲线，GB10先补有限到达率，AWQ先补质量回归，DFlash先拆分配置变量。
 
 这样每个后续实验都解决一个明确问题。不要为增加测试数量而不断换工具、换数据和重跑已经足够的结果；保留可复查的原始材料，围绕剩余风险推进。
+
+## 2026更新：统一跑完一组优化对照
+
+新增[矩阵脚本](../../examples/run_optimization_matrix.py)用于固定HTTP压测参数、交替并发顺序和保存每轮结果。它不启动模型，不修改GPU配置；默认只生成计划。实际执行需要已就绪的服务以及配套`vllm bench serve`客户端。
+
+先从仓库根目录生成计划：
+
+```bash
+python docs/01-deployment-foundations/examples/run_optimization_matrix.py \
+  --model serving-lab --tokenizer /srv/models/example-model \
+  --base-url http://127.0.0.1:8000 \
+  --input-len 512 --output-len 256 --num-prompts 64 \
+  --concurrency 1 2 4 8 --repeats 3 \
+  --output results/baseline-plan
+```
+
+检查`manifest.json`中的12个命令、模型ID、tokenizer、请求数与采样。`status=plan_only`表示没有发请求，不能作为性能结果。确认后换一个新目录，加入`--execute`运行：
+
+```bash
+python docs/01-deployment-foundations/examples/run_optimization_matrix.py \
+  --model serving-lab --tokenizer /srv/models/example-model \
+  --base-url http://127.0.0.1:8000 \
+  --input-len 512 --output-len 256 --num-prompts 64 \
+  --concurrency 1 2 4 8 --repeats 3 \
+  --output results/baseline-run --execute
+```
+
+脚本检查本地CLI支持所需参数，保存帮助和版本；每轮产生`benchmark.log`与`result.json`。命令失败、结果文件缺失或不完整、请求失败都会停止执行，并在manifest中记录failed。即使命令退出码为0，也必须通过结果完整性检查。
+
+**采样约定：** temperature0、固定seed、ignore_eos强制目标输出负载；因此它用于性能实验，不能代替自然停止和答案质量测试。随机输入的实际token由结果确认。相同seed仅在同一生成器、tokenizer和版本下可比较，配置hash不是原始输入文件hash。严格逐字输入对照应使用固定公开请求集与该版本支持的custom数据入口。
+
+**缓存约定：** 脚本不重置缓存。重复随机seed会重用前缀，开启APC时后续轮次可能变成热缓存。纯引擎对照使用明确关闭前缀复用的服务配置；缓存实验则单独定义冷/热组并记录命中。不能将预热和复用造成的收益全部归因推测或量化。
+
+### 负载至少分三类
+
+| 负载 | 示例参数 | 主要观察 |
+| --- | --- | --- |
+| Decode为主 | 输入512、输出1024 | TPOT、接受长度、权重带宽与草稿成本 |
+| Prefill为主 | 输入8192、输出128 | TTFT、计算、workspace与图 |
+| 混合服务 | 固定长短请求集，逐步增加到达率 | 排队、ITL尾部、抢占与有效吞吐 |
+
+数字是教学配置；先确认输入加输出不超过模型/服务长度。将`--request-rate inf`改为有限req/s可以引入受控到达率，同时仍受客户端并发上限约束。不要把并发档位和实际到达率混用。
+
+### 对照与验收
+
+先测baseline，再按相同参数测MTP、DSpark或量化候选。脚本内部会交替并发扫序，跨服务方案仍应手动交替A/B或B/A。每轮保留真实输出token和总时长，核算`total_output_tokens / duration`，再看P95/P99和错误；失败请求也必须计入报告。
+
+资源采样与质量集另行执行，不能从benchmark成功推断它们通过。在线Goodput通常表示满足延迟SLO的请求数/秒；若还要求质量合格，需将逐请求质量结果关联后重新统计，并说明单位是req/s还是token/s。
+
+相关专题：[MTP](speculative-decoding.md) · [DSpark](dspark.md) · [量化](../models/quantization.md) · [PD分离](disaggregated-serving.md)。

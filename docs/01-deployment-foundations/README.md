@@ -7,6 +7,12 @@
 
 **[完整目录](SUMMARY.md) · [硬件实例](engineering/README.md) · [环境与数据约定](00-preface.md) · [独立 Case](../../cases/README.md) · [仓库首页](../../README.md)**
 
+## 2026-10 当前部署与优化
+
+按对应能力层阅读：[当前引擎](chapters/frameworks/serving-engines.md) · [MTP](chapters/performance/speculative-decoding.md) · [DSpark完整流程](chapters/performance/dspark.md) · [量化工程](chapters/models/quantization.md) · [PD与MoE](chapters/performance/disaggregated-serving.md) · [DGX Spark](chapters/hardware/dgx-spark.md)。
+
+[更新说明与官方资料](evidence/2026-10-refresh.md)记录源码快照和支持限制。[压测章节](chapters/performance/benchmarking.md)提供可执行矩阵；新GPU方案标注为官方参考流程，实际性能继续引用原始测量条件。
+
 ## 先认识硬件与计算软件栈
 
 | 平台 | 硬件和软件怎样配合 | 基础介绍 |

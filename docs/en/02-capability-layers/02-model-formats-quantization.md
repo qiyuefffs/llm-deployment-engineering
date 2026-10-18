@@ -133,3 +133,7 @@ Objective tasks and device → Engine support matrix → Original precision base
 | [Mac](../engineering/apple-mlx.md) |GGUF/Metal and MLX artifact segmentation routes, visuals not based on text|
 
 The original full text: [HF→GGUF→ quantization →Ollama](../engineering/gguf-ollama.md). Artifact delivery includes identity lists, complete files, conversion/quantisation records, summaries, functionality and quality results.
+
+## October 2026 engineering update
+
+Continue with the updated [quantization workflow](../chapters/models/quantization.md): maintained tools, W/A/KV, GPTQ export, FP8/NVFP4/MXFP4, and separate quality/resource acceptance.

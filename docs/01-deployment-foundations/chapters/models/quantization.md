@@ -8,6 +8,8 @@
 
 本章结合FlowUs中的GGUF量化、Intel IR INT4/INT8和GB10 AWQ对比记录，解释选择与验证过程。转换操作接续上一章；历史数字集中保存在[测量文件](../../evidence/measurements.json)。
 
+**2026-10更新：** 本章后半新增当前量化工具、NVFP4/MXFP4、可执行GPTQ流程和KV精度实验。AutoAWQ库已弃用，新项目按LLM Compressor等维护中的工具准备；这不表示AWQ算法或已有AWQ权重全部失效。官方资料与固定提交见[核查清单](../../evidence/2026-10-refresh.md)。
+
 ## 1. 把格式、方法和位宽分开
 
 GGUF、safetensors和OpenVINO IR是制品表示；AWQ、GPTQ是量化方法或相关部署路线；INT4、INT8、FP8描述数值位宽或类型；实际执行还取决于布局与kernel。这几项需要同时写清，不能只写“用了4bit”。
@@ -174,3 +176,154 @@ vllm bench serve \
 每份制品保存源模型revision、转换/量化工具commit、命令、量化配置、校准数据说明、文件摘要、许可和验收结果。名称写清系列、大小、量化类型和版本，不用含糊的final、new、best作为唯一身份。
 
 服务配置引用一个明确版本目录，更新通过验收后再切默认。发生质量退化时恢复对应模型、tokenizer、模板和引擎配置，不能只换回权重文件，却保留新模板和不兼容缓存。
+
+## 11. 当前量化选型：先分清W、A和KV
+
+W是权重，A是激活，KV是生成历史状态。W4A16表示4bit权重和16bit激活，不代表所有运算、累加与KV都是4bit。W8A8也要区分INT8、FP8、每tensor/每channel/每token scale及实际kernel。
+
+| 路线 | 主要压缩对象 | 优先使用场景 | 需要核对 |
+| --- | --- | --- | --- |
+| GGUF K/I-quant等 | 按张量类型保存量化权重 | llama.cpp、多后端、CPU/GPU混合 | 目标架构、量化类型、后端kernel |
+| GPTQ/AWQ W4A16 | 分组整数权重 | 低batch带宽与模型容量 | group size、zero point、排列与Marlin等kernel |
+| FP8 W8A8 | 浮点权重与激活 | 具有相应执行路径的现代GPU | E4M3/E5M2、scale粒度、dynamic/static |
+| MXFP4 | FP4值及microscaling元数据 | 支持该制品和kernel的设备 | 块结构、scale、布局、激活路径 |
+| NVFP4 | NVIDIA FP4方案及分级scale | 支持原生路径的Blackwell设备 | 精确架构、ModelOpt/其他导出格式、kernel |
+| FP8等KV量化 | K/V状态 | 长上下文和并发容量受限 | attention后端、scale、长文质量 |
+
+MXFP4与NVFP4的缩放组织和序列化并不相同，不能改一个文件名或dtype字段就互转。量化值之外还有scale、对齐与保留高精度层，4bit制品不应按严格4倍缩小验收。
+
+### 11.1 不再从AutoAWQ旧环境开始新工程
+
+vLLM官方已提示AutoAWQ库弃用，并指向LLM Compressor中的AWQ流程。保留旧AWQ环境可以复现历史制品，新工程则使用维护中的工具，并固定工具commit、PyTorch与导出格式。
+
+GPTQ/AWQ是优化方法，NVFP4/FP8是数值方案，compressed-tensors/ModelOpt是制品约定；这些概念可以组合。不要按“用了GPTQ，所以肯定是INT4”推断最终文件。
+
+### 11.2 原生低精度与fallback区别
+
+当前vLLM的ModelOpt路径通过`hf_quant_config.json`识别量化方案。NVFP4制品可以选择不同linear backend；某些设备没有受支持的原生FP4 GEMM时，会在可支持的组合下使用Marlin等W4A16执行并记录警告。
+
+这类fallback可以解决可运行性，但计算密集prefill的收益不等同原生FP4。也不能由“能读取NVFP4文件”推断任意旧GPU均可部署。查看实际kernel、非量化层、预处理与显存，再测prefill和decode。
+
+当前配置使用`--linear-backend`，旧`VLLM_NVFP4_GEMM_BACKEND`已弃用。起步用auto并保存日志，只有明确需要验证某后端时才固定它。SM100、SM120/121等平台的具体覆盖应分别查，不能只写Blackwell全支持。
+
+## 12. 完整W4A16流程：本地校准、GPTQ、导出和加载
+
+以下为根据LLM Compressor官方API整理的参考实验，未在本仓库GPU执行。选择较小的`Qwen3-0.6B`降低首次验证成本，不将小模型的质量结论推广到其他模型。
+
+### 12.1 固定工具与输入
+
+量化最好使用单独环境，避免与已有推理服务互相修改依赖。先按目标硬件配置配套PyTorch，再安装固定LLM Compressor源码：
+
+```bash
+git clone https://github.com/vllm-project/llm-compressor.git
+git -C llm-compressor checkout f15ac1d2243c3fd60cd745cf4e735e2814142d76
+python -m pip install ./llm-compressor datasets huggingface_hub
+mkdir -p records/quant artifacts
+python -m pip freeze > records/quant/packages.txt
+```
+
+源模型先按[DSpark下载步骤](../performance/dspark.md)相同的revision方法准备到`/srv/models/Qwen3-0.6B`。准备本地UTF-8 `calibration.jsonl`，每行一个对象：
+
+```json
+{"messages":[{"role":"user","content":"说明模型权重和KV缓存的区别。"},{"role":"assistant","content":"权重是模型固定参数，KV缓存保存当前输入及生成历史对应的注意力状态。"}]}
+```
+
+正式校准从有公开/使用权限的代表样本中选取，建议从512条、最大2048token起步；记录来源、数量、截断、语言和任务分布。上面一行仅说明schema，不能复制512次冒充代表数据。校准集不混入独立验收题。
+
+### 12.2 保存并运行quantize_w4a16.py
+
+```python
+import hashlib
+import json
+from pathlib import Path
+from datasets import load_dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from llmcompressor import oneshot
+from llmcompressor.modifiers.gptq import GPTQModifier
+
+source = "/srv/models/Qwen3-0.6B"
+calibration = Path("calibration.jsonl")
+output = Path("artifacts/Qwen3-0.6B-W4A16")
+if output.exists():
+    raise FileExistsError("Choose a new artifact directory")
+tokenizer = AutoTokenizer.from_pretrained(source, local_files_only=True)
+model = AutoModelForCausalLM.from_pretrained(
+    source, local_files_only=True, torch_dtype="auto")
+dataset = load_dataset("json", data_files=str(calibration), split="train")
+if len(dataset) < 512:
+    raise ValueError("Provide at least 512 representative calibration samples")
+dataset = dataset.shuffle(seed=42).select(range(512))
+
+def encode(row):
+    text = tokenizer.apply_chat_template(
+        row["messages"], tokenize=False, add_generation_prompt=False,
+        enable_thinking=False)
+    return tokenizer(text, max_length=2048, truncation=True,
+                     padding=False, add_special_tokens=False)
+
+dataset = dataset.map(encode, remove_columns=dataset.column_names)
+recipe = GPTQModifier(targets="Linear", scheme="W4A16", ignore=["lm_head"])
+oneshot(model=model, dataset=dataset, recipe=recipe,
+        max_seq_length=2048, num_calibration_samples=512)
+model.save_pretrained(output, save_compressed=True)
+tokenizer.save_pretrained(output)
+Path("records/quant/calibration.json").write_text(json.dumps({
+    "file_sha256": hashlib.sha256(calibration.read_bytes()).hexdigest(),
+    "samples": 512, "max_seq_length": 2048, "seed": 42,
+    "source": source, "artifact": str(output), "scheme": "W4A16",
+    "ignored": ["lm_head"], "enable_thinking": False,
+}, indent=2), encoding="utf-8")
+```
+
+```bash
+python quantize_w4a16.py > records/quant/quantize.log 2>&1
+find artifacts/Qwen3-0.6B-W4A16 -type f -exec sha256sum {} \; \
+  > records/quant/artifact-sha256.txt
+```
+
+`ignore=lm_head`只指定保留该输出层，最终还需检查导出的quantization_config，确认实际targets、group size和非量化张量。主机/设备内存必须容纳量化过程中的原权重、校准激活和算法工作区；最终4bit模型能放下不代表量化过程同样能放下。
+
+### 12.3 在独立推理环境加载
+
+```bash
+vllm serve artifacts/Qwen3-0.6B-W4A16 \
+  --served-model-name qwen-quant-lab \
+  --host 127.0.0.1 --port 8000 \
+  --max-model-len 4096 --max-num-seqs 4 \
+  --gpu-memory-utilization 0.80
+```
+
+检查日志识别到compressed-tensors及实际kernel。不要强行加`--quantization awq`，因为本例导出的是GPTQ计算得到的compressed-tensors制品。
+
+依次运行短题、固定质量集、512输入/256输出和长输入负载。原精度基线使用相同模型源、模板、thinking、采样与请求集；量化引起的kernel变化属于方案的一部分，但不能再同时改变并发、上下文和图模式。
+
+## 13. FP8与FP4实验怎么展开
+
+FP8_DYNAMIC的常见配置为权重按channel、激活按token动态量化；这种特定流程可以不使用激活校准数据，不表示全部FP8方法都无需校准。静态scale与KV scale仍可能需要代表数据。
+
+NVFP4/MXFP4先选择官方配套预量化模型，确认目标GPU上能生成。需要自行量化时，使用当前LLM Compressor/ModelOpt对应模型的完整示例，保存变换、校准、保留层和导出配置；不要用一段通用`FP8_DEFAULT_CFG`代码宣称完成了任意FP4模型适配。
+
+对同一个模型建立W/A候选表：BF16、W4A16、FP8、目标设备支持的FP4。每个候选都需要独立的文件摘要、加载日志、峰值内存、prefill/decode/HTTP结果和质量评分。某候选不受支持时保留“未运行/不支持”原因，不给它填零性能。
+
+## 14. KV精度单独做四组实验
+
+| 组别 | 权重 | KV | 比较目的 |
+| --- | --- | --- | --- |
+| A | 原精度 | 原精度 | 质量与资源基线 |
+| B | 量化权重 | 原精度 | 权重方案差异 |
+| C | 原精度 | FP8等候选 | KV方案差异 |
+| D | 量化权重 | 同C的KV | 组合收益与质量 |
+
+vLLM的`--kv-cache-dtype fp8`不等于完成scale校准。当前文档无校准路线使用默认scale1.0，推荐用LLM Compressor代表数据校准；某些per-head路径还限定attention后端。
+
+FA3配合FP8 KV的路径中，attention还可能量化Q，所以“只改变存储、计算完全不变”并不准确。新版本提供`--kv-cache-dtype-skip-layers`，可以保留敏感层或sliding-window层的原精度，但必须先确认本版本支持。
+
+长文验收至少覆盖：短上下文固定题、目标长度的信息检索、多跳关系、数字/代码以及接近最大长度的稳定性。记录实际KV字节、可用token块、最长成功输入和质量变化。总显存不会因为KV减半就减半。
+
+## 15. 最终选型表怎么写
+
+报告逐行填写：目标模型revision、工具commit、W/A/KV、scale粒度、格式、kernel、设备、长度/并发、实际输出、质量与性能。先列硬性门槛，再在通过候选里比较延迟、吞吐、内存与维护成本。
+
+例如要求某任务集得分下降不超过事先约定范围、TTFT P95与TPOT P95低于目标、无持续OOM/错误，再选择资源占用较小或有效吞吐较高的候选。门槛由项目制定，不能把教学样例自动当成生产标准。
+
+**当前资料：** [AutoAWQ弃用说明](https://docs.vllm.ai/en/latest/features/quantization/auto_awq/) · [LLM Compressor方案选型](https://docs.vllm.ai/projects/llm-compressor/en/latest/steps/choosing-scheme/) · [W4A16源码示例](https://github.com/vllm-project/llm-compressor/blob/f15ac1d2243c3fd60cd745cf4e735e2814142d76/examples/quantization_w4a16/llama3_example.py) · [ModelOpt加载与kernel](https://github.com/vllm-project/vllm/blob/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/quantization/modelopt.md) · [KV量化](https://github.com/vllm-project/vllm/blob/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/quantization/quantized_kvcache.md)。

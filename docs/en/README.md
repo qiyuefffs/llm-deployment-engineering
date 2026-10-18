@@ -8,6 +8,12 @@ For LLM deployment, on-device inference, performance optimization, and service d
 
 **[Full contents](SUMMARY.md) · [Hardware examples](engineering/README.md) · [Environment and evidence conventions](00-preface.md) · [Standalone cases](../../cases/README.en.md) · [Repository home](../../README.en.md)**
 
+## October 2026 deployment update
+
+[Current engines](chapters/frameworks/serving-engines.md) · [MTP](chapters/performance/speculative-decoding.md) · [DSpark procedure](chapters/performance/dspark.md) · [Quantization](chapters/models/quantization.md) · [PD/MoE](chapters/performance/disaggregated-serving.md) · [DGX Spark](chapters/hardware/dgx-spark.md).
+
+The [review and sources](evidence/2026-10-refresh.md) identify source snapshots and limits. [Benchmarking](chapters/performance/benchmarking.md) includes an executable matrix. New GPU routes are reference procedures; historical performance retains its original conditions.
+
 ## Hardware and compute software stacks
 
 | Platform | How the hardware and software work together | Introduction |

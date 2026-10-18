@@ -177,3 +177,7 @@ Device / Task Support Matrix → Fixed driver / Toolkit / Engine → Small opera
 Outputs: Environmental lists, building logs, model support tables, minimal calculation and targeted task results, memory and communication evidence. [Adjusted records template](../templates/adaptation-record.md).
 
 Continuation of common infrastructure [Model formatting and quantization](02-model-formats-quantization.md), [inference framework](03-inference-frameworks.md) and [Memory and performance](04-memory-performance.md). If you need specific device commands and historical results, check again. [Matrix of engineering examples](../engineering/README.md).
+
+## October 2026 engineering update
+
+Current hardware detail: [DGX Spark / GB10](../chapters/hardware/dgx-spark.md). Check ARM64, unified-memory accounting, bandwidth, and exact kernel coverage.

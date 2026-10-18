@@ -96,3 +96,7 @@ This information is used to understand the responsibilities of the components; T
 |Apple text model| [MLX-LM](https://github.com/ml-explore/mlx-lm) |Model implementation and generation tools on top of MLX|
 |Intel develops the chip| [oneAPI](https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html) / [OpenVINO](https://docs.openvino.ai/) |Development tools, compute library, inference Runtime and generated pipelines|
 |Ascend software stack| [CANN](https://www.hiascend.com/en/software/cann) |Runtime, operators, development tools and upstream support|
+
+## October 2026 engineering update
+
+See the [October 2026 source review](../evidence/2026-10-refresh.md) for pinned implementation references, documentation limits, and validation status.

@@ -16,6 +16,15 @@
 | 独立 Case | [Case 目录](cases/README.md) | Case 的教程、脚本、输入、截图和结果单独保存 |
 | CPU 顺序演练 | [完整服务实跑](docs/01-deployment-foundations/practice/first-service/README.md) | 从模型校验到 API、压测和验收的可公开演练 |
 
+## 2026-10 技术更新
+
+按原有五层框架补充当前部署方法，包含硬件条件、完整命令、实验对照和验收方式：
+
+- [MTP与动态推测](docs/01-deployment-foundations/chapters/performance/speculative-decoding.md)、[DSpark完整部署](docs/01-deployment-foundations/chapters/performance/dspark.md)。
+- [量化工程](docs/01-deployment-foundations/chapters/models/quantization.md)：LLM Compressor、GPTQ、FP8、NVFP4/MXFP4及KV精度。
+- [当前推理引擎](docs/01-deployment-foundations/chapters/frameworks/serving-engines.md)、[PD分离与MoE](docs/01-deployment-foundations/chapters/performance/disaggregated-serving.md)、[DGX Spark](docs/01-deployment-foundations/chapters/hardware/dgx-spark.md)。
+- [统一压测流程](docs/01-deployment-foundations/chapters/performance/benchmarking.md)及[官方资料、源码快照与验证状态](docs/01-deployment-foundations/evidence/2026-10-refresh.md)。
+
 ## 内容范围
 
 - 五层工程主线：硬件与运行时、模型格式与量化、推理框架、显存与性能、工程交付。

@@ -1,0 +1,95 @@
+{
+  "checked_on": "2026-10-18",
+  "kind": "documentation_snapshots",
+  "gpu_execution": "not_performed",
+  "sources": [
+    {
+      "path": "docs/features/speculative_decoding/mtp.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/speculative_decoding/mtp.md",
+      "sha256": "d45eaafb928d310a6fac8b70a2fcc2e879b94a084ad985def9eb71e423517100",
+      "bytes": 3154
+    },
+    {
+      "path": "docs/features/speculative_decoding/adaptive_verification.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/speculative_decoding/adaptive_verification.md",
+      "sha256": "8e4a098b5721047e51acd82b16e9fd2ed9a9c6fccf4da5467fac09754983711f",
+      "bytes": 4367
+    },
+    {
+      "path": "docs/features/speculative_decoding/README.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/speculative_decoding/README.md",
+      "sha256": "000681bd385cf27f802cd417aa5e201cf044bd6b8e11b9fb573110cc246170a0",
+      "bytes": 13216
+    },
+    {
+      "path": "docs/features/quantization/modelopt.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/quantization/modelopt.md",
+      "sha256": "9b8da9607f40d703a03763292cc7e4cdae73cee0395f6d80dd341c79afa64c52",
+      "bytes": 5149
+    },
+    {
+      "path": "docs/features/quantization/quantized_kvcache.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/quantization/quantized_kvcache.md",
+      "sha256": "5c31da7b20c51dcfab38264632903e70b5b7476a6c3ea673bfa6f3db9ee94c2e",
+      "bytes": 6246
+    },
+    {
+      "path": "docs/configuration/optimization.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/configuration/optimization.md",
+      "sha256": "6464b660e86cf0724dc2042530ac588a23f50aeb6c6ec876c03622d88df35807",
+      "bytes": 24144
+    },
+    {
+      "path": "docs/features/disagg_prefill.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/disagg_prefill.md",
+      "sha256": "4171aaade67da161c071f5ed6ee029a33d79f1568d58f74efc5d6b092962e1fa",
+      "bytes": 10398
+    },
+    {
+      "path": "vllm/benchmarks/serve.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/vllm/benchmarks/serve.py",
+      "sha256": "69097d7900f07d5ebe1e8a6bf055f76c8d7dcc6f1b435b4a1700bf1d2f8e8cb0",
+      "bytes": 92803
+    },
+    {
+      "path": "docs/features/speculative_decoding/dynamic_speculative_decoding.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/2365177ddda7714502e4df7a1669cc79c0a4dfd0/docs/features/speculative_decoding/dynamic_speculative_decoding.md",
+      "sha256": "6fc3b6564089697f2666e5a1252dd991414750a724d96ae655f4dbc2791d0833",
+      "bytes": 2983
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ggml-org/llama.cpp/5aeac37a35b44fde4bdffaec9159f2fcb253b622/docs/speculative.md",
+      "sha256": "1185548fcc6492f24c6c8e635ce205515c3253abc047e52d8dbc1a30c758e89f",
+      "bytes": 24076
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vllm-project/llm-compressor/f15ac1d2243c3fd60cd745cf4e735e2814142d76/examples/quantization_w4a16/llama3_example.py",
+      "sha256": "e2a4811ca804e8e254e4dc2a5163675cf39dd3d3ff51a1e1527cec40a6fdeae1",
+      "bytes": 1437
+    },
+    {
+      "url": "https://docs.nvidia.com/dgx/dgx-spark/hardware.html",
+      "sha256": "02675731cdfcae028528d8fd9e6cf77fcde24c9524cb42eb1a22acb9ebc68d9b",
+      "bytes": 29371
+    },
+    {
+      "url": "https://build.nvidia.com/spark/vllm/instructions",
+      "sha256": "94b046ee368d60a1b6daea6c8d269874a69ed70eece7f8cf1a0c4e5060466fe2",
+      "bytes": 171480
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ggml-org/llama.cpp/5aeac37a35b44fde4bdffaec9159f2fcb253b622/common/arg.cpp",
+      "sha256": "a10b6e6af910366c5c1abb89e47a7c6711fc1f10708b5fbfd8b59ba1a11d0f4a",
+      "bytes": 223600
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ggml-org/llama.cpp/5aeac37a35b44fde4bdffaec9159f2fcb253b622/common/speculative.cpp",
+      "sha256": "88e8d9eb2d16d1efc63b30145c815e4565a45ccd246ca7a71e8ab8579ce474b3",
+      "bytes": 126773
+    }
+  ],
+  "notes": [
+    "Hashes identify fetched documentation, not model or benchmark artifacts.",
+    "Moving documentation URLs may change; prefer pinned commits when available."
+  ]
+}

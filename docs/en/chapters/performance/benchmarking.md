@@ -223,3 +223,49 @@ The report draws four parallel conclusions: whether functionality is complete, w
 A useful report should be able to answer: which configuration is recommended now, how long input/output and workload is appropriate, how the boundaries are exceeded, what is the next best thing to try. For example, oMLX supplements the sample quantity concurrency curve, GB10 supplements the limited reach rate, AWQ supplements the quality return, and DFlash separates the configuration variables.
 
 In this way, each subsequent experiment solves a clear problem. Do not constantly change tools, change data and run back enough results to increase the number of tests; The remaining risks are advanced around the preservation of recoverable raw materials.
+
+## 2026 update: a repeatable optimization matrix
+
+The shared [matrix script](../../../01-deployment-foundations/examples/run_optimization_matrix.py) fixes HTTP benchmark settings, alternates concurrency order, and saves each round. It does not start models or change GPU settings. By default it writes a plan only; execution requires a ready server and matching `vllm bench serve` client.
+
+From the repository root, generate a plan:
+
+```bash
+python docs/01-deployment-foundations/examples/run_optimization_matrix.py \
+  --model serving-lab --tokenizer /srv/models/example-model \
+  --base-url http://127.0.0.1:8000 \
+  --input-len 512 --output-len 256 --num-prompts 64 \
+  --concurrency 1 2 4 8 --repeats 3 \
+  --output results/baseline-plan
+```
+
+Inspect the 12 commands, IDs, tokenizer, counts, and sampling in manifest.json. `status=plan_only` means no requests were sent. Choose a new directory and add execute:
+
+```bash
+python docs/01-deployment-foundations/examples/run_optimization_matrix.py \
+  --model serving-lab --tokenizer /srv/models/example-model \
+  --base-url http://127.0.0.1:8000 \
+  --input-len 512 --output-len 256 --num-prompts 64 \
+  --concurrency 1 2 4 8 --repeats 3 \
+  --output results/baseline-run --execute
+```
+
+The script verifies required CLI flags and saves help/version information. Each round writes benchmark.log and result.json. Failed commands, missing or incomplete result files, and failed requests stop execution and mark the manifest failed. An exit code of zero still requires complete, valid results.
+
+Sampling is temperature 0, fixed seed, and ignore_eos for a controlled output load. This is a performance workload; quality needs natural termination and task evaluation. Confirm actual lengths from results. A seed compares inputs only with the same generator, tokenizer, and version; the configuration hash is not a prompt-file hash. Use a fixed public custom dataset for strict byte-identical requests.
+
+The script does not reset caches. Repeated seeds with APC can produce warm-prefix runs. Explicitly disable prefix reuse for isolated engine comparisons; define separate cold/warm groups and counters for cache experiments.
+
+| Workload | Illustrative lengths | Observe |
+| --- | --- | --- |
+| Decode-heavy | 512 input, 1024 output | TPOT, accepted length, bandwidth, draft cost |
+| Prefill-heavy | 8192 input, 128 output | TTFT, compute, workspace, graphs |
+| Mixed service | Fixed short/long request set, increasing arrival rate | Queues, ITL tails, preemption, goodput |
+
+Check that input plus output fits the service limit. A finite request-rate introduces controlled arrivals while retaining the client concurrency cap. Concurrency and actual arrival rate are different measurements.
+
+Measure baseline, then candidates with the same settings. The script alternates within each concurrency sweep; alternate A/B or B/A across separately started configurations too. Preserve actual tokens, duration, tails, and failures; verify total_output_tokens/duration.
+
+Collect resources and quality separately. Typical latency goodput is qualifying requests/s. To require quality as well, associate per-request quality results and state whether the resulting unit is requests/s or tokens/s.
+
+Topics: [MTP](speculative-decoding.md) · [DSpark](dspark.md) · [Quantization](../models/quantization.md) · [PD](disaggregated-serving.md).
