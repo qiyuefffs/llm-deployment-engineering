@@ -84,7 +84,9 @@ python docs/01-deployment-foundations/examples/verify_records.py
 
 脚本只读取本目录JSON，检查部分成功计数、token/时间与记录吞吐、并发组配对和比值；[实际控制台输出](../examples/verified-output.txt)随文保存。它不连接设备、下载模型或发起推理。
 
-本轮还检查文档相对链接、代码围栏与Python语法，并查看目录、代表章节与图片的渲染。通过这些检查说明公开材料内部一致，不证明历史记录的所有质量、稳定性或跨设备复现要求已满足。
+本轮新增并实际执行了[Windows CPU完整演练](../practice/first-service/README.md)：固定下载与摘要、服务启动、三道功能题、畸形JSON、八条流式请求、metrics、服务停止与三轮引擎基准。公开12个结果文件。三道功能题通过两道，畸形JSON返回500，总验收为false。
+
+本轮GPU/NPU历史工程没有重跑。文档相对链接、代码围栏、Python语法和历史算术另做离线检查；这些检查不代替设备与质量验证。
 
 ## 5. 后续怎样补齐证据？
 

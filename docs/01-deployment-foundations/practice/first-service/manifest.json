@@ -1,0 +1,26 @@
+{
+  "engine": {
+    "project": "ggml-org/llama.cpp",
+    "tag": "b9557",
+    "platform": "Windows x64 CPU",
+    "archive_sha256": "5062d50be43c2bbfbcc10317674290cf03a2c6e01e40b8de972949fce4bd0b82",
+    "url": "https://github.com/ggml-org/llama.cpp/releases/download/b9557/llama-b9557-bin-win-cpu-x64.zip"
+  },
+  "model": {
+    "repository": "Qwen/Qwen3-0.6B-GGUF",
+    "revision": "23749fefcc72300e3a2ad315e1317431b06b590a",
+    "filename": "Qwen3-0.6B-Q8_0.gguf",
+    "url": "https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/resolve/23749fefcc72300e3a2ad315e1317431b06b590a/Qwen3-0.6B-Q8_0.gguf",
+    "bytes": 639446688,
+    "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
+    "license": "Apache-2.0"
+  },
+  "server": {
+    "alias": "book-qwen3-06b",
+    "host": "127.0.0.1",
+    "port": 18080,
+    "context": 2048,
+    "parallel": 2,
+    "threads": 4
+  }
+}

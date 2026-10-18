@@ -85,7 +85,7 @@ llama.cpp/build-hip/bin/llama-server --version
 llama.cpp/build-hip/bin/llama-server --help > llama-server-help.txt
 ```
 
-CUDA、Vulkan与Metal的独立构建命令见[第3层3.5节](../02-capability-layers/03-inference-frameworks.md#35-llamacpp构建单次运行与服务)。保留CMakeCache和完整构建日志。
+CUDA、Vulkan与Metal的独立构建命令见[llama.cpp完整教程](../chapters/frameworks/llama-cpp.md)。保留CMakeCache和完整构建日志。
 
 ## A.6 服务与HTTP
 
@@ -111,7 +111,7 @@ nvidia-smi --query-gpu=timestamp,memory.used,utilization.gpu,temperature.gpu,pow
   --format=csv -l 1 > gpu.csv
 ```
 
-这两段分别是引擎测试与资源采样，均不证明HTTP性能或答案质量。完整服务压测入口见[第4层4.9节](../02-capability-layers/04-memory-performance.md#49-一次完整的性能测试怎样执行)。
+这两段分别是引擎测试与资源采样，均不证明HTTP性能或答案质量。完整服务压测入口见[性能测试教程](../chapters/performance/benchmarking.md)。
 
 ## A.8 CUDA双设备通信
 

@@ -1,0 +1,133 @@
+[
+  {
+    "id": "arithmetic",
+    "prompt": "计算2+2。只输出一个数字。",
+    "expected": "4",
+    "passed": false,
+    "elapsed_s": 0.11404709999987972,
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "2"
+          }
+        }
+      ],
+      "created": 1792297024,
+      "model": "book-qwen3-06b",
+      "system_fingerprint": "b9557-0f7fada56",
+      "object": "chat.completion",
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 22,
+        "total_tokens": 24,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "id": "chatcmpl-u9ULMGAVOnXVaHWjfIRg5EruYyePS02M",
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 22,
+        "prompt_ms": 73.784,
+        "prompt_per_token_ms": 3.3538181818181823,
+        "prompt_per_second": 298.1676244172178,
+        "predicted_n": 2,
+        "predicted_ms": 14.896,
+        "predicted_per_token_ms": 7.448,
+        "predicted_per_second": 134.2642320085929
+      }
+    }
+  },
+  {
+    "id": "capital",
+    "prompt": "中国首都是哪座城市？只输出城市名。",
+    "expected": "北京",
+    "passed": true,
+    "elapsed_s": 0.09446800000296207,
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "北京"
+          }
+        }
+      ],
+      "created": 1792297024,
+      "model": "book-qwen3-06b",
+      "system_fingerprint": "b9557-0f7fada56",
+      "object": "chat.completion",
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 24,
+        "total_tokens": 26,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "id": "chatcmpl-QtuZgXjYN3Kquz4V7gUo6hcexqL7LTry",
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 24,
+        "prompt_ms": 70.365,
+        "prompt_per_token_ms": 2.931875,
+        "prompt_per_second": 341.0786612662546,
+        "predicted_n": 2,
+        "predicted_ms": 14.883,
+        "predicted_per_token_ms": 7.4415,
+        "predicted_per_second": 134.38150910434726
+      }
+    }
+  },
+  {
+    "id": "json",
+    "prompt": "只输出这个JSON对象，不要代码块或解释：{\"ready\":true}",
+    "expected": {
+      "ready": true
+    },
+    "passed": true,
+    "elapsed_s": 0.1854681000004348,
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\"ready\": true}"
+          }
+        }
+      ],
+      "created": 1792297024,
+      "model": "book-qwen3-06b",
+      "system_fingerprint": "b9557-0f7fada56",
+      "object": "chat.completion",
+      "usage": {
+        "completion_tokens": 6,
+        "prompt_tokens": 29,
+        "total_tokens": 35,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "id": "chatcmpl-RuyGTwdym3b103m58rFZBLAPTdjvNihs",
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 29,
+        "prompt_ms": 102.955,
+        "prompt_per_token_ms": 3.550172413793103,
+        "prompt_per_second": 281.67646058957797,
+        "predicted_n": 6,
+        "predicted_ms": 74.676,
+        "predicted_per_token_ms": 12.446,
+        "predicted_per_second": 80.34709946970915
+      }
+    }
+  }
+]

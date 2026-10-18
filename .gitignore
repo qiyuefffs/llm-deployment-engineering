@@ -10,6 +10,8 @@ local-cache/
 *.py[cod]
 *.gguf
 *.aria2
+**/.runtime/
+**/first-service/output/
 case-evidence.tar.gz
 
 # Raw benchmark output should be reviewed and published separately.

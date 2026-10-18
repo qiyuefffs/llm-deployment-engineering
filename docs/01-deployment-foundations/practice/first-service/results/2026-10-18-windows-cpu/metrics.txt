@@ -1,0 +1,11 @@
+llamacpp:prompt_tokens_total 355
+llamacpp:prompt_seconds_total 1.53
+llamacpp:tokens_predicted_total 266
+llamacpp:tokens_predicted_seconds_total 4.225
+llamacpp:n_decode_total 202
+llamacpp:n_tokens_max 66
+llamacpp:prompt_tokens_seconds 232.026
+llamacpp:predicted_tokens_seconds 62.9586
+llamacpp:requests_processing 0
+llamacpp:requests_deferred 0
+llamacpp:n_busy_slots_per_decode 1.31683

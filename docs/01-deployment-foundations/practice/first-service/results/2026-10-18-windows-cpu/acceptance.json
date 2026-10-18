@@ -1,0 +1,9 @@
+{
+  "functional_passed": 2,
+  "functional_total": 3,
+  "invalid_request_passed": false,
+  "http_groups_successful": true,
+  "engine_benchmark_rows": 2,
+  "exercise_passed": false,
+  "scope": "Small CPU teaching exercise; not a large-model capacity or production quality claim."
+}

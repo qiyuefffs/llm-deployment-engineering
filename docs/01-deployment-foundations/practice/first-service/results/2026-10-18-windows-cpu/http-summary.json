@@ -1,0 +1,26 @@
+[
+  {
+    "concurrency": 1,
+    "requests": 4,
+    "successes": 4,
+    "failures": 0,
+    "duration_s": 2.40696399999797,
+    "generated_tokens": 128,
+    "output_token_per_s": 53.17902552763895,
+    "mean_ttft_s": 0.13116455000090355,
+    "mean_e2e_s": 0.6015597999994498,
+    "limits": "4 requests per group; no stable tail estimate or quality benchmark. Fixed 32-token cap may truncate listing."
+  },
+  {
+    "concurrency": 2,
+    "requests": 4,
+    "successes": 4,
+    "failures": 0,
+    "duration_s": 1.5587449999984528,
+    "generated_tokens": 128,
+    "output_token_per_s": 82.11734440214856,
+    "mean_ttft_s": 0.21748577499874955,
+    "mean_e2e_s": 0.7789866999992228,
+    "limits": "4 requests per group; no stable tail estimate or quality benchmark. Fixed 32-token cap may truncate listing."
+  }
+]
