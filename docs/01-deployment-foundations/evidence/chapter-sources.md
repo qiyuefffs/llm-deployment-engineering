@@ -31,6 +31,28 @@
 
 第三部分解释原来的十个概念；第四部分将工程材料组织为十项项目记录；第五部分保留八个原目录作为索引；第六部分从上述真实失败中提取排查入口。
 
+### 本次扩写具体采用哪些工程过程
+
+| 文章主题 | 正文展开的位置 | 直接采用的材料 |
+| --- | --- | --- |
+| RTX2060 Qwen3 Q6/Q5混合推理 | NVIDIA第七节 | i5/32GB/12GB、原参数、9/182token与计时、资源观察、并发证据范围 |
+| 395五机HIP RPC Kimi-K2.5-Q2 | AMD第六节 | BIOS2GB、GTT/TTM数字、DKMS模块、修复、build、RPC、split、加载监控 |
+| W7900八卡及双节点70B/671B | AMD第七节、多设备第八—九节 | ROCm容器、OpenAI入口修正、Ray角色、TP8×PP2、资源与通信检查 |
+| Mac Metal源码构建 | Apple第七节 | Xcode/clang/CMake/Ninja、库与shader、9d36408、hc_head_base/type42 |
+| vllm-metal编译与文本/视觉 | Apple第八节 | 完整依赖表、_rs导入位置、模板/采样、encoder未实现与EngineDead |
+| MLX-VLM多视觉模型与API | Apple第九节、vLLM图像链路 | Metal检查、CLI/server、图像字段、processor分辨率与切片参数 |
+| oMLX操作与性能 | Apple第十节、压测第十节 | 父目录发现、load流程、内存快照、三档完整延迟与吞吐 |
+| MLX-VLM APC | 缓存第八—九节 | 原环境变量、块/磁盘预算、tenant、stats/reset、KV量化互斥 |
+| Intel GPU对比 | Intel第六节、OpenVINO主教程 | pp/tg、23/10层、Mesa25.2.8与26.1.4、HTTP/Pipeline边界 |
+| Intel语音专项 | OpenVINO第七—十二节 | Whisper三轮、BabelVox设备分工/三轮、CP shape与质量失败、Qwen TTS、Kokoro48例 |
+| GB10 VL/Omni/docling | NVIDIA第八节、vLLM第七—八节 | 镜像、原端口和预算、base64/SSE流程、功能分项 |
+| Gemma4 AWQ4/8 | 量化第八节 | 26B-A4B/31B四组、200请求、实际token、TTFT/TPOT/ITL/E2E完整表 |
+| Gemma4 MTP关闭/开启 | 推测解码第六—七节 | 主/assistant、服务预算、三档配对、接受计数与流式分析 |
+| GB10 DFlash编译与测试 | 推测解码第八—九节 | 2cc008e7b、CUDA/torch、drafter、两套配置与完整延迟 |
+| Intel IPEX-LLM与Ollama | Intel第七节、GGUF导入节 | Python3.11历史路线、程序来源、SYCL变量和模板修订 |
+
+上述参数与数值保留工程意义，私人路径与节点改为公开约定。公开视觉图、客户端与aria2清单生成器属于本次补齐的教学材料，未冒充历史原件。
+
 ## 3. 本轮新增的完整执行
 
 Windows CPU演练实际下载固定官方二进制和Qwen3-0.6B-Q8_0，核验模型后运行服务、三道功能题、畸形JSON、八个流式请求、metrics和三轮引擎基准。完整输入、代码与12个结果文件已经公开。

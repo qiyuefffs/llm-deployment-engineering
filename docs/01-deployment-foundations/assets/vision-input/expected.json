@@ -1,0 +1,16 @@
+{
+  "width": 960,
+  "height": 640,
+  "text": [
+    "LOCAL INFERENCE TEST",
+    "Order: DEMO-042",
+    "Quantity: 3",
+    "Total: 128.50"
+  ],
+  "shapes_left_to_right": [
+    "red square",
+    "blue circle",
+    "green triangle"
+  ],
+  "sha256": "12123b3bedbabd7ce30728c0ae041645f4708c365a37af297cbd60e9b0f4396e"
+}

@@ -32,12 +32,17 @@
 | E12 | 昇腾310P部署与压测记录 | 芯片/插件/镜像配套、实际样本量检查 | 一条请求不证明配置的十并发；旧参数不是当前默认值 |
 | E13 | RTX2060 Qwen3 Q6/Q5混合推理记录 | CPU/GPU卸载、主机内存和swap | 单次引擎观测，不当HTTP吞吐或稳定成绩 |
 | E14 | Intel Windows OpenVINO视觉部署记录 | GPU驱动、IR与视觉功能单独验证 | 原图片样本无公开授权链，不转存或当质量真值 |
+| E15 | W7900八卡DeepSeek-R1 AWQ与双节点70B/671B记录 | ROCm容器、OpenAI入口、Ray与TP/PP | 部分旧片段冲突已按角色修订，无完整吞吐成绩 |
+| E16 | MLX-VLM多视觉模型推理与API指南、APC操作 | CLI/API、processor、冷暖缓存、租户与KV量化互斥 | APC源码补丁commit缺失，不保证任意上游版本支持 |
+| E17 | GB10 Qwen3-VL、Qwen3-Omni、granite-docling部署 | 原模型/端口/预算、图像传输与功能分项 | 不给新公开测试卡配上未执行的模型结果 |
+| E18 | Intel报告中的ASR/TTS、全NPU、Kokoro专项 | 三轮计时、shape、错误音频、回滚、48例CPU结果 | 原音频未公开，ASR辅助检查不等于通用质量集 |
+| E19 | IPEX-LLM量化并导入Ollama的Intel集显记录 | Windows程序来源、SYCL变量、Modelfile与卸载验证 | 早期预发布路线，无固定当前支持承诺 |
 
 其他概念笔记包括KV、Prefill、Prefix Cache、ROCm/PyTorch、CUDA/Vulkan构建与环境封装，解释已按官方概念修订。没有形成完整公开记录的平台保留为适配方法，不补造运行成绩。
 
 ## 3. 可公开的测量字段
 
-[measurements.json](measurements.json)保存七组结构化历史转录。数字保持源单位，字段按白名单手工整理；缺失数据不猜测补全。
+[measurements.json](measurements.json)保存15组结构化历史转录。数字保持源单位，字段按白名单手工整理；缺失数据不猜测补全。
 
 | 数据键 | 关键条件与结果 | 阅读位置 |
 | --- | --- | --- |
@@ -48,6 +53,14 @@
 | `dflash_observation` | spec_bench、50请求；上下文/序列/内存/eager同时改变 | 第4层控制变量 |
 | `amd_rpc` | 五机395、ROCm7.2.1、llama b9557；内存与短测 | 第1层兼容，第3层RPC，第4层预算 |
 | `gemma_awq` | GB10/vLLM0.19.0；200请求、c2；AWQ4/8 | 第4层量化组合观察 |
+| `gemma_awq_31b` | 相同负载，31B AWQ4/8完整延迟 | 量化专题四组表 |
+| `rtx2060_hybrid` | RTX2060 12GB、32GB RAM；Q6一次引擎生成 | NVIDIA混合推理完整实例 |
+| `intel_whisper_asr` | 4.4秒音频，三轮NPU核心与进程计时 | OpenVINO语音实战 |
+| `intel_babelvox_hybrid` | NPU＋CPU、三轮、帧数与报告RTF | 设备分工与计时边界 |
+| `intel_babelvox_full_npu` | CP固定shape、RTF达标、音频错误、已回滚 | 质量否决性能方案 |
+| `intel_qwen_tts_cpu` | 0.6B INT8、CPU输出8秒音频；NPU动态shape失败 | 成品IR不等于NPU-ready |
+| `intel_kokoro_cpu` | 8音色×6文本；P95 RTF0.189、RSS约3GiB | 干净背景与多项验收 |
+| `intel_kokoro_npuw` | 首次>20分钟、缓存复测120秒超时、无WAV | 编译未完成，不报告NPU吞吐 |
 
 ### E01 完整条件
 
@@ -91,5 +104,7 @@ python docs/01-deployment-foundations/examples/verify_records.py
 ## 5. 后续怎样补齐证据？
 
 新实验保存完整环境与制品身份、最终命令、输入、逐请求响应、错误、资源采样和统计程序。把质量与性能分开验收，固定版本和负载后再做对照。
+
+本次新增[公开视觉测试卡](../assets/vision-input/vision-card.png)、[期望字段](../assets/vision-input/expected.json)、[生成程序](../examples/make_vision_input.py)与[流式客户端](../examples/vision_client.py)。测试卡已生成并核对尺寸、内容字段及摘要；它是公开输入，未作为GPU/NPU实测输出。
 
 原始文件未公开的历史笔记仍可作为工程知识参考，但不直接当作材料齐全的完整复现实战。需要提交实战时，按[工程交付清单](../02-capability-layers/05-engineering-delivery.md)逐项补齐。

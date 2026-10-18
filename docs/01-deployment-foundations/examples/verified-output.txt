@@ -8,4 +8,9 @@ Gemma MTP c4: observed throughput gain 53.19%
 DFlash configurations: observed ratio 2.03x (multiple parameters differ)
 Gemma AWQ4/AWQ8: observed throughput ratio 1.26x (quality unverified)
 AMD RPC: requested GTT exceeds recorded TTM; no single-machine speedup computed
+RTX2060 Q6: 9 prompt / 182 generated tokens; 9.04 / 5.26 token/s
+Gemma31B AWQ4/AWQ8: rounded throughput and shared token totals agree
+Whisper: RTF from rounded core timings 0.03894; source rounded-RTF mean ~0.0387
+Kokoro CPU: 48 samples; 5.46x realtime; RSS target failed
+Speech: full-NPU quality failure and NPUW load failure remain explicit
 PASS: covered counts and rounded arithmetic agree; source runs and quality are not verified.

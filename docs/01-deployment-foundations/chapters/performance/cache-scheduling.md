@@ -65,3 +65,134 @@ KV卸载将部分状态放到其他存储层，减少设备常驻压力，但带
 先把模型和质量基线固定，再按实际问题选择一项：容量不足看KV预算，长输入干扰看分块调度，重复文档看前缀复用，多请求利用低看批处理。每次保存开关、请求、缓存状态、资源和质量。
 
 作者GB10服务同时启用多个机制并完成200请求，这说明配置整体可运行；没有单变量对照，不能宣称其中某一个机制带来了确定收益。机制解释与实验归因需要分别成立。
+
+## 八、MLX-VLM APC：从配置到冷暖缓存实验
+
+FlowUs中还有一套完整的APC配置。它运行在带相关实现的`mlx_vlm.server`，不是`omlx serve`，模型为Gemma4 26B-A4B/31B MXFP8。原笔记未保存该源码补丁的精确commit，所以读者应先确认当前安装确实支持这些环境变量和cache端点；它们不能自动套到任意上游版本。
+
+### 8.1 按实际作用理解配置
+
+| 参数 | 原值 | 作用与检查 |
+| --- | --- | --- |
+| APC_ENABLED | 1 | 是否真正启用，以启动日志核对 |
+| APC_NUM_BLOCKS | 8192 | 缓存块数量预算 |
+| APC_BLOCK_SIZE | 16 | 每块token粒度 |
+| APC_DISK_MAX_GB | 26B为80、31B为100 | 磁盘缓存上限，需检查剩余空间 |
+| APC_DISK_SHARD_MAX_BLOCKS | 256 | 单磁盘分片块预算 |
+| APC_LAYER_MAJOR_MEMORY_MIN_TOKENS | 50000 | 该实现布局策略阈值 |
+| APC_HASH | fast | 实现提供的哈希模式，需核对版本和隔离要求 |
+| max-kv-size | 65536 | 服务KV相关上限，含义按该版本检查 |
+| prefill-step-size | 2048 | 分段处理输入的预算 |
+| vision-cache-size | 32 | 视觉缓存项预算，与文本APC分开看 |
+
+8192×16=131072只是按块计算的token槽位预算，不能据此宣称每条请求支持131072上下文。模型窗口、单请求KV设置、活动请求数、块共享和实际内存还会分别限制容量。
+
+以下保留26B路线，路径统一为公开示例。运行前创建专用缓存目录，不与其他服务混用：
+
+```bash
+mkdir -p ./cache/gemma26-apc
+APC_ENABLED=1 \
+APC_NUM_BLOCKS=8192 \
+APC_BLOCK_SIZE=16 \
+APC_DISK_PATH="$PWD/cache/gemma26-apc" \
+APC_DISK_MAX_GB=80 \
+APC_DISK_SHARD_MAX_BLOCKS=256 \
+APC_LAYER_MAJOR_MEMORY_MIN_TOKENS=50000 \
+APC_HASH=fast \
+python -m mlx_vlm.server \
+  --model /srv/models/gemma-4-26b-a4b-it-mxfp8 \
+  --host 127.0.0.1 --port 18082 \
+  --max-tokens 2048 --max-kv-size 65536 \
+  --prefill-step-size 2048 --vision-cache-size 32 --log-level INFO
+```
+
+31B路线使用另一缓存目录、端口18083和100GB磁盘预算。缓存必须与模型和配置对应；共用一个空泛目录不能保证模型身份隔离。
+
+### 8.2 准备真正可复用的长前缀
+
+原笔记使用稳定system提示和两个问题验证接口。为了观察较明显的prefill差异，可以生成公开长文，保持system与长文前缀逐字一致，只在尾部换问题。下面是新的可复查实验输入，不把它标成历史已测结果：
+
+```python
+import json
+from pathlib import Path
+
+out = Path('requests/apc')
+out.mkdir(parents=True, exist_ok=True)
+prefix = '\n'.join(
+    f'条目{i:03d}：设备部署需要核对模型、版本、内存、接口与验收结果。'
+    for i in range(128)
+)
+questions = {'a': '概括这份材料的主题。', 'b': '提取五项部署检查。'}
+for name, question in questions.items():
+    body = {
+        'model': '/srv/models/gemma-4-26b-a4b-it-mxfp8',
+        'messages': [
+            {'role': 'system', 'content': '依据所给材料回答，使用简洁中文。'},
+            {'role': 'user', 'content': prefix + '\n问题：' + question},
+        ],
+        'temperature': 0, 'max_tokens': 256, 'stream': True,
+    }
+    (out / f'{name}.json').write_text(
+        json.dumps(body, ensure_ascii=False), encoding='utf-8')
+```
+
+模型字段仍以server实际接受的ID为准。128条是输入生成规则，不等于128token；正式报告使用模型tokenizer或服务统计保存实际输入数。把时间戳和run-id插到长文最前面，会让稳定前缀丢失，运行编号应存元数据而非污染输入。
+
+### 8.3 按顺序验证冷、热与隔离
+
+先在自己专用的测试实例检查健康和初始统计；需要空缓存时仅重置这个实例，不影响他人的服务：
+
+```bash
+curl --fail-with-body http://127.0.0.1:18082/health
+curl --fail-with-body http://127.0.0.1:18082/v1/cache/stats -o cache-before.json
+curl --fail-with-body -X POST http://127.0.0.1:18082/v1/cache/reset
+
+curl -N --fail-with-body http://127.0.0.1:18082/v1/chat/completions \
+  -H 'Content-Type: application/json' -H 'X-APC-Tenant: book-demo' \
+  --data-binary @requests/apc/a.json -o cold-a.sse
+curl --fail-with-body http://127.0.0.1:18082/v1/cache/stats -o cache-after-a.json
+
+curl -N --fail-with-body http://127.0.0.1:18082/v1/chat/completions \
+  -H 'Content-Type: application/json' -H 'X-APC-Tenant: book-demo' \
+  --data-binary @requests/apc/b.json -o warm-b.sse
+curl --fail-with-body http://127.0.0.1:18082/v1/cache/stats -o cache-after-b.json
+```
+
+`X-APC-Tenant`在这套实现中参与缓存隔离。它是稳定测试标识，不是身份认证凭据。测试时保持同值，再单独换成`book-demo-2`观察隔离，不能为了提高命中率而让真实多用户任意共享状态。
+
+仅保存curl墙钟不足以得到TTFT。完整性能测量应使用支持SSE计时的工具，并记录首正文、总时间、实际token和命中统计。上面的命令主要展示操作顺序与原始证据位置。
+
+### 8.4 一张覆盖关键状态的实验表
+
+| 组别 | 前缀/租户/进程状态 | 核对内容 |
+| --- | --- | --- |
+| 冷A | 空cache、前缀P、租户T | 初次prefill、写入、TTFT |
+| 热B | 前缀P、租户T，只改尾部问题 | 可复用token、命中与TTFT |
+| 未命中C | 等长不同前缀Q、租户T | 避免只靠进程预热解释收益 |
+| 隔离D | 前缀P、租户U | 租户状态是否隔离 |
+| 挤出E | 插入超过预算的其他前缀 | 回收、重算、错误和内存 |
+| 磁盘F | 按实现保留cache后重启 | 磁盘恢复成本与首请求行为 |
+
+每组先检查答案，再统计速度。不能为了获得热命中而在a/b之间不小心保持整个问题相同，最后把完整响应复用误当成前缀复用。框架可能缓存不同阶段，日志与统计字段应说明到底复用了什么。
+
+### 8.5 为什么暂时不把APC与KV量化一起开
+
+原MLX-VLM实现开启`--kv-bits`时会跳过APC。这个限制来自该实现，不是所有框架的普遍定律。先建立APC-only与KV-quant-only两条独立配置，检查启动日志，不要把两个开关写上后就宣称同时生效。
+
+如果主要痛点是重复长文TTFT，可优先测APC；如果是长上下文容量，KV量化可能更相关。最终可以保留两套适用负载不同的配置，但要记录质量、缓存行为和资源边界。
+
+## 九、多模态缓存：同一张图不等于全部计算可复用
+
+视觉缓存可能复用图像encoder输出，文本前缀缓存可能复用后续KV，两者的身份和容量不同。图片字节相同但缩放、裁剪、processor版本变化，视觉特征也可能不同；图片相同但放在消息中的位置变化，语言模型状态不一定全部可复用。
+
+原MLX-VLM的vision-cache-size32/64是不同服务配置中的项数预算，不能当成32/64张任意尺寸图片的固定内存。测试应该记录分辨率、切片、视觉token、processor与缓存统计；同图换问题、换图同问题、同图不同尺寸分别做对照。
+
+不要通过高命中短测试掩盖首张新图成本。端侧相册与文档应用可能反复处理同一素材，也可能每次上传新图，二者值得保留各自结果。
+
+## 十、调度参数怎样一步步调
+
+以GB10历史配置为起点：ctx16184、seqs4、batched8192、FP8 KV、prefix和chunked prefill。它是一套完成过200请求突发的组合。要知道瓶颈，应先分别做单请求长输入与单请求长输出，再做混合负载。
+
+第一轮固定所有条件，只改活动序列1/2/4，观察KV、输出吞吐与TTFT。第二轮固定合适的seqs，只改batched预算，观察长输入TTFT、短请求ITL和工作区。第三轮固定负载，单独比较冷/热缓存。所有运行都保存输入和结束原因，质量失败的运行不参与有效吞吐推荐。
+
+如果降低batched预算后短请求更顺畅、长输入首token更慢，可以解释为调度取舍；如果全部都变慢，继续看额外轮次、利用率与软件开销。调参的目标是找到满足任务的工作点，不是让每个参数都达到最大值。

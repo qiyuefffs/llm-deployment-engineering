@@ -46,7 +46,10 @@
       "bytes": 6129582094,
       "ttft_ms": 184.02,
       "tpot_ms": 47.26,
-      "throughput_token_per_s": 21.1599
+      "throughput_token_per_s": 21.1599,
+      "generate_duration_ms": 6193.33,
+      "tokenization_ms": 0.518,
+      "detokenization_ms": 7.221
     },
     "int8": {
       "model": "OpenVINO/Qwen3.5-9B-int8-ov",
@@ -55,7 +58,10 @@
       "bytes": 9457724353,
       "ttft_ms": 169.73,
       "tpot_ms": 98.96,
-      "throughput_token_per_s": 10.1047
+      "throughput_token_per_s": 10.1047,
+      "generate_duration_ms": 12745.07,
+      "tokenization_ms": 2.058,
+      "detokenization_ms": 6.776
     },
     "vulkan": {
       "mesa": "26.1.4",
@@ -64,7 +70,11 @@
       "benchmark": "pp512/tg128, 3 rounds",
       "generation_token_per_s": 11.54,
       "stddev_token_per_s": 0.13,
-      "http_generation_token_per_s": 11.38
+      "http_generation_token_per_s": 11.38,
+      "prompt_token_per_s": 244.91,
+      "prompt_stddev_token_per_s": 0.79,
+      "old_mesa": "25.2.8",
+      "old_generation_token_per_s_approx": 7.76
     },
     "sycl": {
       "compiler": "oneAPI 2026.1.0",
@@ -72,7 +82,10 @@
       "cpu_layers": 10,
       "benchmark": "pp512/tg128, 3 rounds",
       "generation_token_per_s": 10.22,
-      "stddev_token_per_s": 0.19
+      "stddev_token_per_s": 0.19,
+      "prompt_token_per_s": 353.7,
+      "prompt_stddev_token_per_s": 15.31,
+      "http_generation_token_per_s": 9.21
     },
     "npu_int4": "Compiler failure before generation",
     "npu_int8": "Compilation terminated after 420s, exit 124; no inference throughput",
@@ -223,7 +236,14 @@
       "max_model_len": 32768,
       "max_num_seqs": 1,
       "gpu_memory_utilization": 0.7,
-      "enforce_eager": true
+      "enforce_eager": true,
+      "mean_ttft_ms": 893.2,
+      "median_ttft_ms": 213.45,
+      "p99_ttft_ms": 16024.24,
+      "mean_tpot_ms": 43.14,
+      "p99_tpot_ms": 43.34,
+      "mean_itl_ms": 42.97,
+      "p99_itl_ms": 53.15
     },
     "dflash": {
       "duration_s": 292.62,
@@ -233,9 +253,28 @@
       "gpu_memory_utilization": 0.85,
       "enforce_eager": "not explicitly set",
       "num_speculative_tokens": 5,
-      "acceptance_percent": 48.15
+      "acceptance_percent": 48.15,
+      "mean_ttft_ms": 294.13,
+      "median_ttft_ms": 261.0,
+      "p99_ttft_ms": 571.91,
+      "mean_tpot_ms": 21.8,
+      "p99_tpot_ms": 29.03,
+      "mean_itl_ms": 72.82,
+      "p99_itl_ms": 87.71,
+      "acceptance_length": 3.41,
+      "drafts": 3766,
+      "draft_tokens": 18830,
+      "accepted_tokens": 9066
     },
-    "limits": "Multiple server parameters differ. Observed 2.03x ratio is not isolated causal DFlash speedup. Original dataset revision, per-request results and quality comparison not provided."
+    "limits": "Multiple server parameters differ. Observed 2.03x ratio is not isolated causal DFlash speedup. Original dataset revision, per-request results and quality comparison not provided.",
+    "environment": {
+      "vllm_commit": "2cc008e7b",
+      "cuda": "13.0.88",
+      "torch": "2.11.0+cu130",
+      "python": "3.12.13",
+      "cpu_architecture": "aarch64",
+      "unified_memory_gib_approx": 119
+    }
   },
   "gemma_awq": {
     "source_title": "DGX Spark GB10 Gemma-4 AWQ 4bit/8bit deployment and serving benchmark record",
@@ -263,15 +302,325 @@
       "output_token_per_s": 60.08,
       "mean_ttft_ms": 272.97,
       "p95_ttft_ms": 283.52,
-      "mean_tpot_ms": 31.32
+      "mean_tpot_ms": 31.32,
+      "median_ttft_ms": 264.55,
+      "p99_ttft_ms": 418.72,
+      "p95_tpot_ms": 31.85,
+      "mean_itl_ms": 31.07,
+      "p99_itl_ms": 94.44,
+      "mean_e2e_ms": 4264.87,
+      "p95_e2e_ms": 4626.35,
+      "p99_e2e_ms": 4759.75
     },
     "awq8": {
       "duration_s": 537.49,
       "output_token_per_s": 47.81,
       "mean_ttft_ms": 338.92,
       "p95_ttft_ms": 359.94,
-      "mean_tpot_ms": 39.39
+      "mean_tpot_ms": 39.39,
+      "median_ttft_ms": 335.99,
+      "p99_ttft_ms": 504.8,
+      "p95_tpot_ms": 40.11,
+      "mean_itl_ms": 39.08,
+      "p99_itl_ms": 118.89,
+      "mean_e2e_ms": 5360.53,
+      "p95_e2e_ms": 5838.26,
+      "p99_e2e_ms": 5889.24
     },
     "limits": "Historical summary only; model revisions, calibration, per-request files and quality comparison not available. Peak concurrency field conflicts with configured maximum and is excluded. Shared engine memory pool budget is not weight size."
+  },
+  "rtx2060_hybrid": {
+    "source_title": "RTX2060 Qwen3 Q6/Q5混合推理记录",
+    "device": "i5-12400F / 32GB RAM / RTX2060 12GB / Windows CUDA llama.cpp",
+    "model": "Qwen3-30B-A3B-Q6_K.gguf",
+    "prompt_tokens": 9,
+    "prompt_ms": 995.3,
+    "prompt_token_per_s": 9.04,
+    "generated_tokens": 182,
+    "generation_ms": 34618.63,
+    "generation_token_per_s": 5.26,
+    "combined_ms": 35613.93,
+    "cpu_percent_observed": 21,
+    "ram_percent_range": [
+      85,
+      89
+    ],
+    "gpu_percent_range": [
+      98,
+      100
+    ],
+    "limits": "One engine observation. Exact commit/full final command unavailable; no validated concurrency result."
+  },
+  "gemma_awq_31b": {
+    "source_title": "DGX Spark GB10 Gemma-4 AWQ 4bit/8bit deployment and serving benchmark record",
+    "device": "DGX Spark GB10 / 128GB / Ubuntu 24.04",
+    "vllm": "0.19.0+cu130",
+    "model_family": "gemma-4-31B-it",
+    "max_model_len": 16384,
+    "max_num_seqs": 2,
+    "max_num_batched_tokens": 4096,
+    "gpu_memory_utilization": 0.65,
+    "prefix_cache": true,
+    "enforce_eager": true,
+    "requests": 200,
+    "successes": 200,
+    "failures": 0,
+    "client_concurrency": 2,
+    "requested_input_tokens": 1024,
+    "max_output_tokens": 128,
+    "random_range_ratio": 0.1,
+    "warmups": 10,
+    "input_tokens": 206139,
+    "generated_tokens": 25696,
+    "awq4": {
+      "duration_s": 1550.23,
+      "output_token_per_s": 16.58,
+      "mean_ttft_ms": 1554.39,
+      "p95_ttft_ms": 1660.53,
+      "mean_tpot_ms": 109.12,
+      "median_ttft_ms": 1537.91,
+      "p99_ttft_ms": 2448.72,
+      "p95_tpot_ms": 111.02,
+      "mean_itl_ms": 108.24,
+      "p99_itl_ms": 405.37,
+      "mean_e2e_ms": 15461.46,
+      "p95_e2e_ms": 16744.49,
+      "p99_e2e_ms": 17295.65
+    },
+    "awq8": {
+      "duration_s": 2587.6,
+      "output_token_per_s": 9.93,
+      "mean_ttft_ms": 2879.26,
+      "p95_ttft_ms": 3027.51,
+      "mean_tpot_ms": 179.92,
+      "median_ttft_ms": 2846.44,
+      "p99_ttft_ms": 4703.69,
+      "p95_tpot_ms": 183.7,
+      "mean_itl_ms": 178.48,
+      "p99_itl_ms": 737.11,
+      "mean_e2e_ms": 25809.91,
+      "p95_e2e_ms": 27932.55,
+      "p99_e2e_ms": 29163.73
+    },
+    "limits": "Historical summary only; model revisions, calibration, per-request files and quality comparison not available. Peak concurrency field conflicts with configured maximum and is excluded. Shared engine memory pool budget is not weight size."
+  },
+  "intel_whisper_asr": {
+    "date": "2026-07-15",
+    "device": "Core Ultra7 256V / 16GB unified memory",
+    "openvino": "2026.2.1",
+    "genai": "2026.2.1.0",
+    "llm_service": "stopped during speech tests",
+    "source_title": "Qwen3.5-9B Intel OpenVINO平台推理对比报告，语音专项",
+    "model": "Whisper Base INT8 OpenVINO",
+    "target": "NPU",
+    "audio_s": 4.4,
+    "infer_s": [
+      0.173,
+      0.169,
+      0.172
+    ],
+    "process_wall_s": [
+      8.97,
+      1.65,
+      1.66
+    ],
+    "peak_rss_kib": [
+      1277992,
+      764444,
+      764588
+    ],
+    "limits": "One synthesized audio input; not a general ASR accuracy benchmark. Original audio is not published."
+  },
+  "intel_babelvox_hybrid": {
+    "date": "2026-07-15",
+    "device": "Core Ultra7 256V / 16GB unified memory",
+    "openvino": "2026.2.1",
+    "genai": "2026.2.1.0",
+    "llm_service": "stopped during speech tests",
+    "source_title": "Qwen3.5-9B Intel OpenVINO平台推理对比报告，语音专项",
+    "model": "BabelVox OpenVINO INT8",
+    "max_tokens": 256,
+    "talker_buckets": [
+      64,
+      128,
+      256
+    ],
+    "cp_kv": true,
+    "device_map": {
+      "talker": "NPU",
+      "speaker_encoder": "NPU",
+      "tokenizer_decoder": "NPU",
+      "code_predictor": "CPU"
+    },
+    "compile_s": [
+      3.3,
+      1.5,
+      1.5
+    ],
+    "weights_tokenizer_load_s": [
+      1.5,
+      0.6,
+      0.6
+    ],
+    "codec_frames": [
+      42,
+      42,
+      55
+    ],
+    "core_generation_s": [
+      5.1,
+      4.7,
+      6.6
+    ],
+    "audio_s": [
+      3.36,
+      3.36,
+      4.4
+    ],
+    "reported_rtf": [
+      1.5,
+      1.3,
+      1.4
+    ],
+    "process_wall_s": [
+      15.18,
+      11.3,
+      12.61
+    ],
+    "peak_rss_kib": [
+      4415732,
+      4584960,
+      4585956
+    ],
+    "limits": "Reported RTF and rounded core timing use incompletely documented boundaries; preserve source values. Quality coverage incomplete."
+  },
+  "intel_babelvox_full_npu": {
+    "date": "2026-07-15",
+    "device": "Core Ultra7 256V / 16GB unified memory",
+    "openvino": "2026.2.1",
+    "genai": "2026.2.1.0",
+    "llm_service": "stopped during speech tests",
+    "source_title": "Qwen3.5-9B Intel OpenVINO平台推理对比报告，语音专项",
+    "seed": 20260715,
+    "max_tokens": 128,
+    "load_s": [
+      127.03,
+      3.89,
+      2.17
+    ],
+    "core_generation_s": [
+      7.572,
+      7.421,
+      7.381
+    ],
+    "audio_s": [
+      10.24,
+      10.24,
+      10.24
+    ],
+    "reported_rtf": [
+      0.739,
+      0.725,
+      0.721
+    ],
+    "process_wall_s": [
+      138.41,
+      14.94,
+      12.52
+    ],
+    "peak_rss_kib": [
+      5589676,
+      4553232,
+      4550872
+    ],
+    "quality_passed": false,
+    "natural_eos": false,
+    "back_transcription": "我",
+    "full_cp_no_kv": {
+      "load_s": 125.03,
+      "generation_s": 7.497,
+      "audio_s": 10.24,
+      "rtf": 0.732,
+      "process_wall_s": 135.72,
+      "peak_rss_kib": 5713012,
+      "quality_passed": false
+    },
+    "deployment": "Rejected; upstream hybrid pipeline restored"
+  },
+  "intel_qwen_tts_cpu": {
+    "date": "2026-07-15",
+    "device": "Core Ultra7 256V / 16GB unified memory",
+    "openvino": "2026.2.1",
+    "genai": "2026.2.1.0",
+    "llm_service": "stopped during speech tests",
+    "source_title": "Qwen3.5-9B Intel OpenVINO平台推理对比报告，语音专项",
+    "model": "aurora2035/Qwen3-TTS-12Hz-0.6B-CustomVoice-OpenVINO-INT8",
+    "speaker": "vivian",
+    "max_new_tokens": 128,
+    "load_s": 2.704,
+    "generation_s": 8.735,
+    "audio_s": 8.0,
+    "rtf": 1.092,
+    "sample_rate_hz": 24000,
+    "peak_rss_kib": 3777252,
+    "npu": "Encoder/Decoder/Talker dynamic-shape compilation failures",
+    "limits": "One CPU audio test with ASR-assisted content check; not a broad voice quality benchmark."
+  },
+  "intel_kokoro_cpu": {
+    "date": "2026-07-15",
+    "device": "Core Ultra7 256V / 16GB unified memory",
+    "openvino": "2026.2.1",
+    "genai": "2026.2.1.0",
+    "llm_service": "stopped during speech tests",
+    "source_title": "Qwen3.5-9B Intel OpenVINO平台推理对比报告，语音专项",
+    "model": "hexgrad/Kokoro-82M",
+    "voices": 8,
+    "text_types": 6,
+    "samples": 48,
+    "compile_s": 0.67,
+    "init_s": 0.277,
+    "rtf_mean": 0.183,
+    "rtf_median": 0.18,
+    "rtf_p95": 0.189,
+    "rtf_min": 0.175,
+    "rtf_max": 0.288,
+    "rtf_at_most_0_8_count": 48,
+    "peak_rss_kib": 3144108,
+    "rss_target_gib": 2,
+    "rss_target_passed": false,
+    "swap": 0,
+    "total_wall_s": 79.97,
+    "background_load_previous_p95_rtf": 0.29,
+    "limits": "Clean-background cached-voice CPU run. Original WAV set not published; ASR checks do not replace listening."
+  },
+  "intel_kokoro_npuw": {
+    "date": "2026-07-15",
+    "device": "Core Ultra7 256V / 16GB unified memory",
+    "openvino": "2026.2.1",
+    "genai": "2026.2.1.0",
+    "llm_service": "stopped during speech tests",
+    "source_title": "Qwen3.5-9B Intel OpenVINO平台推理对比报告，语音专项",
+    "model": "hexgrad/Kokoro-82M",
+    "input_shapes": {
+      "input_ids": [
+        1,
+        512
+      ],
+      "ref_s": [
+        1,
+        256
+      ],
+      "speed": [
+        1
+      ]
+    },
+    "first_compile_s_lower_bound": 1200,
+    "cache_files": 9,
+    "cache_mib": 178,
+    "cache_retry_timeout_s": 120,
+    "generated_wav_count": 0,
+    "rtf": null,
+    "deployment_passed": false,
+    "limits": "Compilation did not finish; no NPU generation throughput. Reported termination is not proof of OOM."
   }
 }

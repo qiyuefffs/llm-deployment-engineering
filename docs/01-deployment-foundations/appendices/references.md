@@ -58,8 +58,23 @@
 
 ## B.4 来源与引用规则
 
-概念与支持条件优先查对应官方文档；性能与故障引用作者具体工程记录。私人页面不公开，采用E01～E14编号和技术标题建立[来源索引](../evidence/README.md)。
+概念与支持条件优先查对应官方文档；性能与故障引用作者具体工程记录。私人页面不公开，采用E01～E19编号和技术标题建立[来源索引](../evidence/README.md)。
 
 正文将历史观察、命令模板、教学算例和待测事项区分描述。示例代码是公开路径改写；没有本轮硬件执行证据的地方，不写为本轮实测。
 
 外部模型和数据以各自许可证为准，仓库文档许可不自动赋予模型再分发权限。没有取得公开权利的原图、样本与日志不转存。
+
+## B.5 本次扩写的模型与实现资料
+
+| 对应内容 | 公开资料入口 |
+| --- | --- |
+| OpenVINO Qwen3-TTS转换与运行 | [官方Notebook](https://github.com/openvinotoolkit/openvino_notebooks/blob/latest/notebooks/qwen3-tts/qwen3-tts.ipynb) |
+| Kokoro OpenVINO/NPUW方法 | [官方Notebook](https://github.com/openvinotoolkit/openvino_notebooks/blob/latest/notebooks/kokoro/kokoro.ipynb) |
+| Kokoro模型、许可与音色 | [模型卡](https://huggingface.co/hexgrad/Kokoro-82M) · [音色说明](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md) |
+| BabelVox INT8模型与设备分工 | [模型卡](https://huggingface.co/djwarf/babelvox-openvino-int8) |
+| Qwen3-TTS原模型与CPU成品来源 | [Qwen模型卡](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice) · [社区IR](https://huggingface.co/aurora2035/Qwen3-TTS-12Hz-0.6B-CustomVoice-OpenVINO-INT8) |
+| MLX-VLM | [项目与模型支持说明](https://github.com/Blaizzy/mlx-vlm) |
+| llama.cpp RPC | [RPC说明](https://github.com/ggml-org/llama.cpp/tree/master/tools/rpc) |
+| Ray/vLLM多节点 | [vLLM分布式服务文档](https://docs.vllm.ai/en/latest/serving/distributed_serving/) |
+
+以上latest/main/master链接用于继续查阅；正文实测仍按标明的历史日期与版本阅读。复现实验应把所用Notebook/代码也固定到具体commit，不能用今天的默认分支覆盖原来的支持条件。

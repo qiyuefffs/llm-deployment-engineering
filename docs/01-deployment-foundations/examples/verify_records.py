@@ -54,6 +54,37 @@ def main():
     amd = data['amd_rpc']
     require(amd['gtt_requested_bytes'] > amd['ttm_actual_bytes'], 'AMD memory ordering')
     lines.append('AMD RPC: requested GTT exceeds recorded TTM; no single-machine speedup computed')
+    rtx = data['rtx2060_hybrid']
+    for count_key, time_key, rate_key in [
+        ('prompt_tokens', 'prompt_ms', 'prompt_token_per_s'),
+        ('generated_tokens', 'generation_ms', 'generation_token_per_s'),
+    ]:
+        throughput_consistent(rtx[count_key], rtx[time_key] / 1000, rtx[rate_key])
+    require(abs(rtx['prompt_ms'] + rtx['generation_ms'] - rtx['combined_ms']) < .001,
+            'RTX combined timing')
+    lines.append('RTX2060 Q6: 9 prompt / 182 generated tokens; 9.04 / 5.26 token/s')
+    awq31 = data['gemma_awq_31b']
+    for label in ('awq4', 'awq8'):
+        run = awq31[label]
+        throughput_consistent(awq31['generated_tokens'], run['duration_s'], run['output_token_per_s'])
+    lines.append('Gemma31B AWQ4/AWQ8: rounded throughput and shared token totals agree')
+    for label in ('base', 'mtp'):
+        for run in mtp[label]:
+            throughput_consistent(run['requests'] * 256, run['duration_s'], run['output_token_per_s'])
+    asr = data['intel_whisper_asr']
+    computed_rtf = sum(asr['infer_s']) / len(asr['infer_s']) / asr['audio_s']
+    lines.append(f'Whisper: RTF from rounded core timings {computed_rtf:.5f}; source rounded-RTF mean ~0.0387')
+    full_npu = data['intel_babelvox_full_npu']
+    for seconds, duration, rtf in zip(full_npu['core_generation_s'], full_npu['audio_s'], full_npu['reported_rtf']):
+        require(abs(seconds / duration - rtf) < .001, 'Full-NPU TTS RTF')
+    require(not full_npu['quality_passed'], 'Do not mark invalid audio as passing')
+    kokoro = data['intel_kokoro_cpu']
+    require(kokoro['samples'] == kokoro['voices'] * kokoro['text_types'] == 48, 'Kokoro samples')
+    require(kokoro['peak_rss_kib'] / 1024**2 > kokoro['rss_target_gib'], 'Kokoro RSS target failure')
+    require(not data['intel_kokoro_npuw']['deployment_passed'] and data['intel_kokoro_npuw']['rtf'] is None,
+            'No NPUW throughput without generated audio')
+    lines.append(f'Kokoro CPU: 48 samples; {1 / kokoro["rtf_mean"]:.2f}x realtime; RSS target failed')
+    lines.append('Speech: full-NPU quality failure and NPUW load failure remain explicit')
     lines.append('PASS: covered counts and rounded arithmetic agree; source runs and quality are not verified.')
     print('\n'.join(lines))
 

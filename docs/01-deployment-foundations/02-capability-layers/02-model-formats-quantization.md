@@ -48,6 +48,28 @@ if index.exists():
     assert not missing
 ```
 
+### 从目录看各文件的职责
+
+一份典型部署目录可以这样阅读，实际名称随模型而变：
+
+```text
+model/
+├── config.json                 模型层数、维度、架构等
+├── model.safetensors.index.json 张量到分片文件的映射
+├── model-00001-of-00004.safetensors
+├── tokenizer.json              分词规则与词表
+├── tokenizer_config.json       特殊token、模板相关配置
+├── chat_template.jinja         部分模型单独保存的聊天模板
+├── generation_config.json      建议生成参数
+└── preprocessor_config.json    视觉等输入处理配置（模型需要时）
+```
+
+index把逻辑张量映射到文件，不负责把模型分到GPU。服务可以从多个磁盘分片加载到一张卡，也可以把一个逻辑模型切到多张卡，二者属于不同层。
+
+tokenizer决定输入token和输出解码，模板决定角色、历史、工具和生成起点。Apple工程中“权重正常但只输出思考”最终定位到独立jinja模板，说明模型资产清单必须把模板列为正式文件。升级时只替换权重、保留旧模板也会引入兼容问题。
+
+对于VLM，再核对视觉权重、processor和图文连接方式；对于推测解码，再核对drafter/assistant及它与目标模型的匹配。一个可以完成文本的目录，不一定拥有完整视觉或草稿能力。
+
 ## 2.3 量化体系
 
 讨论量化时，分清格式、数值精度、量化方法与执行布局。safetensors是存储格式，INT4是低位宽表示，AWQ/GPTQ是量化方法，具体分组、缩放与打包还要由后端kernel处理。它们处于不同层次。
@@ -63,6 +85,14 @@ AWQ和GPTQ常用于权重量化。BitsAndBytes及在线量化是另外的工具�
 量化并不让所有层都变成同一位宽。尺度、元数据、敏感层与混合方案都会影响实际大小。GGUF的Q4_K_M属于K-quant混合方案，K不应解释为k-means。
 
 更完整的量化判读与真实AWQ/IR对照见[量化制品怎样验证](../chapters/models/quantization.md)。
+
+### 分组、缩放和误差怎样理解
+
+量化可以把一组浮点数映射到有限整数，再用尺度等信息近似恢复。分组更细通常增加尺度/元数据，也可能减少某些局部误差；位宽、组大小、异常值处理和哪些层保留高精度共同影响质量与容量。
+
+以纯教学算例说明开销：一组128个权重、每个4bit，数据本身64字节；若额外保存2字节尺度，最低就成66字节，还没有零点、对齐与其他信息。因此“32B×0.5字节”只给数量级，不给最终文件大小。
+
+权重量化常帮助小batch decode降低数据读取量；较大batch或prefill可能更依赖矩阵kernel和反量化效率。相同4bit在两个设备上表现不同，可以先检查实际kernel，而不是怀疑文件名不够“新”。AWQ四组的完整参数和结果在[量化实战](../chapters/models/quantization.md#八完整工程gb10的gemma4-awq四组比较)。
 
 ## 2.4 常见格式解释
 
@@ -92,6 +122,12 @@ Intel OpenVINO与Apple MLX各有配套制品与运行方式。为它们选择原
 | llama.cpp | 兼容GGUF及必要辅助模型 |
 | OpenVINO GenAI | 完整IR与GenAI/tokenizer配置 |
 | MLX-LM/MLX-VLM | 对应实现支持的MLX制品与processor |
+
+### 三种真实路径怎样落地
+
+RTX2060工程选择GGUF与CUDA混合执行，是在12GB显存、32GB RAM内解决容量约束；Intel16GB设备使用IR INT4在GPU生成，同时保留Vulkan/SYCL作为另一制品路线；Apple工程按GGUF/Metal与MLX制品分别选引擎。三者说明制品选择由整个链路决定。
+
+迁移时先确认目标是否能够读取原制品，再决定转换。转换有时间、磁盘和质量成本，某些自定义架构还没有成熟转换器；直接使用受支持的原格式可能更简单。必须转换时保留高精度源与工具身份，给每份产物独立版本。
 
 ## 2.6 格式选择
 

@@ -3,6 +3,9 @@ local-cache/
 **/cache/
 **/cuda12/
 **/models/
+# This directory contains book chapters, not downloaded model weights.
+!docs/01-deployment-foundations/chapters/models/
+!docs/01-deployment-foundations/chapters/models/*.md
 **/llama.cpp-b10430/
 **/build-cuda12/
 **/logs/
