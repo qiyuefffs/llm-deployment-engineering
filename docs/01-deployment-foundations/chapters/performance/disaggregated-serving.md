@@ -1,3 +1,17 @@
+---
+id: T35
+title: "分离式推理：PD分离、KV传输与MoE并行"
+type: tutorial
+volume: book
+layer: 4
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "资料核查：2026-10-18。 本章命令根据官方文档整理，尚未在本仓库的多GPU环境执行。PD分离属于需要额外设备、网络和运维验证的服务架构。"
+---
+
 # 分离式推理：PD分离、KV传输与MoE并行
 
 [总目录](../../SUMMARY.md) · [缓存与调度](cache-scheduling.md) · [多卡并行](parallelism.md) · [当前引擎选型](../frameworks/serving-engines.md)

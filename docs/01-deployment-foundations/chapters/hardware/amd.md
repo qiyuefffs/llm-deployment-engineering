@@ -1,3 +1,17 @@
+---
+id: T25
+title: "1.2.2 AMD GPU与ROCm软件栈"
+type: tutorial
+volume: book
+layer: 1
+platform: "AMD"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "AMD的大模型部署主要涉及Radeon独立显卡、Instinct数据中心加速卡，以及Ryzen处理器中的集成GPU。它们的内存组织、架构和软件支持范围不同，不能只看“AMD显卡”这一个标签。"
+---
+
 # 1.2.2 AMD GPU与ROCm软件栈
 
 [总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
@@ -50,7 +64,7 @@ HIP路线使用ROCm/HIP及配套计算库；Vulkan路线通过Vulkan驱动与对
 
 先确认设备目标和软件栈，再进行单机生成、内存预算和负载测试。以下保留Windows集显与Linux多机的不同操作路径。
 
-实例：[780M Windows HIP](../../engineering/amd-780m.md) · [8060S Q4/BF16优化](../../engineering/amd-8060s.md) · [395五机RPC](../../engineering/amd-395-rpc.md) · [W7900多卡多机](../../engineering/amd-w7900.md)。
+实例：[780M Windows HIP](../../cases/C05-radeon-780m/README.md) · [8060S Q4/BF16优化](../../cases/C06-radeon-8060s/README.md) · [395五机RPC](../../cases/C07-amd-395-rpc/README.md) · [W7900多卡多机](../../cases/C08-w7900/README.md)。
 
 ## 一、理解软件层次
 

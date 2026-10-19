@@ -1,8 +1,22 @@
+---
+id: EV02
+title: "2026-10部署与推理优化更新"
+type: evidence
+volume: evidence
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "资料核查日期：2026-10-19。本次保留原六部分、五层能力框架，将新技术放到对应层；原硬件实测仍按当时设备、版本与负载阅读。"
+---
+
 # 2026-10部署与推理优化更新
 
 [知识体系首页](../README.md) · [完整目录](../SUMMARY.md) · [参考资料](../appendices/references.md)
 
-资料核查日期：**2026-10-18**。本次保留原六部分、五层能力框架，将新技术放到对应层；原硬件实测仍按当时设备、版本与负载阅读。
+资料核查日期：**2026-10-19**。本次保留原六部分、五层能力框架，将新技术放到对应层；原硬件实测仍按当时设备、版本与负载阅读。
 
 ## 1. 更新内容放在哪里
 
@@ -15,6 +29,7 @@
 | 性能优化 | [DSpark](../chapters/performance/dspark.md) | 半自回归草稿、置信度、llama.cpp完整操作、自适应验证 |
 | 性能优化 | [PD与MoE](../chapters/performance/disaggregated-serving.md) | 状态传输、NIXL/Mooncake、router、EP与同资源验收 |
 | 性能与交付 | [缓存调度](../chapters/performance/cache-scheduling.md) / [压测](../chapters/performance/benchmarking.md) | 缓存冷暖、混合状态、固定矩阵、SLO与真实输出 |
+| 跨项目技能 | [通用性能优化测试方法论](../engineering/edge-llm-performance-methodology.md) / [项目文档索引](../engineering/projects/README.md) | 总章保留通用方法，8 个项目各自独立成文 |
 
 ## 2. 本次修订的关键判断
 
@@ -26,6 +41,9 @@
 6. KV量化、prefix cache、KV offload与PD transfer分别测试。
 7. 推测采样的分布目标是当前目标模型，不自动消除量化误差。
 8. PD、EP与多GPU只在同资源、同任务和同SLO条件下判断收益。
+9. 模型能加载、编译能力可用和端到端性能达标是三个不同关口。
+10. 多机RPC、独立副本与P/D分离分别解决容量、请求并发和阶段资源问题，不能合并成一个“多机加速”。
+11. 项目知识层只保留可复用技术判断，不上传内部主机名、地址、路径、凭据和原始日志。
 
 ## 3. 可追溯的源码快照
 
@@ -66,5 +84,6 @@
 - 新GPU流程依据官方资料整理，尚无本轮硬件运行结果。
 - 矩阵脚本默认plan_only；只有显式execute才发送请求，保存真实benchmark日志与结果。
 - 文档链接、Python/JSON语法、构建产物与脚本计划可以在本地检查；这些检查不替代GPU质量/性能验收。
+- 通用性能优化测试方法论只归纳既有工程结果，不新增模型测试，也不替代原始证据。
 
 新增实验结果应另建记录，填写环境、输入、版本、采样、冷暖、输出和原始日志，再纳入对应硬件实例。不要将本页日期当成历史测量发生日期。

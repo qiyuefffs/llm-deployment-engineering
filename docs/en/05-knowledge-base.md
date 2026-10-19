@@ -89,6 +89,8 @@ For example, Prefix Cache: The knowledge entry explains the state duplication of
 
 When the historical summary of the original documents is missing, mark the evidence to be supplied; The device is marked only when the device is listed; A short input passed is a short input range. The new version has been fully verified and updated, without the need to plug the functionality gap.
 
+Once a project is reviewable, put shared operations in the [General Performance Optimization and Testing Methodology](engineering/edge-llm-performance-methodology.md) and each project in the [project index](engineering/projects/README.md). Keep projects separate instead of combining several long workflows in one chapter.
+
 ## 5.4 Long-term maintenance
 
 When a version, template, model, or driver changes, determine which layer is affected first, and then replenish the corresponding return. New successful results retain the new environment, and old results still link to old versions. Public data extracts the necessary fields of the project from private notes without directly exporting the entire space.

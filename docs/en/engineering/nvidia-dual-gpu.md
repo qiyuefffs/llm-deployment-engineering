@@ -1,6 +1,6 @@
 # NVIDIA RTX 4080 and A6000: dual-GPU vLLM deployment and modeling records
 
-[简体中文](../../01-deployment-foundations/engineering/nvidia-dual-gpu.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C02-dual-4080/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

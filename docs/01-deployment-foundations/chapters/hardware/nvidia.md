@@ -1,3 +1,17 @@
+---
+id: T30
+title: "1.2.1 NVIDIA GPU与CUDA软件栈"
+type: tutorial
+volume: book
+layer: 1
+platform: "NVIDIA"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "NVIDIA GPU通过大量并行计算单元执行矩阵和向量运算。CUDA是调用这些设备进行通用计算的软件平台，既用于训练，也用于推理。"
+---
+
 # 1.2.1 NVIDIA GPU与CUDA软件栈
 
 [总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
@@ -51,7 +65,7 @@ CUDA Runtime、cuBLAS、cuDNN、NCCL有各自的职责与版本；它们不一�
 
 下面从环境检查、源码构建和模型运行继续展开。历史设备只用于解释具体问题，版本与参数按该记录阅读。
 
-实例：[RTX2060混合卸载](../../engineering/nvidia-rtx2060.md) · [RTX4080/A6000双卡](../../engineering/nvidia-dual-gpu.md) · [GB10量化与推测解码](../../engineering/nvidia-gb10.md) · [GB10多模态](../../engineering/nvidia-gb10-multimodal.md)。
+实例：[RTX2060混合卸载](../../cases/C01-rtx2060/README.md) · [RTX4080/A6000双卡](../../cases/C02-dual-4080/README.md) · [GB10量化与推测解码](../../cases/C03-gb10/README.md) · [GB10多模态](../../cases/C04-gb10-multimodal/README.md)。
 
 ## 一、先建立环境记录
 

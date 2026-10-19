@@ -1,6 +1,6 @@
 # Model artifact Engineering records: HF converts GGUF, quantization and Ollama imports
 
-[简体中文](../../01-deployment-foundations/engineering/gguf-ollama.md) | **English**
+[简体中文](../../01-deployment-foundations/appendices/gguf-ollama.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

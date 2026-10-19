@@ -1,3 +1,17 @@
+---
+id: T29
+title: "1.2.3 Intel硬件、oneAPI与OpenVINO"
+type: tutorial
+volume: book
+layer: 1
+platform: "Intel"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "Intel平台可能提供CPU、集成GPU、Arc独立GPU和NPU。CPU负责通用工作；GPU适合并行模型计算；NPU面向支持的神经网络工作负载。Core Ultra是处理器产品系列名称，不能单凭名称确定GPU/NPU代际或大模型支持范围。"
+---
+
 # 1.2.3 Intel硬件、oneAPI与OpenVINO
 
 [总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
@@ -43,7 +57,7 @@ Vulkan是另一条GPU计算路线；PyTorch XPU也有自身的包、算子与后
 
 ## 部署操作与工程参考
 
-下面以设备枚举、三种GPU后端和NPU管线解释检查方法。完整历史记录见[Arc GPU、NPU与ASR/TTS](../../engineering/intel-arc-npu.md)。
+下面以设备枚举、三种GPU后端和NPU管线解释检查方法。完整历史记录见[Arc GPU、NPU与ASR/TTS](../../cases/C09-intel-arc-npu/README.md)。
 
 ## 一、三条常见路线
 

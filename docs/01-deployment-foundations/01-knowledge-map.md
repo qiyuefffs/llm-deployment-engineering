@@ -1,6 +1,20 @@
+---
+id: T01
+title: "第一部分：整体知识体系地图"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "MLX属于机器学习框架，MLX-LM在其上实现文本模型推理；Metal提供Apple GPU计算接口。CUDA/ROCm与MLX不能按同一层的软件包理解。完整对应关系先看硬件与运行时。"
+---
+
 # 第一部分：整体知识体系地图
 
-[总目录](SUMMARY.md) · [平台实例矩阵](engineering/README.md)
+[总目录](SUMMARY.md) · [平台实例矩阵](cases/README.md)
 
 ## 先认识部署中的四类对象
 
@@ -104,4 +118,10 @@ acceptance:
 
 ### 2.2 工程实例入口
 
-[各GPU实例矩阵](engineering/README.md)按具体设备进入完整适配和优化记录。共同机制在五层主框架定义，平台差异、命令与数据在各设备原记录中展开。
+[各GPU实例矩阵](cases/README.md)按具体设备进入完整适配和优化记录。共同机制在五层主框架定义，平台差异、命令与数据在各设备原记录中展开。
+
+### 2.3 从端侧项目提炼技能点
+
+[通用性能优化测试方法论](engineering/edge-llm-performance-methodology.md)只保留共性操作和测试规则；8 个实际项目分别放在[项目文档索引](engineering/projects/README.md)，每个项目一份独立文档。阅读时先选项目，再看推荐路线、最小操作、测试方法、代表性结果和边界。
+
+跨项目判断至少保留四条边界：模型能加载不等于性能达标；多机首先解决容量或长Prefill；独立副本与RPC分层是不同的扩容方式；推测解码、P/D和低精度kernel都必须用完整请求、正确性和资源结果验收。

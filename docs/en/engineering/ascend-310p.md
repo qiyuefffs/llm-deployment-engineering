@@ -1,6 +1,6 @@
 # Ascend 310P3: CANN container, Qwen3 deployment and performance acceptance testing
 
-[简体中文](../../01-deployment-foundations/engineering/ascend-310p.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C12-ascend-310p/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

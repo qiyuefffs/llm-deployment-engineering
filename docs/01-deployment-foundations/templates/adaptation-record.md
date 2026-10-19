@@ -1,3 +1,17 @@
+---
+id: T50
+title: "端侧模型适配记录模板"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "复制到自己的项目后填写。空白和“待测”不代表通过；原始日志另存，不把凭证、设备序列号或私人输入放进公开记录。"
+---
+
 # 端侧模型适配记录模板
 
 [返回知识体系](../README.md)

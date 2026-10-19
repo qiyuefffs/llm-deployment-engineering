@@ -1,3 +1,17 @@
+---
+id: T15
+title: "附录 A：常用命令速查"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "命令用于定位和收集信息。模型运行与构建命令还需要对应设备、驱动和固定源码，详见第二部分；不要把此页从头到尾作为安装脚本执行。"
+---
+
 # 附录 A：常用命令速查
 
 [总目录](../README.md) · [故障速查](../06-troubleshooting.md) · [参考资料](references.md)

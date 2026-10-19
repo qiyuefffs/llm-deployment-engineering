@@ -1,6 +1,20 @@
+---
+id: T07
+title: "第二部分：五层能力详细框架"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "五层按“硬件怎样被调用 → 模型怎样表示 → 引擎怎样执行 → 性能怎样优化 → 服务怎样交付”展开。通用概念和选择方法在主框架，平台专题补充软件栈差异，实际设备记录用于验证和复用。"
+---
+
 # 第二部分：五层能力详细框架
 
-[总目录](../SUMMARY.md) · [设备工程实例](../engineering/README.md)
+[总目录](../SUMMARY.md) · [设备工程实例](../cases/README.md)
 
 五层按“硬件怎样被调用 → 模型怎样表示 → 引擎怎样执行 → 性能怎样优化 → 服务怎样交付”展开。通用概念和选择方法在主框架，平台专题补充软件栈差异，实际设备记录用于验证和复用。
 
@@ -16,8 +30,8 @@
 
 - 主框架：技术定义、组件结构、执行机制、选型、参数与判断条件。
 - 平台专题：先介绍硬件与运行时，再展开配置、部署与故障解释。
-- [完整工程记录](../engineering/README.md)：具体GPU的执行顺序、优化过程和50份FlowUs技术原文。
-- [结果与来源](../evidence/README.md)：历史环境、结构化数字、核算与缺项。
+- [完整工程记录](../cases/README.md)：具体GPU的执行顺序、优化过程和50份FlowUs技术原文。
+- [结果与来源](../evidence/records/README.md)：历史环境、结构化数字、核算与缺项。
 
 ## 适配顺序
 

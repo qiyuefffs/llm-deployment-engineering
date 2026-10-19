@@ -1,3 +1,17 @@
+---
+id: T11
+title: "第六部分：故障排查速查表"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: [E01, E02, E03, E05, E10]
+updated: 2026-10-19
+summary: "找到第一次失败的位置，再向上下游检查。保存第一条异常及其前后的日志，后面的进程退出和连接断开往往只是结果。"
+---
+
 # 第六部分：故障排查速查表
 
 [总目录](README.md) · [上一部分：知识库目录](05-knowledge-base.md) · [附录A：命令](appendices/commands.md)

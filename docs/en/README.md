@@ -10,7 +10,7 @@ For LLM deployment, on-device inference, performance optimization, and service d
 
 ## October 2026 deployment update
 
-[Current engines](chapters/frameworks/serving-engines.md) · [MTP](chapters/performance/speculative-decoding.md) · [DSpark procedure](chapters/performance/dspark.md) · [Quantization](chapters/models/quantization.md) · [PD/MoE](chapters/performance/disaggregated-serving.md) · [DGX Spark](chapters/hardware/dgx-spark.md).
+[Current engines](chapters/frameworks/serving-engines.md) · [MTP](chapters/performance/speculative-decoding.md) · [DSpark procedure](chapters/performance/dspark.md) · [Quantization](chapters/models/quantization.md) · [PD/MoE](chapters/performance/disaggregated-serving.md) · [DGX Spark](chapters/hardware/dgx-spark.md) · [General methodology](engineering/edge-llm-performance-methodology.md) · [Project index](engineering/projects/README.md).
 
 The [review and sources](evidence/2026-10-refresh.md) identify source snapshots and limits. [Benchmarking](chapters/performance/benchmarking.md) includes an executable matrix. New GPU routes are reference procedures; historical performance retains its original conditions.
 
@@ -120,4 +120,4 @@ Standalone case tutorials, scripts, inputs, screenshots, and results are stored 
 
 The 50 technical records preserve public procedures, versions, parameters, logs, and test tables. Private paths, node addresses, and credentials have been sanitized. Historical GPU/NPU measurements retain their original conditions; failures and missing evidence remain explicit. MUSA has no measured device results yet. Read the [technical corrections](appendices/references.md) alongside the framework diagram.
 
-Source edition updated: **2026-10-18**.
+Source edition updated: **2026-10-19**.

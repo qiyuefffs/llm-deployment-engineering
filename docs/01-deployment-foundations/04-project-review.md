@@ -1,3 +1,17 @@
+---
+id: T09
+title: "第四部分：项目复盘模板"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: [E02]
+updated: 2026-10-19
+summary: "项目复盘用于保存可继续工作的工程事实：当时的目标、运行组合、遇到的问题、修改依据和最终边界。按原稿的十项结构填写，命令和数字链接真实文件。"
+---
+
 # 第四部分：项目复盘模板
 
 [总目录](README.md) · [上一部分：核心概念](03-core-concepts.md) · [下一部分：知识库目录](05-knowledge-base.md)
@@ -104,11 +118,11 @@
 
 ## 4.4 完整填写示例：本机 CPU 服务演练
 
-这份示例对应本体系实际执行的[完整教程](practice/first-service/README.md)，下面按原来的十项写成一份简短工程记录。原始请求、响应、日志与指标保存在同一结果目录，结论可以逐项复查。
+这份示例对应本体系实际执行的[完整教程](cases/C14-windows-cpu/README.md)，下面按原来的十项写成一份简短工程记录。原始请求、响应、日志与指标保存在同一结果目录，结论可以逐项复查。
 
 **一、项目背景。** 在普通Windows电脑上完成一次不依赖GPU的模型部署链路，检查下载、校验、服务、功能、流式与性能文件。目标是教学流程和工程验收，不承诺该小模型满足实际业务质量。
 
-**二、硬件与环境。** Windows10.0.26200、AMD64、i5-12600KF、16逻辑线程、Python3.13.12。llama.cpp b9557、提交0f7fada56，纯CPU、4线程。环境字段见[environment.json](practice/first-service/results/2026-10-18-windows-cpu/environment.json)。
+**二、硬件与环境。** Windows10.0.26200、AMD64、i5-12600KF、16逻辑线程、Python3.13.12。llama.cpp b9557、提交0f7fada56，纯CPU、4线程。环境字段见[environment.json](cases/C14-windows-cpu/results/2026-10-18-windows-cpu/environment.json)。
 
 **三、模型与输入。** Qwen3-0.6B-Q8_0，固定revision与SHA256见清单。输入包括三道功能题、单字符畸形JSON和两组各四条列举任务；所有提示词保存在程序与结果中，不依赖私人样本。
 
@@ -149,3 +163,5 @@ results/2026xxxx-platform-model-c2-r1/
 结论发生变化时写明新版本和新证据。例如原文标题写成功，后续运行却有明确kernel失败，应按具体失败输出修订能力范围，保留必要的版本沿革。
 
 知识条目引用最新适用结论，同时保留旧结果对应的版本。这样后续重做时可以判断是环境变化、模型变化，还是原记录不完整。
+
+项目记录完成后，再提炼一次可复用方法：解决了哪一层问题、用了什么证据、在哪些条件下成立。共性方法集中到[通用性能优化测试方法论](engineering/edge-llm-performance-methodology.md)，项目经验分别放入[项目文档索引](engineering/projects/README.md)。具体命令和测量仍留在原项目记录，不把方法页当作新的运行证据。

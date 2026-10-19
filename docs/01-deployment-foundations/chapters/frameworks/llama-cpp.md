@@ -1,6 +1,20 @@
+---
+id: T21
+title: "llama.cpp：构建、加载、接口与停止"
+type: tutorial
+volume: book
+layer: 3
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "llama.cpp是一套模型执行工具，不要求先装PyTorch。它通过不同后端使用CPU或加速设备，围绕GGUF提供CLI、server、benchmark与量化程序。本章将构建、加载与接口串成一条链，平台特殊问题回到硬件专题查看。"
+---
+
 # llama.cpp：构建、加载、接口与停止
 
-[总目录](../../SUMMARY.md) · [所属总章](../../02-capability-layers/03-inference-frameworks.md) · [CPU完整实跑](../../practice/first-service/README.md)
+[总目录](../../SUMMARY.md) · [所属总章](../../02-capability-layers/03-inference-frameworks.md) · [CPU完整实跑](../../cases/C14-windows-cpu/README.md)
 
 ## 本章概览
 
@@ -114,7 +128,7 @@ curl --fail-with-body http://127.0.0.1:18080/v1/chat/completions \
   -d '{"model":"book-qwen3-06b","messages":[{"role":"user","content":"计算2+2。只输出一个数字。"}],"max_tokens":64,"temperature":0}'
 ```
 
-检查别名、正文、usage和结束原因。随后测试流式、JSON任务、超长输入与错误请求。在本体系实际CPU演练中，相同算术题输出错误，畸形JSON返回500。它们已经记录在[真实验收文件](../../practice/first-service/results/2026-10-18-windows-cpu/acceptance.json)，不能因为服务还能响应就忽略。
+检查别名、正文、usage和结束原因。随后测试流式、JSON任务、超长输入与错误请求。在本体系实际CPU演练中，相同算术题输出错误，畸形JSON返回500。它们已经记录在[真实验收文件](../../cases/C14-windows-cpu/results/2026-10-18-windows-cpu/acceptance.json)，不能因为服务还能响应就忽略。
 
 ## 5. 先停服务，再测引擎
 

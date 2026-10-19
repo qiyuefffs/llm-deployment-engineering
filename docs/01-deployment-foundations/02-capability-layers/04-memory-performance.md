@@ -1,3 +1,17 @@
+---
+id: T05
+title: "第4层：显存与性能优化层"
+type: tutorial
+volume: book
+layer: 4
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "优化先确定目标：单用户希望首token与持续生成快；多用户服务还要看总吞吐、尾延迟和成功率；端侧还要满足内存、功耗与持续运行要求。目标不同，适合的参数也不同。"
+---
+
 # 第4层：显存与性能优化层
 
 [总目录](../SUMMARY.md) · [压测](../chapters/performance/benchmarking.md) · [缓存/调度](../chapters/performance/cache-scheduling.md) · [多卡多机](../chapters/performance/parallelism.md) · [MTP/DFlash](../chapters/performance/speculative-decoding.md)
@@ -41,7 +55,7 @@
 | 工作区 | batched tokens、ubatch、attention/量化kernel | 长prefill、decode峰值 |
 | 通信 | TP/PP/EP、rank、collective | 多卡初始化与运行 |
 
-UMA同时观察主机RSS、系统可用、设备预算、memory pressure与swap；这些计数可能重叠，不能简单相加。[395的GTT/TTM实例](../engineering/amd-395-rpc.md)说明物理容量、驱动预算与实际可分配量是三层。
+UMA同时观察主机RSS、系统可用、设备预算、memory pressure与swap；这些计数可能重叠，不能简单相加。[395的GTT/TTM实例](../cases/C07-amd-395-rpc/README.md)说明物理容量、驱动预算与实际可分配量是三层。
 
 ## 4.3 粗略显存估算
 
@@ -93,24 +107,31 @@ KV bytes ≈ 2 × attention层数 × KV heads × head_dim
              并发/到达率、缓存、warm-up、工具版本、计时范围
 ```
 
-[完整原压测文章与命令](../engineering/benchmark-tools.md)。引擎pp/tg、GenAI管线与HTTP不可直接排名；负载c4和到达率inf200请求也是不同实验。
+[完整原压测文章与命令](../appendices/benchmark-tools.md)。引擎pp/tg、GenAI管线与HTTP不可直接排名；负载c4和到达率inf200请求也是不同实验。
 
 ## 4.6 常见瓶颈与优化方向
 
 | 证据 / 瓶颈 | 优化变量 | 代价与验收 | 对应工程 |
 | --- | --- | --- | --- |
-| 权重超过设备 | 权重量化、offload、TP/PP | 质量、RAM、PCIe/通信与加载 | [2060](../engineering/nvidia-rtx2060.md)、[W7900](../engineering/amd-w7900.md) |
-| 权重访问/CPU回退 | 实际卸载、kernel、精度 | 不以GPU利用率代替数据流证据 | [8060S](../engineering/amd-8060s.md) |
+| 权重超过设备 | 权重量化、offload、TP/PP | 质量、RAM、PCIe/通信与加载 | [2060](../cases/C01-rtx2060/README.md)、[W7900](../cases/C08-w7900/README.md) |
+| 权重访问/CPU回退 | 实际卸载、kernel、精度 | 不以GPU利用率代替数据流证据 | [8060S](../cases/C06-radeon-8060s/README.md) |
 | KV/工作区OOM | ctx、seqs、batched、ubatch、KV dtype | 任务范围、长文本质量与峰值 | Intel16GB、395 |
-| 重复长前缀 | Prefix Cache/APC | 冷暖分组、租户、命中、挤出 | [MLX APC](../engineering/apple-mlx.md) |
+| 重复长前缀 | Prefix Cache/APC | 冷暖分组、租户、命中、挤出 | [MLX APC](../cases/C11-m3-mlx/README.md) |
 | 长prefill干扰 | chunked、token预算、长短请求分组 | TTFT与ITL权衡 | GB10、双4080 |
-| decode计算/验证 | MTP、DFlash、草稿长度 | 接受率、验证成本、质量、显存 | [GB10推测解码](../engineering/nvidia-gb10.md) |
-| 并发吞吐不足 | 活动序列、批处理、到达率 | 单流TPOT与尾延迟上升 | [oMLX c1/c2/c4](../engineering/apple-mlx.md) |
+| decode计算/验证 | MTP、DFlash、草稿长度 | 接受率、验证成本、质量、显存 | [GB10推测解码](../cases/C03-gb10/README.md) |
+| 并发吞吐不足 | 活动序列、批处理、到达率 | 单流TPOT与尾延迟上升 | [oMLX c1/c2/c4](../cases/C11-m3-mlx/README.md) |
 | 多卡通信 | TP/PP、网卡、collective、切分 | 每rank内存、拓扑、气泡和恢复 | W7900、HIP RPC |
-| NPU快但内容错误 | shape/算子/精度修复或回滚 | 性能与质量双验收 | [Intel全NPU TTS](../engineering/intel-arc-npu.md) |
+| NPU快但内容错误 | shape/算子/精度修复或回滚 | 性能与质量双验收 | [Intel全NPU TTS](../cases/C09-intel-arc-npu/README.md) |
 
 实验流程：基线→瓶颈证据→假设→变更→同负载复测→质量/资源→采用或回退。单变量可分析归因，多变量保留为组合观察。结果未改善也必须保存，例如8060S BF16放大batch后10.8→10.1token/s。
 
 ## 2026-10 工程更新
 
 [MTP与动态推测](../chapters/performance/speculative-decoding.md)、[DSpark](../chapters/performance/dspark.md)、[PD与MoE](../chapters/performance/disaggregated-serving.md)分别给出配置、实验矩阵和验收条件。
+
+[通用性能优化测试方法论](../engineering/edge-llm-performance-methodology.md)补充跨项目判断：
+
+- 多机RPC、双副本和P/D分离解决的不是同一个容量或延迟问题，必须分别建立单机基线。
+- 推测解码先看完整请求的TTFT与E2E；接受率或Decode提升不能替代端到端验收。
+- Vulkan协作矩阵、整数点积和低精度kernel需要同二进制消融、正确性检查和实际资源采样。
+- 引擎合成benchmark、服务端Prefill、客户端流式Decode和HTTP请求使用不同计时边界。

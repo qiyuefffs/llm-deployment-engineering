@@ -1,6 +1,20 @@
+---
+id: T38
+title: "推测解码：MTP、EAGLE、DFlash与DSpark"
+type: tutorial
+volume: book
+layer: 4
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "完整工程记录： GB10关闭/开启MTP、DFlash完整构建与测试原文"
+---
+
 # 推测解码：MTP、EAGLE、DFlash与DSpark
 
-**完整工程记录：** [GB10关闭/开启MTP、DFlash完整构建与测试原文](../../engineering/nvidia-gb10.md)
+**完整工程记录：** [GB10关闭/开启MTP、DFlash完整构建与测试原文](../../cases/C03-gb10/README.md)
 
 [总目录](../../SUMMARY.md) · [性能总章](../../02-capability-layers/04-memory-performance.md) · [实验记录模板](../../templates/experiment-record.md)
 

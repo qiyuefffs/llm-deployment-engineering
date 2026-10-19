@@ -1,6 +1,6 @@
 # MUSA:llama.cpp deploys adaptive and accelerated verification processes
 
-[简体中文](../../01-deployment-foundations/engineering/musa.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C13-musa/README.md) | **English**
 
 [Platform instance matrix](README.md) · [The backend of the hardware](../02-capability-layers/01-hardware-backends.md)
 

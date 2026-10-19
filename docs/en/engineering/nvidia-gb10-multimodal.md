@@ -1,6 +1,6 @@
 # NVIDIA GB10 Multimodals: Links for deployment of VL, Omni and document models
 
-[简体中文](../../01-deployment-foundations/engineering/nvidia-gb10-multimodal.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C04-gb10-multimodal/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

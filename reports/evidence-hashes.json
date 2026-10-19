@@ -1,0 +1,302 @@
+{
+  "R23": {
+    "source": "engineering/amd-395-rpc.md",
+    "title": "AMD Strix Halo 395 五机 HIP RPC 串联部署 Kimi-K2.5-Q2 实战文档",
+    "body_sha256": "1646feda837ba40efbfa8048f2c36945ec7dce55c6f2c35d79e0292d092257e6",
+    "body_characters": 19923
+  },
+  "R24": {
+    "source": "engineering/amd-395-rpc.md",
+    "title": "AMD 395 llamcpp+rpc编译流程",
+    "body_sha256": "2657f21d1b3049e6439e1a7a4d835fbb3ad8d8e17239c346acacb24fac10583b",
+    "body_characters": 6665
+  },
+  "R25": {
+    "source": "engineering/amd-395-rpc.md",
+    "title": "AMD 395 llamacpp rpc服务功能环境测试脚本",
+    "body_sha256": "2d6800f01cb5530cfbcd16c1891732ef6c82d2203667bd546696fab02b287aa7",
+    "body_characters": 12507
+  },
+  "R18": {
+    "source": "engineering/amd-780m.md",
+    "title": "AMD 780M-GPU 适配教程",
+    "body_sha256": "918c0843beb060ce451925121cb403273340239c15da6e244fafec84ddd52d63",
+    "body_characters": 1114
+  },
+  "R19": {
+    "source": "engineering/amd-780m.md",
+    "title": "AMD适配模型（GPU-780M，ＣＰＵ　－8845HS）",
+    "body_sha256": "5ad305fbd9326dcb4d2757043dd5122067a8c44c9da219dc997e791d6e08679d",
+    "body_characters": 12073
+  },
+  "R20": {
+    "source": "engineering/amd-780m.md",
+    "title": "AMD：使用Ollama框架将Llama3.1 8b部署在AMD的GPU",
+    "body_sha256": "3aef3c691222c609d83d4c46e0caac3dd798031bbb8636b86798912d66f19cbd",
+    "body_characters": 2400
+  },
+  "R21": {
+    "source": "engineering/amd-8060s.md",
+    "title": "Qwen3.6-35B-A3B 部署与推理文档",
+    "body_sha256": "d73f35d6a012e883e81a759834b00c06127d0431f82218dffbde69be0e58538a",
+    "body_characters": 6244
+  },
+  "R22": {
+    "source": "engineering/amd-8060s.md",
+    "title": "Qwen3.6-35B-A3B BF16 推理优化记录",
+    "body_sha256": "1e96c54affa66fc5765132ea44abe12f3610fb4caa94889f27fd00fc81c56ada",
+    "body_characters": 3897
+  },
+  "R26": {
+    "source": "engineering/amd-w7900.md",
+    "title": "单节点八卡服务器（W7900*8,48*8）DeepSeek-R1-AWQ-INT4部署",
+    "body_sha256": "4d37cabaaaf22f569b31df5ac8f0a721a2e901a4641b73ba2d9a5c61570be074",
+    "body_characters": 1987
+  },
+  "R27": {
+    "source": "engineering/amd-w7900.md",
+    "title": "W7900双卡部署Qwen3:30b-A3b",
+    "body_sha256": "20786492aec50132310b4a1e6ccfee9894b55e8b8e974f8e268fbcc41eac9764",
+    "body_characters": 3051
+  },
+  "R28": {
+    "source": "engineering/amd-w7900.md",
+    "title": "服务器：AMD显卡：Ubuntu22.04+VLLM+Docker双卡部署Deepseek-r1:32b/70b",
+    "body_sha256": "03914990e2ce13ab76710601fe275cb2e5b22d5b61372b549a485ed7557a1d17",
+    "body_characters": 8087
+  },
+  "R29": {
+    "source": "engineering/amd-w7900.md",
+    "title": "AMD单节点四卡DS-70B-fp16测试命令",
+    "body_sha256": "e6ce2464d6b62760527317cc22a665777cb0773bd449b06d8a117d21f5bebc5e",
+    "body_characters": 5533
+  },
+  "R30": {
+    "source": "engineering/amd-w7900.md",
+    "title": "双节点模型部署70B验证",
+    "body_sha256": "71220937f7c7e3c037981409d03810f55c1d6bd4ca95089370316bed4d6a4106",
+    "body_characters": 6046
+  },
+  "R31": {
+    "source": "engineering/amd-w7900.md",
+    "title": "双节点模型部署70B-2.0资源调度验证",
+    "body_sha256": "100a6bef2bdb948bb804d7aa52113115f95ac840147854a7da5881a5ea6f1539",
+    "body_characters": 5938
+  },
+  "R32": {
+    "source": "engineering/amd-w7900.md",
+    "title": "双节点，再次推理DS-70B",
+    "body_sha256": "2e0c95439c9966692fc5455291e2327b883eb94399985219345cda308b69570c",
+    "body_characters": 3151
+  },
+  "R33": {
+    "source": "engineering/amd-w7900.md",
+    "title": "Deepseek-R1-671b双节点部署",
+    "body_sha256": "e868a48f0875ff56fed96c0048bac56b53e96c3f1bdd49fe02edf85866469930",
+    "body_characters": 1351
+  },
+  "R34": {
+    "source": "engineering/amd-w7900.md",
+    "title": "多节点部署排障",
+    "body_sha256": "8f6733970d411c3b7545d24d5d52faedf2bc27c9c769a9cf8df9e5cbf41c67ff",
+    "body_characters": 6419
+  },
+  "R39": {
+    "source": "engineering/apple-metal.md",
+    "title": "llama.cpp 在 Mac Studio (Apple Silicon) 上的编译指南",
+    "body_sha256": "50fc8cd90cc2ab1f5484392e6224acfe58b7040bdd4aaaf5f9d44e2b16bde570",
+    "body_characters": 17871
+  },
+  "R40": {
+    "source": "engineering/apple-mlx.md",
+    "title": "vllm-metal 编译与推理记录",
+    "body_sha256": "a68b2276e962a38fcf050ad92d7b23b15af3a9a2a125243eccc09fc51c9100fd",
+    "body_characters": 12396
+  },
+  "R41": {
+    "source": "engineering/apple-mlx.md",
+    "title": "mlx-vlm 多视觉模型推理与 API 调用指南",
+    "body_sha256": "94248c050069b0cbe5a6b2b135f2065051878985d80e760cca32fa7a9aa62057",
+    "body_characters": 16624
+  },
+  "R42": {
+    "source": "engineering/apple-mlx.md",
+    "title": "oMLX Mac 推理操作流程",
+    "body_sha256": "abafa2be3a7a29fa50a9e3c42cb75ff360c72a154ee6f4158f1d026b2978cae1",
+    "body_characters": 7832
+  },
+  "R43": {
+    "source": "engineering/apple-mlx.md",
+    "title": "oMLX 推理框架性能测试报告与压测流程",
+    "body_sha256": "a1b53b42d299e0c54f0633b8bf0794c87a2d90244c1b18e7b225472b00cac554",
+    "body_characters": 2322
+  },
+  "R44": {
+    "source": "engineering/apple-mlx.md",
+    "title": "Mac 设备推理框架分类总结",
+    "body_sha256": "b87154df841feb833562957001102efcad95f6a7a24ef89272ea489ffb748850",
+    "body_characters": 28487
+  },
+  "R45": {
+    "source": "engineering/ascend-310p.md",
+    "title": "华为昇腾310P3推理Qwen3-32B",
+    "body_sha256": "bebb36d3573b5e1aa0c7478346880c54b1d10442f2e5a8bef2baa1fa371b19fd",
+    "body_characters": 2104
+  },
+  "R46": {
+    "source": "engineering/ascend-310p.md",
+    "title": "华为昇腾310p3：qwen3-32b与qwen3-235b-a22b-2507测试",
+    "body_sha256": "1863ba04eb9123e515269552ba51a50a5623cef00b7b81a15dac84ea25fc8c4f",
+    "body_characters": 8741
+  },
+  "R47": {
+    "source": "engineering/ascend-310p.md",
+    "title": "昇腾310P3部署Qwen3-32B benchmark记录",
+    "body_sha256": "f5c550ee96a4e0b3cf8c0a0ac8be63806953ec476e2fa934dda13389bad250c0",
+    "body_characters": 14343
+  },
+  "R48": {
+    "source": "engineering/benchmark-tools.md",
+    "title": "llama.cpp 与 vLLM 推理性能评测工具2026年版本",
+    "body_sha256": "be80cf2247b08595230068be2b62563491525bc1454e1bb05ab08b94e8ccebe4",
+    "body_characters": 10986
+  },
+  "R49": {
+    "source": "engineering/benchmark-tools.md",
+    "title": "大模型性能评估框架集合",
+    "body_sha256": "8a2f66aeb208dbd8676453647b4b7f044276981f5e690ad2eb8b5ec2927de91e",
+    "body_characters": 3687
+  },
+  "R50": {
+    "source": "engineering/gguf-ollama.md",
+    "title": "使用llama.cpp进行模型转换和量化，再使用ollama自定义模型。",
+    "body_sha256": "9c558a52f4966ad9cf835e95967ef5d64348cc1fb5e087577d0a95079ca32a73",
+    "body_characters": 2688
+  },
+  "R35": {
+    "source": "engineering/intel-arc-npu.md",
+    "title": "Qwen3.5-9B Intel openvino 平台推理对比报告",
+    "body_sha256": "ca123e16ae767290fa0533f29da3baf474e01b15f8a811c395b0677f9995e0e3",
+    "body_characters": 25252
+  },
+  "R36": {
+    "source": "engineering/intel-arc-npu.md",
+    "title": "Qwen3.5-9B INT4 IR 多模态视觉推理测试报告",
+    "body_sha256": "f93ba84d26dc1686837cdf547ef4e4eef99980611f8ed41b19df148af3c8f0c0",
+    "body_characters": 4187
+  },
+  "R37": {
+    "source": "engineering/intel-arc-npu.md",
+    "title": "使用ipex-llm进行量化并制作ollama模型，部署在Intel集显。",
+    "body_sha256": "0bda0d3f062e192f0d0947b6d5b44128c2ee4e08adf98c27f3b17bb09e241ac8",
+    "body_characters": 1641
+  },
+  "R38": {
+    "source": "engineering/intel-arc-npu.md",
+    "title": "Intel NPU进行模型推理：deepseek-r1:1.5b,7b,8b",
+    "body_sha256": "93ac3fa668c880c683f894df501cfb9fcf4ae4efbd720aa7e94c1cfcd2a4d3a3",
+    "body_characters": 2185
+  },
+  "R04": {
+    "source": "engineering/nvidia-dual-gpu.md",
+    "title": "服务器：Nvidia显卡：Ubuntu22.04+VLLM+Docker双卡部署Deepseek-r1:32B(Int4)",
+    "body_sha256": "b56e3e8d2eb02bc0e11e35145d70cefd3f870114a6652dc9b7c83c216cea9fc8",
+    "body_characters": 6459
+  },
+  "R13": {
+    "source": "engineering/nvidia-gb10-multimodal.md",
+    "title": "GB10部署Qwen3-VL-8B模型",
+    "body_sha256": "2f75f0ba0a745d4c2cf7b5e8017f5f6b077aea91738a5b1cb95e74536cdd863e",
+    "body_characters": 3469
+  },
+  "R14": {
+    "source": "engineering/nvidia-gb10-multimodal.md",
+    "title": "nvidia GB10 部署Qwen2.5-VL-7B",
+    "body_sha256": "7e91e367ba792e96c103d66934dae4d9e7b1bd8d69dc0f7fc77abae145fcf347",
+    "body_characters": 5459
+  },
+  "R15": {
+    "source": "engineering/nvidia-gb10-multimodal.md",
+    "title": "GB10部署Qwen3-VL-30B-A3B",
+    "body_sha256": "4dba99a6f7afa2fa0cf4b2ac423a0cb5d13f6feea38b43da83622b47a0a1b6cf",
+    "body_characters": 873
+  },
+  "R16": {
+    "source": "engineering/nvidia-gb10-multimodal.md",
+    "title": "NVIDIA GB10版本vllm部署Qwen3‑Omni‑30B‑A3B‑Instruct",
+    "body_sha256": "6fbda67c12b444b5db8000b3fb2f7d704f0c4d9b83e60734f5064a635a4b385a",
+    "body_characters": 1414
+  },
+  "R17": {
+    "source": "engineering/nvidia-gb10-multimodal.md",
+    "title": "NVIDIA GB10 vllm部署granite-docling-258M",
+    "body_sha256": "600449d91eca52d7657fd952c7af1bd386db7f4f093c5ed72ec2648a92b58584",
+    "body_characters": 814
+  },
+  "R05": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "NVIDIA GB10 ARM编译llamacpp",
+    "body_sha256": "55e759baa1305201af3dcbd512d4e108a6ab4f8f084cc2d81f33ac1b7cc26cfd",
+    "body_characters": 2035
+  },
+  "R06": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "nvidia GB10设备（arm64架构）编译vllm",
+    "body_sha256": "c4d38e8ee1b79aebce61e1a328c5a0181fefcb771ddd4d5187f3683569678cce",
+    "body_characters": 2362
+  },
+  "R07": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "DGX Spark适配编译vllm部署Qwen3.6-35B-A3B模型（bf16/fp8精度）",
+    "body_sha256": "7e4e47b110de0ed5ff6bf11ef643b9b5c30e3d1808915c150d192641c99ad06c",
+    "body_characters": 4055
+  },
+  "R08": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "NVIDIA GB10部署Qwen3-30B-A3B-Instruct-2507",
+    "body_sha256": "56e62d9a3943d1b821d5f37516caafd4b5ac7e3ba55f69a7b00b4108263d92a0",
+    "body_characters": 3490
+  },
+  "R09": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "DGX GB10部署Gemma-4系列AWQ量化模型",
+    "body_sha256": "afad1dceb9a9388149aa578bb269d919cb36ff2ee421e7af0dd0064276675faa",
+    "body_characters": 11420
+  },
+  "R10": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "DGX Spark GB10部署gemma-4系列模型及关闭MTP推理加速",
+    "body_sha256": "477953a3dbaba1023bb8f100d97d3b575490f4f5edb9e6aa0296f3099cc0a861",
+    "body_characters": 5445
+  },
+  "R11": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "DGX Spark GB10部署gemma-4系列模型及MTP推理加速",
+    "body_sha256": "ba4807bc126806ba0279fca1583d3bbe4fdd322f4b03561058f5756bfbbdd9c1",
+    "body_characters": 6647
+  },
+  "R12": {
+    "source": "engineering/nvidia-gb10.md",
+    "title": "DGX Spark GB10编译DFlash推理加速模块集成到vllm中",
+    "body_sha256": "97a1158b1f60fc29b3fa7304b084e4e96dc8698b596d7fb2390823f9e656af44",
+    "body_characters": 14637
+  },
+  "R01": {
+    "source": "engineering/nvidia-rtx2060.md",
+    "title": "nvidai-llamacpp-qwen3:30-a3b-q6测试记录",
+    "body_sha256": "d77c96fe1398ac5c1420335f29d820a4c0f0aa4392a3b746b5473bd96382baaa",
+    "body_characters": 1219
+  },
+  "R02": {
+    "source": "engineering/nvidia-rtx2060.md",
+    "title": "nvidai-llamacpp-qwen3:30-a3b-q6基准性能测试记录",
+    "body_sha256": "6d7d3432fa40799b44b333c74741d53f10495a8b6cc7dd8ccc0d51f897c98cf7",
+    "body_characters": 724
+  },
+  "R03": {
+    "source": "engineering/nvidia-rtx2060.md",
+    "title": "nvidai-llamacpp-qwen3:32B-q5基准性能测试记录",
+    "body_sha256": "49f2a95ae42bdb7663468be3f0fe47b17b6c4ae1773798872d8a35dc34e6290b",
+    "body_characters": 749
+  }
+}

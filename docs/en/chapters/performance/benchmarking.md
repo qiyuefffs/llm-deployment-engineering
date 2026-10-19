@@ -99,7 +99,7 @@ The author's historical GB10 burst test of 200 requests had a mean TTFT of appro
 
 ## 7. How are the results of two sets of real concurrency analysed?
 
-The system's CPU results are as follows: Each group of 4 requests, 128 output tokens, original file see [HTTP summary](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/http-summary.json):
+The system's CPU results are as follows: Each group of 4 requests, 128 output tokens, original file see [HTTP summary](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/http-summary.json):
 
 |Client concurrency|HTTP is successful|Output throughput|Average TTFT|Average E2E|
 | --- | --- | --- | --- | --- |

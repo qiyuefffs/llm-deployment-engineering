@@ -1,6 +1,20 @@
+---
+id: T28
+title: "DGX Spark / GB10：ARM64、统一内存与低位宽推理"
+type: tutorial
+volume: book
+layer: 1
+platform: "NVIDIA"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "资料核查：2026-10-18。 本章说明硬件特性和当前部署流程；已有性能数据仍引用原GB10记录，新配置没有补写GPU实测结果。"
+---
+
 # DGX Spark / GB10：ARM64、统一内存与低位宽推理
 
-[总目录](../../SUMMARY.md) · [NVIDIA与CUDA](nvidia.md) · [GB10历史工程](../../engineering/nvidia-gb10.md) · [量化选择](../models/quantization.md)
+[总目录](../../SUMMARY.md) · [NVIDIA与CUDA](nvidia.md) · [GB10历史工程](../../cases/C03-gb10/README.md) · [量化选择](../models/quantization.md)
 
 **资料核查：2026-10-18。** 本章说明硬件特性和当前部署流程；已有性能数据仍引用原GB10记录，新配置没有补写GPU实测结果。
 

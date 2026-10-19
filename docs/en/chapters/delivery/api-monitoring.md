@@ -45,7 +45,7 @@ High TTFT may come from a queue, prefill, compilation or network; High TPOT may 
 
 ## 5. A real metrics document
 
-Activate the CPU exercises `--metrics`, the collected [metrics.txt](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/metrics.txt) These include:
+Activate the CPU exercises `--metrics`, the collected [metrics.txt](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/metrics.txt) These include:
 
 ```text
 llamacpp:prompt_tokens_total 355

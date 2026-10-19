@@ -1,6 +1,6 @@
 # NVIDIA GB10: ARM64 build, FP8, AWQ, MTP and DFlash
 
-[简体中文](../../01-deployment-foundations/engineering/nvidia-gb10.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C03-gb10/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

@@ -1,6 +1,6 @@
 # AMD Radeon 780M: Windows HIP operating library, Ollama and model compatible
 
-[简体中文](../../01-deployment-foundations/engineering/amd-780m.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C05-radeon-780m/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

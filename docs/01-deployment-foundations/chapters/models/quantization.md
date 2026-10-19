@@ -1,3 +1,17 @@
+---
+id: T32
+title: "量化选择：从放得下到用得好"
+type: tutorial
+volume: book
+layer: 2
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "端侧内存有限，量化通常是第一个容量方案。它改变权重或中间状态的表示，减少存储与数据搬运，也会引入额外误差和计算处理。一个合适方案应同时满足容量、质量和服务性能，不能仅看文件从多少GB降到多少GB。"
+---
+
 # 量化选择：从放得下到用得好
 
 [总目录](../../SUMMARY.md) · [所属总章](../../02-capability-layers/02-model-formats-quantization.md) · [上一章：GGUF转换](gguf-conversion.md)

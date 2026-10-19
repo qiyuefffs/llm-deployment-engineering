@@ -1,6 +1,6 @@
 # Apple M3 Ultra: vllm-metal, MLX-VLM, APC and oMLX optimized
 
-[简体中文](../../01-deployment-foundations/engineering/apple-mlx.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C11-m3-mlx/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 
@@ -44,7 +44,7 @@ The following technical correctness, commands, tables, logs, failures and subseq
 > Recorded: 2026-05-18
 > device :Mac Studio / Apple M3 Ultra / 512GB unified memory
 > The work directory: `/srv/llm/Desktop/llm-workspace/vllm-metal`
-> The model directory: `/Volumes/990pro/modeldown/models`
+> The model directory: `<MODEL_VOLUME>/modeldown/models`
 
 This article is about the compilation installed on Mac Apple Silicon.`vllm-metal` Starting Qwen 3.6 text inference service, OpenAI API calls, and the network, template, multi-module issues that you're pressing.
 
@@ -304,7 +304,7 @@ This is not a compilation failure, but a Python import priority that causes the 
 The current model directory:
 
 ```text
-cd /Volumes/990pro/modeldown/models
+cd <MODEL_VOLUME>/modeldown/models
 ls
 ```
 
@@ -356,7 +356,7 @@ export VLLM_METAL_PREFIX_CACHE_FRACTION=0.05
 export VLLM_WORKER_MULTIPROC_METHOD=spawn
 export TOKENIZERS_PARALLELISM=false
 
-vllm serve /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+vllm serve <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --host 0.0.0.0 \
   --port 18092 \
   --served-model-name qwen3.6-35b-a3b-bf16 \
@@ -368,7 +368,7 @@ vllm serve /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --max-num-batched-tokens 32768 \
   --block-size 16 \
   --enable-prefix-caching \
-  --chat-template /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16/chat_template.jinja \
+  --chat-template <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16/chat_template.jinja \
   --default-chat-template-kwargs '{"enable_thinking": false}' \
   --generation-config vllm \
   --override-generation-config '{"do_sample": false, "temperature": 0, "top_p": 1}' \
@@ -498,7 +498,7 @@ The solution:
 When the service is launched, add:
 
 ```text
---chat-template /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16/chat_template.jinja \
+--chat-template <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16/chat_template.jinja \
 --default-chat-template-kwargs '{"enable_thinking": false}'
 ```
 
@@ -659,7 +659,7 @@ Since vllm-metal is currently unable to execute a multimodal encoder, image reco
 If the image is on a Linux device:
 
 ```text
-scp "/srv/llm/图片/1.jpg" goflash@<NODE_IP>:/tmp/1.jpg
+scp "/srv/llm/图片/1.jpg" <USER>@<NODE_IP>:/tmp/1.jpg
 ```
 
 Testing on Mac:
@@ -669,7 +669,7 @@ cd /private/tmp
 source /srv/llm/Desktop/llm-workspace/vllm-metal/.venv-vllm-metal/bin/activate
 
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --image /tmp/1.jpg \
   --prompt "请识别这张图片，描述图片中的主要内容、场景、物体和可能的文字。" \
   --max-tokens 512 \
@@ -747,25 +747,25 @@ If you `python` The command is unavailable and can be used directly by a virtual
 The current model is by default located at:
 
 ```text
-/Volumes/990pro/modeldown/models
+<MODEL_VOLUME>/modeldown/models
 ```
 
 There are four model paths:
 
 ```text
-/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16
-/Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16
-/Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16
-/Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16
+<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16
+<MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16
+<MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16
+<MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16
 ```
 
 The following commands can be used to confirm the integrity of the model file:
 
 ```text
-ls /Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16
-ls /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16
-ls /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16
-ls /Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16
+ls <MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16
+ls <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16
+ls <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16
+ls <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16
 ```
 
 Key configuration:
@@ -786,7 +786,7 @@ This is not the case.
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16 \
   --prompt "你好，请做一个简短自我介绍。" \
   --max-tokens 512 \
   --temperature 0.0
@@ -796,7 +796,7 @@ Image understanding:
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16 \
   --image /path/to/image.jpg \
   --prompt "请详细描述这张图片。" \
   --max-tokens 1024 \
@@ -807,7 +807,7 @@ OCR：
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16 \
   --image /path/to/image.jpg \
   --prompt "请对图片进行OCR识别，逐行输出所有可见文字，保留原始顺序和表格结构，不要编造。" \
   --max-tokens 4096 \
@@ -818,7 +818,7 @@ OCR details priority mode:
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16 \
   --image /path/to/image.jpg \
   --prompt "请对图片进行OCR识别，逐行输出所有可见文字，保留原始顺序和表格结构，不要编造。" \
   --max-tokens 4096 \
@@ -832,7 +832,7 @@ This is not the case.
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --prompt "你好，请做一个简短自我介绍。" \
   --max-tokens 512 \
   --temperature 0.0
@@ -842,7 +842,7 @@ Image understanding:
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --image /path/to/image.jpg \
   --prompt "请详细描述这张图片。" \
   --max-tokens 1024 \
@@ -853,7 +853,7 @@ OCR：
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --image /path/to/image.jpg \
   --prompt "请对图片进行OCR识别，逐行输出所有可见文字，保留原始顺序和表格结构，不要编造。" \
   --max-tokens 4096 \
@@ -864,7 +864,7 @@ High-resolution input attempt:
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --image /path/to/image.jpg \
   --prompt "请对图片进行OCR识别，逐行输出所有可见文字，保留原始顺序和表格结构，不要编造。" \
   --max-tokens 4096 \
@@ -878,7 +878,7 @@ This is not the case.
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16 \
   --prompt "你好，请做一个简短自我介绍。" \
   --max-tokens 512 \
   --temperature 0.0
@@ -890,7 +890,7 @@ This is not the case.
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16 \
   --prompt "你好，请做一个简短自我介绍。" \
   --max-tokens 512 \
   --temperature 0.0
@@ -900,7 +900,7 @@ Image understanding:
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16 \
   --image /path/to/image.jpg \
   --prompt "请详细描述这张图片。" \
   --max-tokens 1024 \
@@ -911,7 +911,7 @@ OCR：
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16 \
   --image /path/to/image.jpg \
   --prompt "请对图片进行OCR识别，逐行输出所有可见文字，保留原始顺序和表格结构，不要编造。" \
   --max-tokens 4096 \
@@ -922,7 +922,7 @@ Image understanding:
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16 \
   --image /path/to/image.jpg \
   --prompt "请详细描述这张图片。" \
   --max-tokens 1024 \
@@ -933,7 +933,7 @@ OCR：
 
 ```text
 python -m mlx_vlm.generate \
-  --model /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16 \
   --image /path/to/image.jpg \
   --prompt "请对图片进行OCR识别，逐行输出所有可见文字，保留原始顺序和表格结构，不要编造。" \
   --max-tokens 4096 \
@@ -985,7 +985,7 @@ OCR/Mapping Stability:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8080 \
-  --model /Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16 \
   --max-tokens 4096 \
   --max-kv-size 32768 \
   --prefill-step-size 2048 \
@@ -999,7 +999,7 @@ The following is a list of some of the most common types of memory:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8080 \
-  --model /Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16 \
   --max-tokens 2048 \
   --max-kv-size 262144 \
   --prefill-step-size 4096 \
@@ -1021,7 +1021,7 @@ Stable release:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8081 \
-  --model /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --max-tokens 4096 \
   --max-kv-size 32768 \
   --prefill-step-size 2048 \
@@ -1035,7 +1035,7 @@ Memory-saving configuration:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8081 \
-  --model /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --max-tokens 4096 \
   --max-kv-size 32768 \
   --prefill-step-size 2048 \
@@ -1057,7 +1057,7 @@ Stable release:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8082 \
-  --model /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16 \
   --max-tokens 4096 \
   --max-kv-size 32768 \
   --prefill-step-size 2048 \
@@ -1075,7 +1075,7 @@ Stable release:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8083 \
-  --model /Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16 \
   --max-tokens 4096 \
   --max-kv-size 32768 \
   --prefill-step-size 2048 \
@@ -1089,7 +1089,7 @@ Memory-saving configuration:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8083 \
-  --model /Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16 \
   --max-tokens 4096 \
   --max-kv-size 32768 \
   --prefill-step-size 2048 \
@@ -1107,7 +1107,7 @@ Memory-saving configuration:
 python -m mlx_vlm.server \
   --host <NODE_IP> \
   --port 8082 \
-  --model /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16 \
   --max-tokens 4096 \
   --max-kv-size 32768 \
   --prefill-step-size 2048 \
@@ -1153,7 +1153,7 @@ A mini-CPM example:
 curl http://<NODE_IP>:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16",
+    "model": "<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16",
     "messages": [
       {
         "role": "user",
@@ -1171,7 +1171,7 @@ Qwen's example:
 curl http://<NODE_IP>:8081/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "/Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16",
+    "model": "<MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16",
     "messages": [
       {
         "role": "user",
@@ -1189,7 +1189,7 @@ Gemma's example:
 curl http://<NODE_IP>:8082/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "/Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16",
+    "model": "<MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16",
     "messages": [
       {
         "role": "user",
@@ -1207,7 +1207,7 @@ The Gemma 31B example:
 curl http://<NODE_IP>:8083/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "/Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16",
+    "model": "<MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16",
     "messages": [
       {
         "role": "user",
@@ -1236,7 +1236,7 @@ IMG_B64=$(base64 -w 0 "/srv/llm/图片/1.jpg")
 
 cat > /tmp/vlm_image_request.json <<EOF
 {
-  "model": "/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16",
+  "model": "<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16",
   "messages": [
     {
       "role": "user",
@@ -1268,21 +1268,21 @@ Alternate port and model paths when calling Qwen:
 
 ```Markdown
 端口: 8081
-模型: /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16
+模型: <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16
 ```
 
 Alternate port and model paths when calling Gemma:
 
 ```Markdown
 端口: 8082
-模型: /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-bf16
+模型: <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-bf16
 ```
 
 When using Gemma 31B, replace the port and model path:
 
 ```Markdown
 端口: 8083
-模型: /Volumes/990pro/modeldown/models/gemma-4-31b-it-bf16
+模型: <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-bf16
 ```
 
 #### 8. API OCR calls
@@ -1294,7 +1294,7 @@ IMG_B64=$(base64 -w 0 "/srv/llm/图片/1.jpg")
 
 cat > /tmp/vlm_ocr_request.json <<EOF
 {
-  "model": "/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16",
+  "model": "<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16",
   "messages": [
     {
       "role": "user",
@@ -1329,7 +1329,7 @@ IMG_B64=$(base64 -w 0 "/srv/llm/图片/1.jpg")
 
 cat > /tmp/vlm_ocr_json_request.json <<EOF
 {
-  "model": "/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16",
+  "model": "<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16",
   "messages": [
     {
       "role": "user",
@@ -1393,7 +1393,7 @@ import base64
 import requests
 
 server = "http://<NODE_IP>:8080/v1/chat/completions"
-model = "/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16"
+model = "<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16"
 image_path = "/srv/llm/图片/1.jpg"
 
 with open(image_path, "rb") as f:
@@ -1492,7 +1492,7 @@ Example:
 
 ```text
 {
-  "model": "/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16",
+  "model": "<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16",
   "messages": [],
   "max_tokens": 4096,
   "temperature": 0.0,
@@ -1573,7 +1573,7 @@ curl http://<NODE_IP>:8080/v1/chat/completions \
 In the API request `model ` Field recommendations and service start parameters `--model` It's perfectly consistent, for example:
 
 ```text
-"/Volumes/990pro/modeldown/models/MiniCPM-V-4.6-bf16"
+"<MODEL_VOLUME>/modeldown/models/MiniCPM-V-4.6-bf16"
 ```
 
 ##### 13.4 of the API `/v1/models` Not showing local models
@@ -1631,13 +1631,13 @@ Explanation: The above data is from `sudo asitop` It is used to describe the ver
 Model Father's Catalogue:
 
 ```text
-/Volumes/990pro/models/mlx-community
+<MODEL_VOLUME>/models/mlx-community
 ```
 
 The target model directory:
 
 ```text
-/Volumes/990pro/models/mlx-community/DeepSeek-V4-Flash-4bit
+<MODEL_VOLUME>/models/mlx-community/DeepSeek-V4-Flash-4bit
 ```
 
 Notes: `omlx serve --model-dir` Fill in the parent directory, not the model subdirectory.
@@ -1646,12 +1646,12 @@ Notes: `omlx serve --model-dir` Fill in the parent directory, not the model subd
 
 ```text
 omlx serve \
-  --model-dir /Volumes/990pro/models/mlx-community \
+  --model-dir <MODEL_VOLUME>/models/mlx-community \
   --host 127.0.0.1 \
   --port 8000 \
   --max-model-memory disabled \
   --max-process-memory disabled \
-  --paged-ssd-cache-dir /Volumes/990pro/omlx-cache \
+  --paged-ssd-cache-dir <MODEL_VOLUME>/omlx-cache \
   --paged-ssd-cache-max-size 100GB \
   --hot-cache-max-size 8GB \
   --log-level info
@@ -1668,7 +1668,7 @@ Uvicorn running on http://127.0.0.1:8000
 The current actual API Key:
 
 ```text
-8888
+<API_TOKEN>
 ```
 
 Sources:
@@ -1744,7 +1744,7 @@ curl -N http://127.0.0.1:8000/v1/chat/completions \
 
 `Invalid API key`
 
-Reason: The key in the request's head is wrong. Currently used `8888`.
+Reason: The key in the request's head is wrong. Currently used `<API_TOKEN>`.
 
 `address already in use`
 
@@ -1770,13 +1770,13 @@ If you want to change it to your own key, when you restart the service explicitl
 
 ```text
 omlx serve \
-  --model-dir /Volumes/990pro/models/mlx-community \
+  --model-dir <MODEL_VOLUME>/models/mlx-community \
   --host 127.0.0.1 \
   --port 8000 \
 [认证配置已脱敏；按当前实例配置]
   --max-model-memory disabled \
   --max-process-memory disabled \
-  --paged-ssd-cache-dir /Volumes/990pro/omlx-cache \
+  --paged-ssd-cache-dir <MODEL_VOLUME>/omlx-cache \
   --paged-ssd-cache-max-size 100GB \
   --hot-cache-max-size 8GB \
   --log-level info
@@ -1792,9 +1792,9 @@ The request was then changed to:
 
 > This section is used `mlx_vlm.server ` It's not.`omlx serve`. Applicable model:
 
-  - `/Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-mxfp8`
+  - `<MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-mxfp8`
 
-  - `/Volumes/990pro/modeldown/models/gemma-4-31b-it-mxfp8`
+  - `<MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-mxfp8`
 
 Caching uses MLX-VLM's APC (Automatic Prefix Caching). It caches repeated prompts, long system prompts, long document context, and multiple historical prefixes. The request side must be repeated.`X-APC-Tenant` It's easy to isolate and hit the same group of caches.
 
@@ -1808,7 +1808,7 @@ cd /srv/llm/Desktop/llm-workspace/oMLX-vlm/mlx-vlm
 APC_ENABLED=1 \
 APC_NUM_BLOCKS=8192 \
 APC_BLOCK_SIZE=16 \
-APC_DISK_PATH=/Volumes/990pro/mlx-vlm-apc-cache/gemma-4-26b-a4b-it-mxfp8 \
+APC_DISK_PATH=<MODEL_VOLUME>/mlx-vlm-apc-cache/gemma-4-26b-a4b-it-mxfp8 \
 APC_DISK_MAX_GB=80 \
 APC_DISK_SHARD_MAX_BLOCKS=256 \
 APC_LAYER_MAJOR_MEMORY_MIN_TOKENS=50000 \
@@ -1816,7 +1816,7 @@ APC_HASH=fast \
 ../oMLX-vlm/bin/python -m mlx_vlm.server \
   --host 0.0.0.0 \
   --port 18082 \
-  --model /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-mxfp8 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-mxfp8 \
   --log-level INFO \
   --max-tokens 2048 \
   --max-kv-size 65536 \
@@ -1839,7 +1839,7 @@ cd /srv/llm/Desktop/llm-workspace/oMLX-vlm/mlx-vlm
 APC_ENABLED=1 \
 APC_NUM_BLOCKS=8192 \
 APC_BLOCK_SIZE=16 \
-APC_DISK_PATH=/Volumes/990pro/mlx-vlm-apc-cache/gemma-4-31b-it-mxfp8 \
+APC_DISK_PATH=<MODEL_VOLUME>/mlx-vlm-apc-cache/gemma-4-31b-it-mxfp8 \
 APC_DISK_MAX_GB=100 \
 APC_DISK_SHARD_MAX_BLOCKS=256 \
 APC_LAYER_MAJOR_MEMORY_MIN_TOKENS=50000 \
@@ -1847,7 +1847,7 @@ APC_HASH=fast \
 ../oMLX-vlm/bin/python -m mlx_vlm.server \
   --host 0.0.0.0 \
   --port 18083 \
-  --model /Volumes/990pro/modeldown/models/gemma-4-31b-it-mxfp8 \
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-mxfp8 \
   --log-level INFO \
   --max-tokens 2048 \
   --max-kv-size 65536 \
@@ -1875,7 +1875,7 @@ IMG_B64=$(base64 -w 0 "$IMG")
 
 cat > "$REQ" <<EOF
 {
-  "model": "/Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-mxfp8",
+  "model": "<MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-mxfp8",
   "messages": [
     {
       "role": "system",
@@ -1921,7 +1921,7 @@ IMG_B64=$(base64 -w 0 "$IMG")
 
 cat > "$REQ" <<EOF
 {
-  "model": "/Volumes/990pro/modeldown/models/gemma-4-31b-it-mxfp8",
+  "model": "<MODEL_VOLUME>/modeldown/models/gemma-4-31b-it-mxfp8",
   "messages": [
     {
       "role": "system",
@@ -1965,7 +1965,7 @@ curl -N http://<NODE_IP>:18082/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "X-APC-Tenant: $TENANT" \
   -d '{
-    "model": "/Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-mxfp8",
+    "model": "<MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-mxfp8",
     "messages": [
       {
         "role": "system",
@@ -1991,7 +1991,7 @@ curl -N http://<NODE_IP>:18082/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "X-APC-Tenant: $TENANT" \
   -d '{
-    "model": "/Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-mxfp8",
+    "model": "<MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-mxfp8",
     "messages": [
       {
         "role": "system",
@@ -2121,7 +2121,7 @@ evalscope perf \
   --api openai \
 [认证配置已脱敏；按当前实例配置]
   --dataset random \
-  --tokenizer-path /Volumes/990pro/models/mlx-community/DeepSeek-V4-Flash-4bit \
+  --tokenizer-path <MODEL_VOLUME>/models/mlx-community/DeepSeek-V4-Flash-4bit \
   --parallel 1 1 2 4 \
   --number 5 20 10 10 \
   --min-prompt-length 128 \
@@ -2600,7 +2600,7 @@ uv pip install vllm-mlx \
 Example start:
 
 ```text
-vllm-mlx serve /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+vllm-mlx serve <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --host 0.0.0.0 \
   --port 18084 \
   --continuous-batching
@@ -2786,7 +2786,7 @@ cd /srv/llm/Desktop/llm-workspace/oMLX-vlm/mlx-vlm
 ../oMLX-vlm/bin/python -m mlx_vlm.server \
   --host 0.0.0.0 \
   --port 18082 \
-  --model /Volumes/990pro/modeldown/models/gemma-4-26b-a4b-it-mxfp8
+  --model <MODEL_VOLUME>/modeldown/models/gemma-4-26b-a4b-it-mxfp8
 ```
 
 Suitable scenarios:
@@ -2997,7 +2997,7 @@ GGUF 模型优先选 llama.cpp。
 Current model examples of directories:
 
 ```Markdown
-/Volumes/990pro/modeldown/models
+<MODEL_VOLUME>/modeldown/models
 ```
 
 There are models:
@@ -3380,12 +3380,12 @@ cd /srv/llm/Desktop/llm-workspace/omlx
 source /srv/llm/Desktop/llm-workspace/omlx/omlx-build/bin/activate
 
 omlx serve \
-  --model-dir /Volumes/990pro/modeldown/models \
+  --model-dir <MODEL_VOLUME>/modeldown/models \
   --host 0.0.0.0 \
   --port 18080 \
   --max-model-memory disabled \
   --max-process-memory disabled \
-  --paged-ssd-cache-dir /Volumes/990pro/omlx-cache \
+  --paged-ssd-cache-dir <MODEL_VOLUME>/omlx-cache \
   --paged-ssd-cache-max-size 100GB \
   --hot-cache-max-size 8GB \
   --max-concurrent-requests 8 \
@@ -3428,7 +3428,7 @@ uv pip install vllm-mlx \
 Example start:
 
 ```text
-vllm-mlx serve /Volumes/990pro/modeldown/models/Qwen3.6-35B-A3B-bf16 \
+vllm-mlx serve <MODEL_VOLUME>/modeldown/models/Qwen3.6-35B-A3B-bf16 \
   --host 0.0.0.0 \
   --port 18084 \
   --continuous-batching

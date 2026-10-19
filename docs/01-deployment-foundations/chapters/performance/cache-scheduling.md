@@ -1,6 +1,21 @@
+---
+id: T34
+title: "KV、缓存与调度：分别解决什么问题"
+type: tutorial
+volume: book
+layer: 4
+platform: "general"
+device: "general"
+status: historical
+source_ids: [R42, R43, E26, E29]
+updated: 2026-10-19
+summary: "区分KV、块管理、批处理、分块和前缀复用，并用oMLX实测说明吞吐、TPOT与缓存状态怎样验收。"
+---
+
 # KV、缓存与调度：分别解决什么问题
 
-**完整工程记录：** [MLX-VLM APC完整配置与调用原文](../../engineering/apple-mlx.md)
+**实例与证据：** [C11 Apple MLX/APC/oMLX](../../cases/C11-m3-mlx/README.md) ·
+[R42 原始操作](../../evidence/sources/R42.md) · [R43 并发记录](../../evidence/sources/R43.md)
 
 [总目录](../../SUMMARY.md) · [显存与性能总章](../../02-capability-layers/04-memory-performance.md) · [压测](benchmarking.md)
 
@@ -67,6 +82,24 @@ KV卸载将部分状态放到其他存储层，减少设备常驻压力，但带
 先把模型和质量基线固定，再按实际问题选择一项：容量不足看KV预算，长输入干扰看分块调度，重复文档看前缀复用，多请求利用低看批处理。每次保存开关、请求、缓存状态、资源和质量。
 
 作者GB10服务同时启用多个机制并完成200请求，这说明配置整体可运行；没有单变量对照，不能宣称其中某一个机制带来了确定收益。机制解释与实验归因需要分别成立。
+
+## 8. 最小闭环：先证明调度收益，再单独证明缓存命中
+
+[C11的oMLX实例](../../cases/C11-m3-mlx/README.md)给出了实际服务和完整
+EvalScope命令：固定同一4bit模型、输入目标128、输出上限256、温度0、
+流式接口，分别运行c1/c2/c4。该章的结果同时列聚合吞吐、单路Decode、
+TPOT和E2E，读者不需要先从数万字原文中寻找测法。
+
+按这个已有实验，先检查models返回目标ID，明确加载目标模型，再用相同
+tokenizer和请求集执行各档，保存每档总输出与墙钟。观察到总吞吐提高而
+单路Decode降低时，可以判定批处理的容量取舍；不能只读聚合列就称每个
+用户都更快。原请求数有限、缓存状态未齐，不用该表证明稳定P99或冷请求TTFT。
+
+缓存则另做一轮：先冷前缀、再同前缀改后缀、再等长不同前缀，读取服务实际
+计算的prompt token。已有[Qwen3.8前缀实验](../../engineering/projects/04-qwen38-27b-flash-next.md)
+用此计数确认命中；[W4A16专项](../../engineering/projects/06-vllm-rocm.md)
+发现prefix cache污染后保留旧结果，关闭缓存再做正式A/B。两个过程说明：
+“服务开了缓存”“首请求做过预热”“本次确实命中前缀”需要三种不同证据。
 
 ## 八、MLX-VLM APC：从配置到冷暖缓存实验
 

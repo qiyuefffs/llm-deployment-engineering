@@ -1,3 +1,17 @@
+---
+id: T36
+title: "DSpark：从块草稿到自适应验证"
+type: tutorial
+volume: book
+layer: 4
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "资料核查：2026-10-18。 本章是依据官方实现整理的工程流程，尚未在本仓库的GPU环境执行。下面的命令、教学计算和上游实验各自标明来源，不提供虚构的本机加速数字。"
+---
+
 # DSpark：从块草稿到自适应验证
 
 [总目录](../../SUMMARY.md) · [MTP与推测解码](speculative-decoding.md) · [压测方法](benchmarking.md) · [本次资料核查](../../evidence/2026-10-refresh.md)

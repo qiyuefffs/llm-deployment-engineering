@@ -116,7 +116,7 @@ curl --fail-with-body http://127.0.0.1:18080/v1/chat/completions \
   -d '{"model":"book-qwen3-06b","messages":[{"role":"user","content":"计算2+2。只输出一个数字。"}],"max_tokens":64,"temperature":0}'
 ```
 
-Check the last name, spelling, usage and reason for termination. This is followed by test flows, JSON tasks, extra-long inputs and error requests. In the actual CPU exercises of this system, the same arithmetic problems resulted in a malformed JSON error returning 500. They have been recorded in [Real acceptance testing documents](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/acceptance.json) It is not possible to ignore the fact that services can also respond.
+Check the last name, spelling, usage and reason for termination. This is followed by test flows, JSON tasks, extra-long inputs and error requests. In the actual CPU exercises of this system, the same arithmetic problems resulted in a malformed JSON error returning 500. They have been recorded in [Real acceptance testing documents](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/acceptance.json) It is not possible to ignore the fact that services can also respond.
 
 ## 5. Service interruption, re-testing of engine
 

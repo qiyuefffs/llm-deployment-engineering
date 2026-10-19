@@ -1,8 +1,22 @@
+---
+id: T33
+title: "性能测试：把一次运行变成可比较的结果"
+type: tutorial
+volume: book
+layer: 4
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "完整工程记录： 完整压测工具与操作原文 · oMLX完整实测"
+---
+
 # 性能测试：把一次运行变成可比较的结果
 
-**完整工程记录：** [完整压测工具与操作原文](../../engineering/benchmark-tools.md) · [oMLX完整实测](../../engineering/apple-mlx.md)
+**完整工程记录：** [完整压测工具与操作原文](../../appendices/benchmark-tools.md) · [oMLX完整实测](../../cases/C11-m3-mlx/README.md)
 
-[总目录](../../SUMMARY.md) · [所属总章：性能优化](../../02-capability-layers/04-memory-performance.md) · [完整CPU实跑](../../practice/first-service/README.md)
+[总目录](../../SUMMARY.md) · [所属总章：性能优化](../../02-capability-layers/04-memory-performance.md) · [完整CPU实跑](../../cases/C14-windows-cpu/README.md)
 
 ## 本章概览
 
@@ -97,7 +111,7 @@ evalscope perf \
 
 ## 7. 两组真实并发结果怎样分析？
 
-本体系CPU结果如下。每组4请求、128输出token，原始文件见[HTTP汇总](../../practice/first-service/results/2026-10-18-windows-cpu/http-summary.json)：
+本体系CPU结果如下。每组4请求、128输出token，原始文件见[HTTP汇总](../../cases/C14-windows-cpu/results/2026-10-18-windows-cpu/http-summary.json)：
 
 | 客户端并发 | HTTP成功 | 输出吞吐 | 平均TTFT | 平均E2E |
 | --- | --- | --- | --- | --- |

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title description">
+<title id="title">大模型部署工程：五层能力框架</title>
+<desc id="description">硬件与运行时、模型与量化、推理引擎、内存与性能、工程交付五层能力，连接理解平台、准备模型、执行推理、优化和交付的完整工程链。</desc>
+<rect width="1440" height="1040" fill="#f5f7f3"/>
+<g font-family="Microsoft YaHei,PingFang SC,Segoe UI,sans-serif" fill="#183d3a">
+<text x="76" y="72" font-size="18" font-weight="700" letter-spacing="2">大模型部署工程</text>
+<text x="76" y="128" font-size="40" font-weight="700">五层能力，一条部署工作流</text>
+<text x="76" y="168" font-size="21" fill="#516b67">理解平台 → 准备模型 → 执行推理 → 定位瓶颈 → 优化交付</text>
+
+<rect x="72" y="210" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="210" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="210" width="14" height="108" fill="#176d65"/>
+<text x="110" y="275" text-anchor="middle" font-size="28" font-weight="700" fill="white">01</text>
+<text x="178" y="254" font-size="27" font-weight="700">硬件与运行时</text>
+<text x="178" y="288" font-size="18" fill="#516b67">CPU / GPU / NPU｜容量、带宽与统一内存</text>
+<text x="760" y="272" font-size="17" fill="#385c55">驱动、CUDA、ROCm/HIP、Metal、oneAPI、CANN</text>
+
+<rect x="72" y="335" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="335" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="335" width="14" height="108" fill="#176d65"/>
+<text x="110" y="400" text-anchor="middle" font-size="28" font-weight="700" fill="white">02</text>
+<text x="178" y="379" font-size="27" font-weight="700">模型与量化</text>
+<text x="178" y="413" font-size="18" fill="#516b67">架构、权重、Tokenizer、对话模板</text>
+<text x="760" y="397" font-size="17" fill="#385c55">HF / GGUF / IR｜精度、量化与质量边界</text>
+
+<rect x="72" y="460" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="460" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="460" width="14" height="108" fill="#176d65"/>
+<text x="110" y="525" text-anchor="middle" font-size="28" font-weight="700" fill="white">03</text>
+<text x="178" y="504" font-size="27" font-weight="700">推理引擎</text>
+<text x="178" y="538" font-size="18" fill="#516b67">加载 → prefill → decode → sample → 返回</text>
+<text x="760" y="522" font-size="17" fill="#385c55">vLLM、llama.cpp、MLX-LM、OpenVINO GenAI</text>
+
+<rect x="72" y="585" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="585" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="585" width="14" height="108" fill="#176d65"/>
+<text x="110" y="650" text-anchor="middle" font-size="28" font-weight="700" fill="white">04</text>
+<text x="178" y="629" font-size="27" font-weight="700">内存与性能</text>
+<text x="178" y="663" font-size="18" fill="#516b67">权重＋KV/状态＋工作区＋运行时开销</text>
+<text x="760" y="647" font-size="17" fill="#385c55">TTFT / TPOT / 吞吐｜缓存、调度、并行</text>
+
+<rect x="72" y="710" width="1296" height="108" rx="14" fill="white" stroke="#ccdcd4"/>
+<rect x="72" y="710" width="76" height="108" rx="14" fill="#176d65"/>
+<rect x="134" y="710" width="14" height="108" fill="#176d65"/>
+<text x="110" y="775" text-anchor="middle" font-size="28" font-weight="700" fill="white">05</text>
+<text x="178" y="754" font-size="27" font-weight="700">工程交付</text>
+<text x="178" y="788" font-size="18" fill="#516b67">环境、API、监控、容量与恢复</text>
+<text x="760" y="772" font-size="17" fill="#385c55">功能＋质量＋性能＋运维验收</text>
+
+<rect x="72" y="856" width="1296" height="122" rx="14" fill="#e4ede7"/>
+<text x="100" y="894" font-size="22" font-weight="700">三卷阅读结构</text>
+<text x="100" y="928" font-size="19">教程卷：理解机制与判断方法 · 实例卷：执行、测量与结果解释</text>
+<text x="100" y="956" font-size="19">证据卷：完整原始记录、E01–E20 边界与结构化测量文件</text>
+<text x="1356" y="1015" text-anchor="end" font-size="15" fill="#617871">大模型部署知识体系 · 2026-10</text>
+</g>
+</svg>

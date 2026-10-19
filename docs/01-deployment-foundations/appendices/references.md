@@ -1,6 +1,20 @@
+---
+id: T17
+title: "附录 B：参考资料与原稿修订"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "官方文档用于核对支持条件与概念，性能数字使用作者工程记录。下列入口可能随上游变化；复现旧实验时，应继续查固定commit、release与对应文档。"
+---
+
 # 附录 B：参考资料与原稿修订
 
-[总目录](../README.md) · [常用命令](commands.md) · [工程来源](../evidence/README.md)
+[总目录](../README.md) · [常用命令](commands.md) · [工程来源](../evidence/records/README.md)
 
 ## B.1 官方资料入口
 
@@ -56,7 +70,7 @@
 
 ## B.4 来源与引用规则
 
-概念与支持条件优先查对应官方文档；性能与故障引用作者具体工程记录。私人页面不公开，采用E01～E20编号和技术标题建立[来源索引](../evidence/README.md)。
+概念与支持条件优先查对应官方文档；性能与故障引用作者具体工程记录。私人页面不公开，采用E01～E20编号和技术标题建立[来源索引](../evidence/records/README.md)。
 
 正文将历史观察、命令模板、教学算例和待测事项区分描述。示例代码是公开路径改写；没有本轮硬件执行证据的地方，不写为本轮实测。
 

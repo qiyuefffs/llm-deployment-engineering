@@ -1,3 +1,17 @@
+---
+id: T31
+title: "从原始权重到可加载的 GGUF"
+type: tutorial
+volume: book
+layer: 2
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "拿到模型以后，先确认运行框架能够读取什么制品。llama.cpp通常读取GGUF；从Hugging Face下载的safetensors目录不能仅靠改扩展名变成GGUF。转换程序要读懂模型结构、张量名称、tokenizer和配置，才能写出执"
+---
+
 # 从原始权重到可加载的 GGUF
 
 [总目录](../../SUMMARY.md) · [所属总章：模型格式与量化](../../02-capability-layers/02-model-formats-quantization.md) · [下一篇：量化选择与验证](quantization.md)
@@ -6,7 +20,7 @@
 
 拿到模型以后，先确认运行框架能够读取什么制品。llama.cpp通常读取GGUF；从Hugging Face下载的safetensors目录不能仅靠改扩展名变成GGUF。转换程序要读懂模型结构、张量名称、tokenizer和配置，才能写出执行器能够使用的文件。
 
-本章依据作者FlowUs中的GB10构建与Qwen转换、量化记录整理。原笔记包含从FP8转F16的命令，但转换不会恢复FP8已经损失的信息。下面的教学操作改用小型原始模型，先转换为F16，再进入量化，步骤更容易检查。本轮未执行这组转换；已实际运行的成品GGUF演练见[第一个本地服务](../../practice/first-service/README.md)。
+本章依据作者FlowUs中的GB10构建与Qwen转换、量化记录整理。原笔记包含从FP8转F16的命令，但转换不会恢复FP8已经损失的信息。下面的教学操作改用小型原始模型，先转换为F16，再进入量化，步骤更容易检查。本轮未执行这组转换；已实际运行的成品GGUF演练见[第一个本地服务](../../cases/C14-windows-cpu/README.md)。
 
 ## 1. 转换之前，先看清模型目录
 

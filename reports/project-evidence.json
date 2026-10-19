@@ -1,0 +1,134 @@
+[
+  {
+    "id": "E21",
+    "source_file": "minimax-m27-dual-node-summary.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E21.md",
+    "boundary": "本地服务记录，2026-07-10；2 槽位，成功加载精确计时未记录。",
+    "original_sha256": "e36c9e22a240bb9d96c72d2d1c3da4329c59ddc11e5864b4f01c70e59590926f",
+    "sanitized_body_sha256": "994eec850a41669fed9809567eddc4571ad33009a6a708ad22897e7cc541604c",
+    "snapshot_sha256": "56c7c8a1968f333022ac0bcc7b45885e56558b55f2f25b20c47d932e0635011b",
+    "original_characters": 5802,
+    "sanitized_characters": 5388
+  },
+  {
+    "id": "E22",
+    "source_file": "x2-x3-minimax-rpc-deployment.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E22.md",
+    "boundary": "本地部署记录，2026-07-10；5 槽位，约 7 分钟是进程启动到 health ok 的观察。",
+    "original_sha256": "1915337df086a3c0220e93927e8e60bde5737f1e7a5e14c74c6f1ee30b295b0f",
+    "sanitized_body_sha256": "baee2c5da9a72e7590f3bd23a4f92f8c3510d1ed29f8cd6eee7be1be630c8ba2",
+    "snapshot_sha256": "fbba1732155cb9b5ccee194934d73aa93a283cf6de72b36f68421c53f06ce9a5",
+    "original_characters": 11438,
+    "sanitized_characters": 10053
+  },
+  {
+    "id": "E23",
+    "source_file": "README-BALANCED.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E23.md",
+    "boundary": "随下载制品保存的模型说明；其中性能、质量和驱动故障为制品作者记录，不代表本机独立实测。",
+    "original_sha256": "fc137d8bd6ab61cdf648887c906ad63bc0d0e2cb8c6bb30ded0a7fa63d459b7f",
+    "sanitized_body_sha256": "6c15f24e94ccb8f5eeaf01636b1ca5b2f5875b214bae7dcf3b71ef840f2f8175",
+    "snapshot_sha256": "0f5d0fede2239b8843071e05107d7938f5fca9f753643fba99751e6c4197b9ab",
+    "original_characters": 9623,
+    "sanitized_characters": 9635
+  },
+  {
+    "id": "E24",
+    "source_file": "README-HYBRID.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E24.md",
+    "boundary": "随下载制品保存的模型说明；其中性能、质量和驱动故障为制品作者记录，不代表本机独立实测。",
+    "original_sha256": "6346aaaf741cb5f3e3547dd0aaa5354a1dd9a2fa0f77057e0e6e6fcf57eed3f8",
+    "sanitized_body_sha256": "7f281286f396712ced45203d28b6bc00aeb2d21743f4656850ef8db3ad67fc46",
+    "snapshot_sha256": "2177a7d0d8de7f2cf8cbc11f8f0ffdd99be490035057ad25dc16235b82b97683",
+    "original_characters": 5296,
+    "sanitized_characters": 5307
+  },
+  {
+    "id": "E25",
+    "source_file": "deployment.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E25.md",
+    "boundary": "工程部署方案；命令覆盖 Docker 与原生路线，运行状态以独立报告为准。",
+    "original_sha256": "8626e20c1a63188e077ab0258708eb136aeeaa753a00b7ed74c58e3a900b50b2",
+    "sanitized_body_sha256": "c0bb104f9aeb69c6190a8fdc83ef7eff3718f2ef55ea80e193f3f5e2aa885605",
+    "snapshot_sha256": "6b13edddae21c02bac8232dc33469f5136740858ed7dd18e8b2abba49e554cc3",
+    "original_characters": 4575,
+    "sanitized_characters": 4588
+  },
+  {
+    "id": "E26",
+    "source_file": "benchmark_methodology.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E26.md",
+    "boundary": "工程测试方案；默认请求矩阵、流式计时、失败处理和输出文件约定。",
+    "original_sha256": "8494e6dcbda3cefa2de964548d709bb7653d940490cd75727f4e12b7356439b2",
+    "sanitized_body_sha256": "7684653eddbb3d037889a0f27360df44570e9bb1983a8522a5614c94b19b4615",
+    "snapshot_sha256": "d03dd3cd696525de90750f865b752357a1c3a1e4ef7522b6c10f8fcf104df5c8",
+    "original_characters": 2916,
+    "sanitized_characters": 2925
+  },
+  {
+    "id": "E27",
+    "source_file": "report.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E27.md",
+    "boundary": "本地测试报告，2026-07-21；并发最高测试到 32，属于 capped。",
+    "original_sha256": "0773f9a4e7078680d70e367a741998ad905ffed4244926339bf720cbd0d5dbb2",
+    "sanitized_body_sha256": "44c5ade10bec607dd01c77bca4dbdbde7105411b4c6c2ab5f7c44c0de3133edb",
+    "snapshot_sha256": "8e8ef89a94b88e2ce2c4b900c52b622efe20078dd93ec6b9e11aed97465eb509",
+    "original_characters": 3117,
+    "sanitized_characters": 3122
+  },
+  {
+    "id": "E28",
+    "source_file": "report.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E28.md",
+    "boundary": "本地测试报告，2026-07-21；flash_on 请求失败，不能形成有效 Flash 性能对照。",
+    "original_sha256": "9f94ca610adb279f469f03515e19cf4016744415b2783d0acd98f734c9303e36",
+    "sanitized_body_sha256": "fe40d91d23b044fa281e11a9a10cf56fdfeec6fd6526ebaf61c669bd8bccf365",
+    "snapshot_sha256": "ffe10138cb5c74b3a05d223802f3226dbec70a7f542eef50eb61740b6955b5c8",
+    "original_characters": 2554,
+    "sanitized_characters": 2559
+  },
+  {
+    "id": "E29",
+    "source_file": "comparison.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E29.md",
+    "boundary": "本地文本 API 测试，2026-07-22；剪枝量化衍生权重，非多模态测试。",
+    "original_sha256": "827bb14f924e319406103323f6dffe1d9ba82b6cdbeccc91622df1d8a8ff3cdd",
+    "sanitized_body_sha256": "aa21eaa392795b650be90a72da01938a467804f99a49f19ae36c888cc272996d",
+    "snapshot_sha256": "d1c2eff535249a37424c8f0461159427bfb91096ac6fca26ada7a4ce1b4bc1c5",
+    "original_characters": 5794,
+    "sanitized_characters": 5761
+  },
+  {
+    "id": "E30",
+    "source_file": "REPORT.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E30.md",
+    "boundary": "本地测试报告，2026-08-06；兼容性规格和正式规格分别比较。",
+    "original_sha256": "a1741877244cb2a8037f7816a380e878628ac0f4c2e5e85e8dee5ac0bd19b8f4",
+    "sanitized_body_sha256": "ac36eb8bfbfb94e77941993e7e14ada618e1b1a7d7b85e8561efd7efd1f95b7e",
+    "snapshot_sha256": "cf5dc97de9d50864de9ff0716ca9a103b279c2854c56a213fe5fb1f705c75608",
+    "original_characters": 7196,
+    "sanitized_characters": 6067
+  },
+  {
+    "id": "E31",
+    "source_file": "README.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E31.md",
+    "boundary": "本地部署与生成记录，2026-10-19；LPIPS 引自模型卡，非本地独立评测。",
+    "original_sha256": "c5502aea1a048374ec9d4a919982cd1f1654acff812c33f23d69f1d72373681d",
+    "sanitized_body_sha256": "7d8908ed5523ddd5601e0b7e90a491816c63f745a4a1092f865d99d566a5845f",
+    "snapshot_sha256": "7f289ecad29b1fbbdadfd69ffce5e3b01a5326e3ae2d931ceb6cd8622f583821",
+    "original_characters": 5127,
+    "sanitized_characters": 4914
+  },
+  {
+    "id": "E32",
+    "source_file": "Qwen-Image-2.1-问题解决与部署文档.md",
+    "path": "docs/01-deployment-foundations/evidence/records/E32.md",
+    "boundary": "本地测试报告，2026-10-19；复现了 Find 搜索路径，没有故意持续触发 GPU reset。",
+    "original_sha256": "e7a8fa02df553586401b627960efd6ed74ecd3bcf9887a3885f22cd565f7c4a1",
+    "sanitized_body_sha256": "fd801668dc38d3eb934a4b366e7623ab1429db90ab930c066f687ebf0dd0c32e",
+    "snapshot_sha256": "bc1269917b361c7b9434c7bb0f9d40f80c25c4cc7a30d76af637ce434b98a7fa",
+    "original_characters": 9764,
+    "sanitized_characters": 9354
+  }
+]

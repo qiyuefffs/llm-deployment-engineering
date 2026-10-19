@@ -4,7 +4,7 @@
 
 [Home](../README.md) · [Contents](../SUMMARY.md) · [References](../appendices/references.md)
 
-**Sources checked: 2026-10-18.** The original six parts and five layers remain the organizing framework. Historical measurements retain their original hardware, versions, workload, and limitations.
+**Sources checked: 2026-10-19.** The original six parts and five layers remain the organizing framework. Historical measurements retain their original hardware, versions, workload, and limitations.
 
 ## 1. Updated topics
 
@@ -17,6 +17,7 @@
 | Performance | [DSpark](../chapters/performance/dspark.md) | Block drafting, confidence, local procedure, budgets |
 | Performance | [PD/MoE](../chapters/performance/disaggregated-serving.md) | KV transfer, routers, NIXL/Mooncake, EP |
 | Delivery | [Caching](../chapters/performance/cache-scheduling.md) / [Benchmarks](../chapters/performance/benchmarking.md) | Cache states, reproducible matrices, SLO accounting |
+| Cross-project skills | [General performance methodology](../engineering/edge-llm-performance-methodology.md) / [project index](../engineering/projects/README.md) | Shared methods in one chapter and eight separate project documents |
 
 ## 2. Corrections to older guidance
 
@@ -25,6 +26,8 @@ DSpark is an algorithm, DGX Spark hardware. AutoAWQ deprecation concerns a libra
 Native FP4, W4A16 fallback, and FP4 artifact loading are different results. KV quantization, prefix reuse, offloading, and inter-instance transfer need separate experiments. Speculation preserves the selected target distribution when its implementation guarantees apply; it does not remove quantization error.
 
 Compare PD, EP, and multiple GPUs with equal resources, tasks, and SLOs.
+
+Model loading, compiled capability, and end-to-end performance are separate gates. Multi-device RPC, independent replicas, and P/D address capacity, request concurrency, and stage resources respectively; they are not one generic "multi-device speedup." The project knowledge layer retains reusable technical judgments and excludes internal hostnames, addresses, paths, credentials, and raw logs.
 
 ## 3. Pinned source snapshots
 
@@ -54,3 +57,5 @@ The shared [source manifest](../../01-deployment-foundations/evidence/2026-10-so
 Historical artifacts and CPU outputs keep their identities. New GPU configurations are reference procedures without new local GPU results. The benchmark script defaults to plan_only and sends requests only with execute.
 
 Local link, Python/JSON, HTML, and plan checks do not replace device quality/performance acceptance. Add new device results with complete environment, inputs, sampling, cache state, outputs, and logs. This review date is not the historical measurement date.
+
+The general performance methodology summarizes existing engineering results. It does not add new model tests or replace the original evidence.

@@ -1,6 +1,6 @@
 # In addition to this, it is important to ensure that the quality of the product is consistent with the quality of the product.
 
-[简体中文](../../01-deployment-foundations/engineering/benchmark-tools.md) | **English**
+[简体中文](../../01-deployment-foundations/appendices/benchmark-tools.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

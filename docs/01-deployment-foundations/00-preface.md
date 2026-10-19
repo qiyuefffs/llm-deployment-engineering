@@ -1,6 +1,20 @@
+---
+id: T00
+title: "工程资料约定与执行基线"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "保留原框架六部分、五层及1.1～1.4、2.1～2.6、3.1～3.6、4.1～4.6、5.1～5.3节编号。主框架保存定义、组件关系、参数与判断方法；平台专题解释后端细节；engineering/保存每个设备从环境到优化的连续记录及Flo"
+---
+
 # 工程资料约定与执行基线
 
-[知识体系首页](README.md) · [完整工程实例](engineering/README.md)
+[知识体系首页](README.md) · [完整工程实例](cases/README.md)
 
 ## 目录规则
 
@@ -47,4 +61,4 @@ deployment/
 
 原文存在RTX4080 NVLink、MoE带宽推导、端点字段和并发口径等问题。实例入口给出修订，必要处原位改正；测量数字与错误结论分别处理。[源文清单](evidence/source-coverage.json)列出保留篇目、字符及代码围栏数量。
 
-历史GPU/NPU工程未在本轮重跑。[Windows CPU工程](practice/first-service/README.md)有本机实际文件；公开视觉卡是新测试输入，没有配上未执行的GPU输出。按目录进入对应平台，执行前核对其版本与资源。
+历史GPU/NPU工程未在本轮重跑。[Windows CPU工程](cases/C14-windows-cpu/README.md)有本机实际文件；公开视觉卡是新测试输入，没有配上未执行的GPU输出。按目录进入对应平台，执行前核对其版本与资源。

@@ -1,3 +1,17 @@
+---
+id: T23
+title: "当前推理引擎怎么选：先匹配执行路径，再比较服务结果"
+type: tutorial
+volume: book
+layer: 3
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "资料核查：2026-10-18。 这里介绍当前维护中的工程路线；具体支持仍由模型、硬件和固定引擎版本共同决定。"
+---
+
 # 当前推理引擎怎么选：先匹配执行路径，再比较服务结果
 
 [总目录](../../SUMMARY.md) · [推理框架总章](../../02-capability-layers/03-inference-frameworks.md) · [量化](../models/quantization.md) · [分离式推理](../performance/disaggregated-serving.md)

@@ -1,3 +1,17 @@
+---
+id: T52
+title: "推理优化实验记录模板"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "每个主要假设单独建一份记录。所有数据待测时留空；不填写示意“提升值”冒充结果。"
+---
+
 # 推理优化实验记录模板
 
 [返回知识体系](../README.md)

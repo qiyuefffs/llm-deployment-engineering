@@ -1,3 +1,17 @@
+---
+id: T27
+title: "1.2.5 昇腾：芯片、CANN与框架插件"
+type: tutorial
+volume: book
+layer: 1
+platform: "Ascend"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "昇腾是面向AI计算的加速器平台，常在工具中使用NPU设备名称。不同芯片面向的场景、设备内存、支持精度、算子和并行能力存在差异，不能把某个310P实例推广到所有昇腾设备。"
+---
+
 # 1.2.5 昇腾：芯片、CANN与框架插件
 
 [总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
@@ -36,7 +50,7 @@
 
 ## 部署操作与工程参考
 
-后续使用310P3记录说明具体容器、模型、接口和压测检查。完整材料见[310P3部署与排错记录](../../engineering/ascend-310p.md)。
+后续使用310P3记录说明具体容器、模型、接口和压测检查。完整材料见[310P3部署与排错记录](../../cases/C12-ascend-310p/README.md)。
 
 ## 一、固定已知组合
 

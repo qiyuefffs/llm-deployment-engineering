@@ -1,45 +1,48 @@
+---
+id: T13
+title: "大模型部署知识体系目录"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: [E01, E20, R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22, R23, R24, R25, R26, R27, R28, R29, R30, R31, R32, R33, R34, R35, R36, R37, R38, R39, R40, R41, R42, R43, R44, R45, R46, R47, R48, R49, R50]
+updated: 2026-10-19
+summary: "全书分为教程卷、实例卷和证据卷。教程卷回答“怎样判断”，实例卷回答“具体怎样做”，证据卷保留来源、完整技术正文与测量边界。"
+---
+
 # 大模型部署知识体系目录
 
-六部分、五层能力与原节编号保持对应。从硬件、运行时与模型基础开始，逐步进入引擎执行、性能优化和服务交付；平台操作和完整实测记录用于补充具体工程问题。
+全书分为教程卷、实例卷和证据卷。教程卷回答“怎样判断”，实例卷回答“具体怎样做”，证据卷保留来源、完整技术正文与测量边界。
 
-## 总览与阅读入口
+## 教程卷
 
 - [知识体系首页与框架图](README.md)
 - [工程资料约定与执行基线](00-preface.md)
-- [硬件部署适配与优化实例矩阵](engineering/README.md)
-- [CPU实例：固定模型、完整服务与实际验收](practice/first-service/README.md)
-
-## 第一部分：整体知识体系地图
-
+- [通用性能优化测试方法论](engineering/edge-llm-performance-methodology.md)
+  - [端侧模型项目文档索引](engineering/projects/README.md)
+    - [MiniMax-M2.7 多机推理](engineering/projects/01-minimax-m27.md)
+    - [DeepSeek V4 Flash](engineering/projects/02-deepseek-v4-flash.md)
+    - [Qwen3.6-35B-A3B](engineering/projects/03-qwen36-35b-a3b.md)
+    - [Qwen3.8-27B 与 Flash-Next](engineering/projects/04-qwen38-27b-flash-next.md)
+    - [GLM-5.3-Flash](engineering/projects/05-glm-53-flash.md)
+    - [vLLM ROCm 文本与多模态](engineering/projects/06-vllm-rocm.md)
+    - [MiniMax-H3 视频/音频生成](engineering/projects/07-minimax-h3.md)
+    - [Qwen-Image 2.1](engineering/projects/08-qwen-image-21.md)
 - [模型、硬件与引擎的关系及工程模块](01-knowledge-map.md)
-
-## 第二部分：五层能力详细框架
-
 - [五层框架索引](02-capability-layers/README.md)
 - [第1层：硬件、运行时与计算后端（1.1—1.4）](02-capability-layers/01-hardware-backends.md)
   - [NVIDIA：GPU与CUDA、计算库、部署](chapters/hardware/nvidia.md)
     - [DGX Spark / GB10：当前ARM64与统一内存部署](chapters/hardware/dgx-spark.md)
-    - [RTX2060：混合卸载与Qwen3量化推理](engineering/nvidia-rtx2060.md)
-    - [RTX4080/A6000：双卡部署与调参](engineering/nvidia-dual-gpu.md)
-    - [GB10：ARM64、FP8、AWQ、MTP与DFlash](engineering/nvidia-gb10.md)
-    - [GB10多模态：VL、Omni与Docling](engineering/nvidia-gb10-multimodal.md)
   - [AMD：GPU与ROCm、HIP、计算库、部署](chapters/hardware/amd.md)
-    - [780M：Windows HIP与Ollama完整适配](engineering/amd-780m.md)
-    - [8060S：Vulkan卸载与Q4/BF16优化](engineering/amd-8060s.md)
-    - [395五机：HIP RPC与GTT修复](engineering/amd-395-rpc.md)
-    - [W7900：单机多卡、Ray与TP/PP](engineering/amd-w7900.md)
   - [Intel：硬件、oneAPI、OpenVINO与部署](chapters/hardware/intel.md)
-    - [Arc/NPU：三后端与ASR/TTS完整实测](engineering/intel-arc-npu.md)
   - [Mac：统一内存、Metal、MLX与部署](chapters/hardware/apple.md)
-    - [M3 Ultra：Metal构建与GGUF排错](engineering/apple-metal.md)
-    - [M3 Ultra：MLX、APC与oMLX并发](engineering/apple-mlx.md)
   - [昇腾：芯片、CANN、插件与测试](chapters/hardware/ascend.md)
-    - [310P3：完整部署、压测与故障记录](engineering/ascend-310p.md)
-  - [MUSA：完整部署与优化待验证流程](engineering/musa.md)
 - [第2层：模型格式与量化层（2.1—2.6）](02-capability-layers/02-model-formats-quantization.md)
   - [HF→GGUF→量化：统一执行流程](chapters/models/gguf-conversion.md)
   - [量化工程：W/A/KV、校准部署与AWQ实测](chapters/models/quantization.md)
-  - [模型转换与Ollama：完整技术原文](engineering/gguf-ollama.md)
+  - [模型转换与Ollama：完整技术原文](appendices/gguf-ollama.md)
 - [第3层：推理框架层（3.1—3.6）](02-capability-layers/03-inference-frameworks.md)
   - [当前引擎选型：vLLM V1、SGLang与TensorRT-LLM](chapters/frameworks/serving-engines.md)
   - [vLLM：完整服务与多模态输入](chapters/frameworks/vllm-service.md)
@@ -52,37 +55,108 @@
   - [推测解码：MTP、DFlash、动态策略与实测](chapters/performance/speculative-decoding.md)
   - [DSpark：完整本地部署与自适应验证](chapters/performance/dspark.md)
   - [PD分离、KV传输与MoE专家并行](chapters/performance/disaggregated-serving.md)
-  - [压测工具与命令：完整技术原文](engineering/benchmark-tools.md)
+  - [压测工具与命令：完整技术原文](appendices/benchmark-tools.md)
 - [第5层：工程交付层（5.1—5.3）](02-capability-layers/05-engineering-delivery.md)
   - [环境封装、启停与回滚](chapters/delivery/environment-operations.md)
   - [API、监控与验收](chapters/delivery/api-monitoring.md)
-
-## 第三部分：核心概念解释库
-
 - [十个核心机制：定义、工程解释与参数](03-core-concepts.md)
-
-## 第四部分：项目复盘模板
-
 - [标准项目十项记录与多硬件模板](04-project-review.md)
 - [适配记录模板](templates/adaptation-record.md)
 - [实验记录模板](templates/experiment-record.md)
-
-## 第五部分：个人知识库目录设计
-
 - [八个主题目录与工程资料组织](05-knowledge-base.md)
-
-## 第六部分：故障排查速查表
-
 - [按失败阶段定位与回归](06-troubleshooting.md)
-
-## 附录与工程证据
-
 - [附录A：常用命令](appendices/commands.md)
 - [附录B：参考资料与技术修订](appendices/references.md)
-- [2026-10资料核查、源码快照与验证状态](evidence/2026-10-refresh.md)
-- [文章、实例与五层框架映射](evidence/chapter-sources.md)
-- [历史工程条件与测量说明](evidence/README.md)
 
-50份源文的保留范围及代码围栏数量见[源文清单](evidence/source-coverage.json)。设备、模型、参数和历史性能按原条件保留；隐私与认证脱敏，MUSA标注待实测。
+## 实例卷
 
-[离线检索页面](book.html)支持框架目录、全文搜索、页内目录与上下项。构建：`python tools/build_deployment_book.py`，依赖见[构建说明](../../tools/README.md)。
+- [实例卷索引](cases/README.md)
+- [C01 · NVIDIA RTX 2060 12GB：CUDA混合卸载与Qwen3量化推理](cases/C01-rtx2060/README.md)
+- [C02 · NVIDIA RTX 4080与A6000：双卡vLLM部署和调参记录](cases/C02-dual-4080/README.md)
+- [C03 · NVIDIA GB10：ARM64构建、FP8、AWQ、MTP与DFlash](cases/C03-gb10/README.md)
+- [C04 · NVIDIA GB10多模态：VL、Omni与文档模型的部署链路](cases/C04-gb10-multimodal/README.md)
+- [C05 · AMD Radeon 780M：Windows HIP运行库、Ollama与模型适配](cases/C05-radeon-780m/README.md)
+- [C06 · AMD Radeon 8060S：Vulkan全层卸载、Q4与BF16优化对照](cases/C06-radeon-8060s/README.md)
+- [C07 · AMD 395五机HIP RPC：GTT修复、构建、分发与Kimi加载](cases/C07-amd-395-rpc/README.md)
+- [C08 · AMD W7900：单机多卡、双节点Ray与TP/PP部署](cases/C08-w7900/README.md)
+- [C09 · Intel Arc与NPU：Vulkan、SYCL、IR和语音任务完整对照](cases/C09-intel-arc-npu/README.md)
+- [C10 · Apple M3 Ultra：Metal工具链、GGUF适配与模型加载排错](cases/C10-m3-metal/README.md)
+- [C11 · Apple M3 Ultra：vllm-metal、MLX-VLM、APC与oMLX优化](cases/C11-m3-mlx/README.md)
+- [C12 · 昇腾310P3：CANN容器、Qwen3部署与性能验收](cases/C12-ascend-310p/README.md)
+- [C13 · MUSA：llama.cpp部署适配与加速验证流程](cases/C13-musa/README.md)
+- [C14 · 完整操作实例：第一个本地推理服务](cases/C14-windows-cpu/README.md)
+
+## 证据卷
+
+- [证据卷阅读说明](evidence/README.md)
+- [工程来源、E01–E20 与测量边界](evidence/records/README.md)
+- [端侧项目补充证据索引](evidence/records/projects.md)
+  - [E21 · MiniMax 双机服务快照](evidence/records/E21.md)
+  - [E22 · MiniMax 双机部署与 API 验收](evidence/records/E22.md)
+  - [E23 · GLM BALANCED 随制品说明](evidence/records/E23.md)
+  - [E24 · GLM HYBRID 随制品说明](evidence/records/E24.md)
+  - [E25 · vLLM ROCm 部署方案](evidence/records/E25.md)
+  - [E26 · vLLM ROCm 基准测试口径](evidence/records/E26.md)
+  - [E27 · Qwen3-VL-4B Flash 对照结果](evidence/records/E27.md)
+  - [E28 · DeepSeek-VL2-Tiny 成功与失败结果](evidence/records/E28.md)
+  - [E29 · DeepSeek W4A16 TP1 与 TP2 对照](evidence/records/E29.md)
+  - [E30 · MiniMax-H3 视频音频实验记录](evidence/records/E30.md)
+  - [E31 · Qwen-Image 工程部署记录](evidence/records/E31.md)
+  - [E32 · Qwen-Image 故障复现与验收记录](evidence/records/E32.md)
+- [R01–R50 原文索引](evidence/sources/README.md)
+- [证据使用与数据边界](meta/evidence-policy.md)
+- [性能指标口径](meta/metrics.md)
+- [写作与章节模板](meta/style-guide.md)
+- [已知口径冲突](meta/known-conflicts.md)
+  - [R01 · nvidai-llamacpp-qwen3:30-a3b-q6测试记录](evidence/sources/R01.md)
+  - [R02 · nvidai-llamacpp-qwen3:30-a3b-q6基准性能测试记录](evidence/sources/R02.md)
+  - [R03 · nvidai-llamacpp-qwen3:32B-q5基准性能测试记录](evidence/sources/R03.md)
+  - [R04 · 服务器：Nvidia显卡：Ubuntu22.04+VLLM+Docker双卡部署Deepseek-r1:32B(Int4)](evidence/sources/R04.md)
+  - [R05 · NVIDIA GB10 ARM编译llamacpp](evidence/sources/R05.md)
+  - [R06 · nvidia GB10设备（arm64架构）编译vllm](evidence/sources/R06.md)
+  - [R07 · DGX Spark适配编译vllm部署Qwen3.6-35B-A3B模型（bf16/fp8精度）](evidence/sources/R07.md)
+  - [R08 · NVIDIA GB10部署Qwen3-30B-A3B-Instruct-2507](evidence/sources/R08.md)
+  - [R09 · DGX GB10部署Gemma-4系列AWQ量化模型](evidence/sources/R09.md)
+  - [R10 · DGX Spark GB10部署gemma-4系列模型及关闭MTP推理加速](evidence/sources/R10.md)
+  - [R11 · DGX Spark GB10部署gemma-4系列模型及MTP推理加速](evidence/sources/R11.md)
+  - [R12 · DGX Spark GB10编译DFlash推理加速模块集成到vllm中](evidence/sources/R12.md)
+  - [R13 · GB10部署Qwen3-VL-8B模型](evidence/sources/R13.md)
+  - [R14 · nvidia GB10 部署Qwen2.5-VL-7B](evidence/sources/R14.md)
+  - [R15 · GB10部署Qwen3-VL-30B-A3B](evidence/sources/R15.md)
+  - [R16 · NVIDIA GB10版本vllm部署Qwen3‑Omni‑30B‑A3B‑Instruct](evidence/sources/R16.md)
+  - [R17 · NVIDIA GB10 vllm部署granite-docling-258M](evidence/sources/R17.md)
+  - [R18 · AMD 780M-GPU 适配教程](evidence/sources/R18.md)
+  - [R19 · AMD适配模型（GPU-780M，ＣＰＵ　－8845HS）](evidence/sources/R19.md)
+  - [R20 · AMD：使用Ollama框架将Llama3.1 8b部署在AMD的GPU](evidence/sources/R20.md)
+  - [R21 · Qwen3.6-35B-A3B 部署与推理文档](evidence/sources/R21.md)
+  - [R22 · Qwen3.6-35B-A3B BF16 推理优化记录](evidence/sources/R22.md)
+  - [R23 · AMD Strix Halo 395 五机 HIP RPC 串联部署 Kimi-K2.5-Q2 实战文档](evidence/sources/R23.md)
+  - [R24 · AMD 395 llamcpp+rpc编译流程](evidence/sources/R24.md)
+  - [R25 · AMD 395 llamacpp rpc服务功能环境测试脚本](evidence/sources/R25.md)
+  - [R26 · 单节点八卡服务器（W7900*8,48*8）DeepSeek-R1-AWQ-INT4部署](evidence/sources/R26.md)
+  - [R27 · W7900双卡部署Qwen3:30b-A3b](evidence/sources/R27.md)
+  - [R28 · 服务器：AMD显卡：Ubuntu22.04+VLLM+Docker双卡部署Deepseek-r1:32b/70b](evidence/sources/R28.md)
+  - [R29 · AMD单节点四卡DS-70B-fp16测试命令](evidence/sources/R29.md)
+  - [R30 · 双节点模型部署70B验证](evidence/sources/R30.md)
+  - [R31 · 双节点模型部署70B-2.0资源调度验证](evidence/sources/R31.md)
+  - [R32 · 双节点，再次推理DS-70B](evidence/sources/R32.md)
+  - [R33 · Deepseek-R1-671b双节点部署](evidence/sources/R33.md)
+  - [R34 · 多节点部署排障](evidence/sources/R34.md)
+  - [R35 · Qwen3.5-9B Intel openvino 平台推理对比报告](evidence/sources/R35.md)
+  - [R36 · Qwen3.5-9B INT4 IR 多模态视觉推理测试报告](evidence/sources/R36.md)
+  - [R37 · 使用ipex-llm进行量化并制作ollama模型，部署在Intel集显。](evidence/sources/R37.md)
+  - [R38 · Intel NPU进行模型推理：deepseek-r1:1.5b,7b,8b](evidence/sources/R38.md)
+  - [R39 · llama.cpp 在 Mac Studio (Apple Silicon) 上的编译指南](evidence/sources/R39.md)
+  - [R40 · vllm-metal 编译与推理记录](evidence/sources/R40.md)
+  - [R41 · mlx-vlm 多视觉模型推理与 API 调用指南](evidence/sources/R41.md)
+  - [R42 · oMLX Mac 推理操作流程](evidence/sources/R42.md)
+  - [R43 · oMLX 推理框架性能测试报告与压测流程](evidence/sources/R43.md)
+  - [R44 · Mac 设备推理框架分类总结](evidence/sources/R44.md)
+  - [R45 · 华为昇腾310P3推理Qwen3-32B](evidence/sources/R45.md)
+  - [R46 · 华为昇腾310p3：qwen3-32b与qwen3-235b-a22b-2507测试](evidence/sources/R46.md)
+  - [R47 · 昇腾310P3部署Qwen3-32B benchmark记录](evidence/sources/R47.md)
+  - [R48 · llama.cpp 与 vLLM 推理性能评测工具2026年版本](evidence/sources/R48.md)
+  - [R49 · 大模型性能评估框架集合](evidence/sources/R49.md)
+  - [R50 · 使用llama.cpp进行模型转换和量化，再使用ollama自定义模型。](evidence/sources/R50.md)
+
+50 份源文按原章节顺序保存；路径、认证和私人节点已脱敏。历史数字保留原条件，未重跑的设备结果不包装成当前复现成绩。

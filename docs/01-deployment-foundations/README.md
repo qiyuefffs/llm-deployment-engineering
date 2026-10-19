@@ -1,15 +1,29 @@
+---
+id: T12
+title: "大模型部署知识体系"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "简体中文 | English"
+---
+
+![大模型部署适配知识体系框架](assets/framework.webp)
+
 # 大模型部署知识体系
 **简体中文** | [English](../en/README.md)
 
-![大模型部署适配五层能力框架](assets/edge-llm-deployment-framework-original.png)
+面向大模型部署、端侧推理、性能优化与服务交付。全书按教程卷、实例卷和证据卷组织：教程卷解释机制与判断方法，实例卷记录设备执行过程，证据卷保留 R01–R50 原文、E01–E20 条件和结构化测量。
 
-面向大模型部署、端侧推理、性能优化与服务交付。按六部分、五层能力及 1.1～5.3 节编号组织，先讲通用原理和选型，再讲平台操作与工程实例。
-
-**[完整目录](SUMMARY.md) · [硬件实例](engineering/README.md) · [环境与数据约定](00-preface.md) · [独立 Case](../../cases/README.md) · [仓库首页](../../README.md)**
+**[完整目录](SUMMARY.md) · [硬件实例](cases/README.md) · [环境与数据约定](00-preface.md) · [独立 Case](../../cases/README.md) · [仓库首页](../../README.md)**
 
 ## 2026-10 当前部署与优化
 
-按对应能力层阅读：[当前引擎](chapters/frameworks/serving-engines.md) · [MTP](chapters/performance/speculative-decoding.md) · [DSpark完整流程](chapters/performance/dspark.md) · [量化工程](chapters/models/quantization.md) · [PD与MoE](chapters/performance/disaggregated-serving.md) · [DGX Spark](chapters/hardware/dgx-spark.md)。
+按对应能力层阅读：[当前引擎](chapters/frameworks/serving-engines.md) · [MTP](chapters/performance/speculative-decoding.md) · [DSpark完整流程](chapters/performance/dspark.md) · [量化工程](chapters/models/quantization.md) · [PD与MoE](chapters/performance/disaggregated-serving.md) · [DGX Spark](chapters/hardware/dgx-spark.md) · [通用性能优化测试方法论](engineering/edge-llm-performance-methodology.md) · [项目文档索引](engineering/projects/README.md)。
 
 [更新说明与官方资料](evidence/2026-10-refresh.md)记录源码快照和支持限制。[压测章节](chapters/performance/benchmarking.md)提供可执行矩阵；新GPU方案标注为官方参考流程，实际性能继续引用原始测量条件。
 
@@ -51,40 +65,40 @@
 | 能力层 | 重点 | 详细专题 |
 | --- | --- | --- |
 | [1. 硬件与运行时](02-capability-layers/01-hardware-backends.md) | CPU/GPU/NPU、容量与带宽、驱动、Runtime、计算库 | [NVIDIA](chapters/hardware/nvidia.md) / [AMD](chapters/hardware/amd.md) / [Intel](chapters/hardware/intel.md) / [Apple](chapters/hardware/apple.md) / [昇腾](chapters/hardware/ascend.md) |
-| [2. 模型格式与量化](02-capability-layers/02-model-formats-quantization.md) | 制品身份、HF/GGUF/IR、W/A/KV 精度、质量 | [GGUF 转换](chapters/models/gguf-conversion.md) / [量化选择](chapters/models/quantization.md) / [Ollama 操作](engineering/gguf-ollama.md) |
+| [2. 模型格式与量化](02-capability-layers/02-model-formats-quantization.md) | 制品身份、HF/GGUF/IR、W/A/KV 精度、质量 | [GGUF 转换](chapters/models/gguf-conversion.md) / [量化选择](chapters/models/quantization.md) / [Ollama 操作](appendices/gguf-ollama.md) |
 | [3. 推理框架](02-capability-layers/03-inference-frameworks.md) | 构建、加载、上下文、调度、API | [vLLM](chapters/frameworks/vllm-service.md) / [llama.cpp](chapters/frameworks/llama-cpp.md) / [OpenVINO](chapters/frameworks/openvino.md) |
 | [4. 显存与性能优化](02-capability-layers/04-memory-performance.md) | KV、prefill/decode、并发、延迟、吞吐 | [压测](chapters/performance/benchmarking.md) / [缓存与调度](chapters/performance/cache-scheduling.md) / [多卡多机](chapters/performance/parallelism.md) / [推测解码](chapters/performance/speculative-decoding.md) |
 | [5. 工程交付](02-capability-layers/05-engineering-delivery.md) | 环境封装、接口、监控、验收、回滚 | [环境与启停](chapters/delivery/environment-operations.md) / [API 与监控](chapters/delivery/api-monitoring.md) |
 
 ## 二、硬件部署适配与优化实例
 
-完整测试条件和证据状态见[实例矩阵](engineering/README.md)。每个入口集中保存同一平台的部署、参数调整、实际结果和限制。
+完整测试条件和证据状态见[实例矩阵](cases/README.md)。每个入口集中保存同一平台的部署、参数调整、实际结果和限制。
 
 | 平台 | 实例入口 | 工程重点 |
 | --- | --- | --- |
-| NVIDIA | [RTX2060](engineering/nvidia-rtx2060.md) | CUDA、量化制品、CPU/GPU 混合卸载 |
-| NVIDIA | [RTX4080 / A6000 双卡](engineering/nvidia-dual-gpu.md) | TP、PCIe、显存预算、服务调参 |
-| NVIDIA | [GB10 文本推理](engineering/nvidia-gb10.md) | ARM64 构建、FP8、AWQ、MTP、DFlash |
-| NVIDIA | [GB10 多模态](engineering/nvidia-gb10-multimodal.md) | VL、Omni、Docling、输入预算 |
-| AMD | [Radeon 780M](engineering/amd-780m.md) | Windows HIP、Ollama、回退与共享内存 |
-| AMD | [Radeon 8060S](engineering/amd-8060s.md) | Vulkan、Q4/BF16、CPU→GPU→参数优化 |
-| AMD | [395 五机 RPC](engineering/amd-395-rpc.md) | HIP RPC、GTT/TTM、构建分发与权重切分 |
-| AMD | [W7900 多卡多节点](engineering/amd-w7900.md) | ROCm/RCCL、Ray、TP/PP、通信排查 |
-| Intel | [Arc GPU / NPU](engineering/intel-arc-npu.md) | Vulkan/SYCL/IR 对照、ASR/TTS、设备分工 |
-| Apple | [M3 Ultra Metal](engineering/apple-metal.md) | GGUF、Metal 构建、制品兼容性排错 |
-| Apple | [M3 Ultra MLX / oMLX](engineering/apple-mlx.md) | 模板、APC、视觉、并发对照 |
-| 昇腾 | [310P3](engineering/ascend-310p.md) | CANN、模型插件、FP16/TP2、压测 |
-| MUSA | [适配与优化流程](engineering/musa.md) | Toolkit、构建、GPU 卸载、API；待设备实测 |
-| CPU | [Windows 顺序演练](practice/first-service/README.md) | 固定制品、完整服务、功能/异常/性能验收 |
+| NVIDIA | [RTX2060](cases/C01-rtx2060/README.md) | CUDA、量化制品、CPU/GPU 混合卸载 |
+| NVIDIA | [RTX4080 / A6000 双卡](cases/C02-dual-4080/README.md) | TP、PCIe、显存预算、服务调参 |
+| NVIDIA | [GB10 文本推理](cases/C03-gb10/README.md) | ARM64 构建、FP8、AWQ、MTP、DFlash |
+| NVIDIA | [GB10 多模态](cases/C04-gb10-multimodal/README.md) | VL、Omni、Docling、输入预算 |
+| AMD | [Radeon 780M](cases/C05-radeon-780m/README.md) | Windows HIP、Ollama、回退与共享内存 |
+| AMD | [Radeon 8060S](cases/C06-radeon-8060s/README.md) | Vulkan、Q4/BF16、CPU→GPU→参数优化 |
+| AMD | [395 五机 RPC](cases/C07-amd-395-rpc/README.md) | HIP RPC、GTT/TTM、构建分发与权重切分 |
+| AMD | [W7900 多卡多节点](cases/C08-w7900/README.md) | ROCm/RCCL、Ray、TP/PP、通信排查 |
+| Intel | [Arc GPU / NPU](cases/C09-intel-arc-npu/README.md) | Vulkan/SYCL/IR 对照、ASR/TTS、设备分工 |
+| Apple | [M3 Ultra Metal](cases/C10-m3-metal/README.md) | GGUF、Metal 构建、制品兼容性排错 |
+| Apple | [M3 Ultra MLX / oMLX](cases/C11-m3-mlx/README.md) | 模板、APC、视觉、并发对照 |
+| 昇腾 | [310P3](cases/C12-ascend-310p/README.md) | CANN、模型插件、FP16/TP2、压测 |
+| MUSA | [适配与优化流程](cases/C13-musa/README.md) | Toolkit、构建、GPU 卸载、API；待设备实测 |
+| CPU | [Windows 顺序演练](cases/C14-windows-cpu/README.md) | 固定制品、完整服务、功能/异常/性能验收 |
 
 ## 三、命令、模板与证据
 
 | 用途 | 入口 |
 | --- | --- |
 | 执行前核对 | [环境与数据约定](00-preface.md) |
-| 命令查询 | [常用命令](appendices/commands.md) / [压测工具与完整命令](engineering/benchmark-tools.md) |
+| 命令查询 | [常用命令](appendices/commands.md) / [压测工具与完整命令](appendices/benchmark-tools.md) |
 | 工程记录 | [适配模板](templates/adaptation-record.md) / [实验模板](templates/experiment-record.md) / [复盘模板](templates/deployment-review.md) |
-| 历史数据 | [测量条件与说明](evidence/README.md) / [测量 JSON](evidence/measurements.json) |
+| 历史数据 | [测量条件与说明](evidence/records/README.md) / [测量 JSON](evidence/measurements.json) |
 | 数据核算 | [核算程序](examples/verify_records.py) / [核算输出](examples/verified-output.txt) |
 | 来源追溯 | [文章与章节映射](evidence/chapter-sources.md) / [50 份技术记录清单](evidence/source-coverage.json) |
 | 参考资料 | [官方文档与技术修订](appendices/references.md) |
@@ -100,10 +114,11 @@
 ├── 02-capability-layers/    五层能力框架
 ├── 03～06-*.md             概念、复盘、资料组织、排错
 ├── chapters/               各技术专题
-├── engineering/            各硬件完整工程记录
-├── practice/               顺序演练与实际结果
+├── engineering/            方法论、项目文档与兼容入口
+├── cases/                  C01～C14 设备实例与可执行材料
+├── evidence/               R01～R50 原文、E记录与测量文件
+├── meta/                   证据政策、指标口径与冲突记录
 ├── templates/              适配、实验、复盘模板
-├── evidence/               来源与测量数据
 ├── examples/               辅助程序
 ├── assets/                 框架图与公开样例
 ├── appendices/             命令与参考资料
@@ -118,4 +133,4 @@ GitHub 阅读从本页和[完整目录](SUMMARY.md)进入。离线检索可下�
 
 50 份技术记录保留可公开的操作步骤、版本、参数、日志和测试表，私人路径、节点与认证信息脱敏。GPU/NPU 的历史成绩按原条件引用，缺失证据和失败保留说明；MUSA 尚无实测记录。框架图中的分类与简写以[技术修订](appendices/references.md)为准。
 
-更新时间：**2026-10-18**
+更新时间：**2026-10-19**

@@ -1,6 +1,6 @@
 # Intel Arc and NPU: Vulkan, SYCL, IR and voice commands
 
-[简体中文](../../01-deployment-foundations/engineering/intel-arc-npu.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C09-intel-arc-npu/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

@@ -1,6 +1,6 @@
 # Apple M3 Ultra: Metal toolchain, GGUF compatible with the model
 
-[简体中文](../../01-deployment-foundations/engineering/apple-metal.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C10-m3-metal/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 
@@ -364,7 +364,7 @@ If you **No such thing.`ggml_metal_*` Going **It's a compilation.`GGML_METAL=OFF
 ```text
 cd "$WORKSPACE/llama.cpp"
 
-MODEL=/Volumes/990pro/modeldown/models/DeepSeek-V4-Flash-FP4-FP8-native.gguf
+MODEL=<MODEL_VOLUME>/modeldown/models/DeepSeek-V4-Flash-FP4-FP8-native.gguf
 
 ./build/bin/llama-server \
   -m "$MODEL" \

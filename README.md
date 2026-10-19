@@ -1,7 +1,7 @@
+![大模型部署适配知识体系框架](docs/01-deployment-foundations/assets/framework.webp)
+
 # 大模型部署知识体系
 **简体中文** | [English](README.en.md)
-
-![大模型部署适配知识体系框架](docs/01-deployment-foundations/assets/edge-llm-deployment-framework-original.png)
 
 面向部署工程师，介绍从硬件与运行时、模型与量化、推理引擎，到性能优化和服务交付的通用知识。先理解每层软件负责什么、一次推理怎样执行，再进入平台配置与实际工程实例。
 
@@ -11,10 +11,11 @@
 | --- | --- | --- |
 | **最新知识体系** | [大模型部署知识体系](docs/01-deployment-foundations/README.md) | 硬件与软件栈入门、五层知识框架和技术专题 |
 | 硬件与运行时入门 | [CPU/GPU/NPU与软件调用关系](docs/01-deployment-foundations/02-capability-layers/01-hardware-backends.md) | 从驱动、运行时、计算库理解部署环境 |
-| 完整目录 | [五层能力目录](docs/01-deployment-foundations/SUMMARY.md) | 按硬件、模型、框架、性能和交付查看全部章节 |
-| 硬件工程实例 | [GPU / NPU / Apple 实例矩阵](docs/01-deployment-foundations/engineering/README.md) | 每个平台按适配、基线、优化、结果和限制组织 |
+| 三卷目录 | [教程卷、实例卷与证据卷](docs/01-deployment-foundations/SUMMARY.md) | 教程讲判断，实例讲执行，证据保留原文和测量边界 |
+| 硬件工程实例 | [GPU / NPU / Apple 实例矩阵](docs/01-deployment-foundations/cases/README.md) | 每个平台按适配、基线、优化、结果和限制组织 |
+| 证据与来源 | [R01–R50 原文索引](docs/01-deployment-foundations/evidence/sources/README.md) | 完整技术正文、E01–E20 条件、E21–E32 项目快照与结构化测量文件 |
 | 独立 Case | [Case 目录](cases/README.md) | Case 的教程、脚本、输入、截图和结果单独保存 |
-| CPU 顺序演练 | [完整服务实跑](docs/01-deployment-foundations/practice/first-service/README.md) | 从模型校验到 API、压测和验收的可公开演练 |
+| CPU 顺序演练 | [完整服务实跑](docs/01-deployment-foundations/cases/C14-windows-cpu/README.md) | 从模型校验到 API、压测和验收的可公开演练 |
 
 ## 2026-10 技术更新
 
@@ -24,13 +25,16 @@
 - [量化工程](docs/01-deployment-foundations/chapters/models/quantization.md)：LLM Compressor、GPTQ、FP8、NVFP4/MXFP4及KV精度。
 - [当前推理引擎](docs/01-deployment-foundations/chapters/frameworks/serving-engines.md)、[PD分离与MoE](docs/01-deployment-foundations/chapters/performance/disaggregated-serving.md)、[DGX Spark](docs/01-deployment-foundations/chapters/hardware/dgx-spark.md)。
 - [统一压测流程](docs/01-deployment-foundations/chapters/performance/benchmarking.md)及[官方资料、源码快照与验证状态](docs/01-deployment-foundations/evidence/2026-10-refresh.md)。
+- [通用性能优化测试方法论](docs/01-deployment-foundations/engineering/edge-llm-performance-methodology.md)与[8 个项目独立文档](docs/01-deployment-foundations/engineering/projects/README.md)：保留环境准入、实际命令、测试矩阵、计时复算、失败与未验证项，过滤私人路径、节点、身份和凭据。
+- 全书已拆为[教程卷、实例卷和证据卷](docs/01-deployment-foundations/SUMMARY.md)：原始记录不再与提炼后的实例说明混在同一页。
 
 ## 内容范围
 
 - 五层工程主线：硬件与运行时、模型格式与量化、推理框架、显存与性能、工程交付。
 - 平台基础：[NVIDIA与CUDA](docs/01-deployment-foundations/chapters/hardware/nvidia.md)、[AMD与ROCm](docs/01-deployment-foundations/chapters/hardware/amd.md)、[Mac/Metal/MLX](docs/01-deployment-foundations/chapters/hardware/apple.md)、[Intel与OpenVINO](docs/01-deployment-foundations/chapters/hardware/intel.md)、[昇腾与CANN](docs/01-deployment-foundations/chapters/hardware/ascend.md)。
 - 每个硬件入口都记录环境、模型制品、启动参数、基线、优化实验、性能数据、失败原因和验收边界。
-- FlowUs 中整理出的公开技术记录保留在对应实例中；私人路径、账号、凭据和内部地址已移除。
+- 50 份公开技术记录保存在证据卷，设备实例页通过 R 编号跳转；私人路径、账号、凭据和内部地址已移除。
+- 12 份补充项目原文以 E21–E32 保存脱敏快照，并区分本机记录、制品作者报告和部署测试方案。
 
 ## 获取仓库
 
@@ -45,4 +49,4 @@ cd llm-deployment-engineering
 
 CPU 顺序演练有公开运行结果。GPU、NPU 和多机记录按原始测试条件保留，并在页面中标明历史测试、缺失证据和未验证项目；这些数字不能直接视为当前设备的保证值。MUSA 页面提供适配与验证流程，实测结果待补充。
 
-更新时间：**2026-10-18**
+更新时间：**2026-10-19**

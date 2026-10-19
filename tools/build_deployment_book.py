@@ -13,6 +13,80 @@ from markdown_it import MarkdownIt
 ROOT = Path(__file__).resolve().parents[1]
 BOOK = ROOT / 'docs/01-deployment-foundations'
 REMOTE = 'https://github.com/qiyuefffs/llm-deployment-engineering/blob/main/'
+HEADING_HTML = re.compile(
+    r'<(h2|h3) id="(?P<id>[^"]+)">(?P<title>.*?)</\1>',
+    re.DOTALL,
+)
+
+
+def strip_front_matter(text):
+    if text.startswith('---\n'):
+        end = text.find('\n---\n', 4)
+        if end >= 0:
+            front = text[4:end]
+            metadata = {}
+            key = None
+            for line in front.splitlines():
+                if key and line.startswith('  '):
+                    metadata[key] += ' ' + line.strip()
+                    continue
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    metadata[key.strip()] = value.strip().strip('"')
+            return metadata, text[end + 5 :]
+    return {}, text
+
+
+def plain_html(value):
+    value = re.sub(r'<[^>]+>', ' ', value)
+    value = html.unescape(value)
+    value = re.sub(r'\[([^]]+)]\([^)]*\)', r'\1', value)
+    value = re.sub(r'[`*_|#]+', '', value)
+    value = re.sub(r'-{3,}', '', value)
+    return re.sub(r'\s+', ' ', value).strip()
+
+
+def section_records(body, page_id, chapter, volume):
+    headers = list(HEADING_HTML.finditer(body))
+    records = []
+    if not headers:
+        text = plain_html(body)[:96]
+        if text:
+            records.append({
+                'chapter_id': chapter['id'],
+                'chapter_title': chapter['title'],
+                'volume': volume,
+                'section_id': page_id,
+                'section_title': chapter['title'],
+                'text': text,
+            })
+        return records
+    prefix = body[:headers[0].start()]
+    top_text = plain_html(prefix)[:96]
+    if top_text:
+        records.append({
+            'chapter_id': chapter['id'],
+            'chapter_title': chapter['title'],
+            'volume': volume,
+            'section_id': page_id,
+            'section_title': chapter['title'],
+            'text': top_text,
+        })
+    limit = 40
+    for index, match in enumerate(headers):
+        end = headers[index + 1].start() if index + 1 < len(headers) else len(body)
+        text = plain_html(body[match.end():end])[:limit]
+        if not text:
+            continue
+        records.append({
+            'chapter_id': chapter['id'],
+            'chapter_title': chapter['title'],
+            'volume': volume,
+            'section_id': match.group('id'),
+            'section_title': plain_html(match.group('title')),
+            'text': text,
+        })
+    return records
 
 
 def slug(text):
@@ -38,15 +112,14 @@ def render_book():
     entries = contents()
     paths = ['README.md', 'SUMMARY.md']
     paths.extend(e['path'] for e in entries if e['path'] not in paths)
-    # Each file has one authoritative reading position.
     paths = list(dict.fromkeys(paths))
     ids = {(BOOK / p).resolve(): f'ch{i:02}' for i, p in enumerate(paths)}
     md = MarkdownIt('commonmark', {'html': False}).enable('table')
-    pages, search = [], []
+    pages, chapters, search, titles = [], [], [], {}
     for i, relative in enumerate(paths):
         source = BOOK / relative
         page_id = ids[source.resolve()]
-        text = source.read_text(encoding='utf-8')
+        metadata, text = strip_front_matter(source.read_text(encoding='utf-8'))
         tokens = md.parse(text)
         counts = {}
         headings = []
@@ -83,26 +156,38 @@ def render_book():
                 elif target.is_relative_to(ROOT):
                     child.attrSet('href', REMOTE + quote(target.relative_to(ROOT).as_posix()) +
                                   ('#' + parsed.fragment if parsed.fragment else ''))
-        title = next(t.content for t in tokens if t.type == 'inline')
+        title = metadata.get('title') or next(t.content for t in tokens if t.type == 'inline')
+        chapter_id = metadata.get('id') or page_id.upper()
+        volume = metadata.get('volume') or (
+            'cases' if relative.startswith('cases/') else
+            'evidence' if relative.startswith('evidence/') else 'book'
+        )
+        titles[source.resolve()] = title
         body = md.renderer.render(tokens, md.options, {})
         local_toc = ''.join(f'<a class="toc-{level}" href="#{html.escape(anchor)}">{html.escape(label)}</a>'
                             for label, anchor, level in headings)
         source_link = REMOTE + quote(source.relative_to(ROOT).as_posix())
-        pages.append(f'<section class="chapter" id="{page_id}" data-index="{i}" hidden>'
-                     f'<div class="chapter-meta">大模型部署知识体系 · {i + 1:02} / {len(paths):02}'
+        pages.append(f'<section class="chapter" id="{page_id}" data-index="{i}" data-volume="{volume}" hidden>'
+                     f'<div class="chapter-meta">{html.escape(chapter_id)} · {i + 1:02} / {len(paths):02}'
                      f'<a href="{source_link}" target="_blank" rel="noreferrer">Markdown 源文</a></div>'
                      f'<details class="local-toc"><summary>页内目录 · {len(headings)} 项</summary>{local_toc}</details>'
                      f'<article>{body}</article></section>')
-        plain = re.sub(r'^\s*```[^\n]*$', '', text, flags=re.M)
-        search.append({'id': page_id, 'title': title, 'text': plain})
+        chapter = {'id': chapter_id, 'title': title, 'page_id': page_id, 'volume': volume}
+        chapters.append(chapter)
+        search.extend(section_records(body, page_id, chapter, volume))
     nav = ['<a class="toc-link" href="#ch01">完整知识体系目录</a>']
     previous_group = None
     for entry in entries:
         if entry['group'] != previous_group:
             nav.append(f'<div class="nav-group">{html.escape(entry["group"])}</div>')
             previous_group = entry['group']
+        target = (BOOK / entry['path']).resolve()
+        page_id = ids[target]
+        title = titles.get(target, entry['label'])
+        chapter = next(item for item in chapters if item['page_id'] == page_id)
+        label = title if chapter['volume'] == 'book' else f'{chapter["id"]} · {title}'
         nav.append(f'<a class="toc-link depth-{entry["depth"]}" href="#{ids[(BOOK / entry["path"]).resolve()]}">'
-                   f'{html.escape(entry["label"])}</a>')
+                   f'{html.escape(label)}</a>')
     template = '''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>大模型部署知识体系 · 离线检索</title><link rel="icon" href="data:,"><style>
@@ -117,8 +202,8 @@ main{margin-left:298px;padding:45px 56px 110px;max-width:1250px}.chapter{max-wid
 article{font-size:16px;line-height:1.95;overflow-wrap:anywhere}article h1,article h2,article h3{scroll-margin-top:80px}article h1{font-size:32px;line-height:1.45;letter-spacing:.2px;margin:0 0 24px}article h2{font-size:23px;line-height:1.6;margin:46px 0 18px;padding-top:8px;border-top:1px solid var(--line)}article h3{font-size:19px;line-height:1.65;margin:30px 0 14px}article h4{font-size:17px}article p{margin:15px 0}article li{padding-left:3px;margin:7px 0}article ul,article ol{padding-left:26px}article strong{font-weight:650}article img{max-width:100%;height:auto;display:block;margin:25px auto;border:1px solid var(--line);border-radius:6px}
 pre{background:#f0f3f1;border:1px solid var(--line);border-left:3px solid #73a193;border-radius:5px;padding:18px 20px;overflow-x:auto;line-height:1.7;font-size:13px;white-space:pre;max-width:100%}code{font-family:Consolas,"SFMono-Regular",monospace;font-size:.88em;background:#edf2ed;padding:2px 5px;border-radius:3px}pre code{background:none;padding:0;font-size:inherit}blockquote{border-left:3px solid #73a193;padding:3px 20px;color:#4e6260;background:#f5f7f2}
 .table-scroll{overflow:auto;border:1px solid var(--line);border-radius:5px;margin:23px 0}table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.8;min-width:530px}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#eaf0e9;font-weight:650}tr:last-child td{border-bottom:0}tbody tr:nth-child(even){background:#f7f8f3}
-.local-toc{margin:50px 0 25px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted)}.local-toc a{display:block;margin:9px 0}.local-toc summary{cursor:pointer}.reader-footer{position:fixed;bottom:0;left:298px;right:0;background:rgba(255,254,250,.97);border-top:1px solid var(--line);padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:13px;z-index:3}.reader-footer a{max-width:43%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.reader-footer span{font-size:11px;color:var(--muted)}.topbar{display:none}.search-results{max-width:850px;margin:auto}.search-card{display:block;border-bottom:1px solid var(--line);padding:20px 0}.search-card strong{display:block;font-size:18px}.search-card p{font-size:14px;color:var(--muted);line-height:1.9}.empty{padding:40px 0;color:var(--muted)}.overlay{display:none}
-.local-toc{margin:0 0 30px;border:1px solid var(--line);border-radius:6px;padding:14px 18px;background:#f5f7f2}.local-toc a{line-height:1.65}.local-toc .toc-h3{padding-left:16px;font-size:12px}.toc-link.depth-2{padding-left:32px;font-size:12px}.reader-footer a{min-width:0;flex:1}.reader-footer span{flex-shrink:0;white-space:nowrap}#ch00 .local-toc{display:none}#ch00 article>p:first-of-type img{max-height:76vh;width:auto;object-fit:contain}
+.local-toc{margin:50px 0 25px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted)}.local-toc a{display:block;margin:9px 0}.local-toc summary{cursor:pointer}.reader-footer{position:fixed;bottom:0;left:298px;right:0;background:rgba(255,254,250,.97);border-top:1px solid var(--line);padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:13px;z-index:3}.reader-footer a{max-width:43%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.reader-footer span{font-size:11px;color:var(--muted)}.topbar{display:none}.search-results{max-width:850px;margin:auto}.search-card{display:block;border-bottom:1px solid var(--line);padding:20px 0}.search-card:hover{text-decoration:none}.search-card strong{display:block;font-size:18px}.search-meta{display:block;font-size:12px;color:var(--muted);margin:7px 0 5px}.search-card p{font-size:14px;color:var(--muted);line-height:1.9}.search-card mark{background:#f3dc8a;color:#342c13;padding:0 2px}.empty{padding:40px 0;color:var(--muted)}.overlay{display:none}
+.local-toc{margin:0 0 30px;border:1px solid var(--line);border-radius:6px;padding:14px 18px;background:#f5f7f2}.local-toc a{line-height:1.65}.local-toc .toc-h3{padding-left:16px;font-size:12px}.toc-link.depth-2{padding-left:32px;font-size:12px}.reader-footer a{min-width:0;flex:1}.reader-footer span{flex-shrink:0;white-space:nowrap}#ch00 .chapter-meta,#ch00 .local-toc{display:none}#ch00 article>p:first-child{margin:0 0 28px}#ch00 article>p:first-child img{width:100%;height:auto;margin:0;border:0;border-radius:0}
 @media(min-width:1450px){main{margin-left:330px;padding-left:80px;padding-right:80px}.sidebar{width:330px}.reader-footer{left:330px}}
 @media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform .2s;width:290px}.sidebar.open{transform:translateX(0)}main{margin-left:0;padding:85px 25px 100px}.topbar{display:flex;position:fixed;inset:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:13px 20px;align-items:center;gap:18px;z-index:4;font-size:13px}.topbar button{border:1px solid var(--line);border-radius:5px;background:var(--side);padding:5px 12px;color:var(--ink)}.reader-footer{left:0;padding:14px 20px}.overlay.show{display:block;position:fixed;inset:0;background:#18282455;z-index:4}article{font-size:15px}article h1{font-size:26px}article h2{font-size:21px}pre{font-size:12px;padding:14px}.chapter-meta{margin-bottom:28px}}
 @media print{.sidebar,.topbar,.reader-footer,.local-toc,.search-results{display:none!important}main{margin:0;padding:0;max-width:none}.chapter[hidden]{display:block!important}.chapter{max-width:none;break-before:page}.table-scroll{overflow:visible}pre{white-space:pre-wrap;overflow:visible}.chapter-meta{margin-top:20px}article{font-size:11pt}article h1{font-size:23pt}article h2{font-size:17pt}a{color:inherit}}
@@ -130,10 +215,15 @@ pre{background:#f0f3f1;border:1px solid var(--line);border-left:3px solid #73a19
 <noscript>请启用浏览器JavaScript以使用章节导航，或直接阅读仓库Markdown。</noscript></main>
 <footer class="reader-footer"><a id="prev" href="#ch00">上一项</a><span id="progress"></span><a id="next" href="#ch01">下一项</a></footer>
 <script id="book-data" type="application/json">__DATA__</script><script>
-const data=JSON.parse(document.getElementById('book-data').textContent);
+const book=JSON.parse(document.getElementById('book-data').textContent);
+const chapterData=book.chapters,sections=book.sections;
 const chapters=[...document.querySelectorAll('.chapter')];
 const search=document.getElementById('search'),results=document.getElementById('search-results');
 const side=document.querySelector('.sidebar'),overlay=document.getElementById('overlay');
+const volumeNames={book:'教程卷',cases:'实例卷',evidence:'证据卷'};
+const volumeCounts={book:0,cases:0,evidence:0};
+const chapterByID=Object.fromEntries(chapterData.map(chapter=>[chapter.id,chapter]));
+for(const chapter of chapterData)volumeCounts[chapter.volume]++;
 let current=0;
 for(const table of document.querySelectorAll('table')){const wrap=document.createElement('div');wrap.className='table-scroll';table.replaceWith(wrap);wrap.append(table)}
 function closeMenu(){side.classList.remove('open');overlay.classList.remove('show')}
@@ -143,28 +233,48 @@ function show(){
   const target=document.getElementById(id),page=target?.closest('.chapter')||chapters[0];
   current=Number(page.dataset.index);
   chapters.forEach(c=>c.hidden=c!==page);results.hidden=true;search.value='';
-  document.querySelectorAll('.toc-link').forEach(a=>{const on=a.hash==='#'+page.id;a.classList.toggle('active',on);on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});
-  for(const [key,index] of [['prev',current-1],['next',current+1]]){const link=document.getElementById(key);link.style.visibility=data[index]?'visible':'hidden';if(data[index]){link.href='#'+data[index].id;link.textContent=(key==='prev'?'← ':'')+data[index].title+(key==='next'?' →':'')}}
-  document.getElementById('progress').textContent=(current+1)+' / '+data.length;
-  document.title=data[current].title+' · 大模型部署知识体系';closeMenu();
+  document.querySelectorAll('.toc-link').forEach(a=>{const on=a.hash==='#'+page.id;a.classList.toggle('active',on);on?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');if(on)a.scrollIntoView({block:'center'})});
+  for(const [key,index] of [['prev',current-1],['next',current+1]]){const link=document.getElementById(key);link.style.visibility=chapterData[index]?'visible':'hidden';if(chapterData[index]){link.href='#'+chapterData[index].page_id;link.textContent=(key==='prev'?'← ':'')+chapterData[index].title+(key==='next'?' →':'')}}
+  const volume=chapterData[current].volume;
+  const before=chapterData.slice(0,current).filter(item=>item.volume===volume).length;
+  document.getElementById('progress').textContent=volumeNames[volume]+' '+(before+1)+' / '+volumeCounts[volume];
+  document.title=chapterData[current].title+' · 大模型部署知识体系';closeMenu();
   requestAnimationFrame(()=>{if(target&&target!==page)target.scrollIntoView({block:'start'});else window.scrollTo(0,0)});
 }
 window.addEventListener('hashchange',show);
 document.querySelector('nav').addEventListener('click',e=>{if(e.target.closest('a')){search.value='';show();closeMenu()}});
+function appendHighlighted(node,text,terms){
+  const lower=text.toLowerCase();let cursor=0;
+  const hits=[];
+  for(const term of terms){let at=lower.indexOf(term,cursor);if(at>=0)hits.push([at,at+term.length])}
+  hits.sort((a,b)=>a[0]-b[0]);
+  for(const [start,end] of hits){if(start<cursor)continue;node.append(document.createTextNode(text.slice(cursor,start)));const mark=document.createElement('mark');mark.textContent=text.slice(start,end);node.append(mark);cursor=end}
+  node.append(document.createTextNode(text.slice(cursor)));
+}
 search.addEventListener('input',()=>{
-  const query=search.value.trim().toLowerCase();if(!query){show();search.focus();return}
+  const raw=search.value.trim(),query=raw.toLowerCase();if(!query){show();search.focus();return}
+  const terms=query.split(/\\s+/).filter(Boolean);
+  const grams=query.length>=3&&terms.length===1?Array.from({length:query.length-1},(_,i)=>query.slice(i,i+2)):terms;
+  const match=item=>{const chapter=chapterByID[item[0]],hay=(chapter.title+' '+item[2]+' '+item[3]).toLowerCase();return terms.every(term=>hay.includes(term))||(!query.includes(' ')&&grams.length>1&&grams.every(term=>hay.includes(term)))};
   chapters.forEach(c=>c.hidden=true);results.hidden=false;results.replaceChildren();
   const title=document.createElement('h1');title.textContent='全文搜索';results.append(title);
-  const matches=data.filter(d=>d.text.toLowerCase().includes(query));
-  const count=document.createElement('p');count.textContent='找到 '+matches.length+' 项资料';results.append(count);
-  for(const d of matches){const link=document.createElement('a');link.className='search-card';link.href='#'+d.id;const h=document.createElement('strong');h.textContent=d.title;const p=document.createElement('p');const at=d.text.toLowerCase().indexOf(query);p.textContent='…'+d.text.slice(Math.max(0,at-45),at+150).replace(/[#*`]/g,'')+'…';link.append(h,p);link.onclick=()=>{search.value='';if(location.hash==='#'+d.id)show();closeMenu()};results.append(link)}
+  const matches=sections.filter(match).slice(0,50);
+  const count=document.createElement('p');count.textContent='找到 '+matches.length+' 个小节级结果';results.append(count);
+  for(const item of matches){const chapter=chapterByID[item[0]],link=document.createElement('a');link.className='search-card';link.href='#'+item[1];const h=document.createElement('strong');h.textContent=item[2];const meta=document.createElement('span');meta.className='search-meta';meta.textContent=volumeNames[chapter.volume]+' · '+item[0]+' · '+chapter.title;const p=document.createElement('p');const at=item[3].toLowerCase().indexOf(terms[0]);const excerpt='…'+item[3].slice(Math.max(0,at-35),Math.max(0,at-35)+150)+'…';appendHighlighted(p,excerpt,terms);link.append(h,meta,p);link.onclick=()=>{search.value='';if(location.hash==='#'+item[1])show();closeMenu()};results.append(link)}
   window.scrollTo(0,0);
 });
-search.addEventListener('keydown',e=>{if(e.key==='Enter')closeMenu()});
-document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea'))return;if(e.key==='ArrowRight'&&data[current+1])location.hash=data[current+1].id;if(e.key==='ArrowLeft'&&data[current-1])location.hash=data[current-1].id});
+search.addEventListener('keydown',e=>{if(e.key==='Escape'){search.value='';show();search.blur()}if(e.key==='Enter'){const first=results.querySelector('.search-card');if(first){location.hash=first.hash;search.value='';closeMenu()}}});
+document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea'))return;if(e.key==='/'){e.preventDefault();search.focus();return}if(e.key==='ArrowRight'&&chapterData[current+1])location.hash=chapterData[current+1].page_id;if(e.key==='ArrowLeft'&&chapterData[current-1])location.hash=chapterData[current-1].page_id});
 show();
 </script></body></html>'''
-    payload = json.dumps(search, ensure_ascii=False).replace('<', '\\u003c')
+    compact_sections = [
+        [item['chapter_id'], item['section_id'], item['section_title'], item['text']]
+        for item in search
+    ]
+    payload = json.dumps(
+        {'chapters': chapters, 'sections': compact_sections},
+        ensure_ascii=False, separators=(',', ':'),
+    ).replace('<', '\\u003c')
     return template.replace('__NAV__', ''.join(nav)).replace('__PAGES__', ''.join(pages)).replace('__DATA__', payload), len(paths)
 
 

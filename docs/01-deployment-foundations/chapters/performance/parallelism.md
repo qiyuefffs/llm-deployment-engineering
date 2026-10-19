@@ -1,3 +1,17 @@
+---
+id: T37
+title: "多卡与多节点：先解决容量，再验证通信和收益"
+type: tutorial
+volume: book
+layer: 4
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "多设备部署通常有两种目标：单设备放不下，或单副本的服务容量不足。前者需要切分或卸载，后者可能适合多个副本。把目标说清，才能选择TP、PP、DP、EP或RPC，而不是先把所有设备连起来。"
+---
+
 # 多卡与多节点：先解决容量，再验证通信和收益
 
 [总目录](../../SUMMARY.md) · [性能总章](../../02-capability-layers/04-memory-performance.md) · [通信冒烟脚本](../../examples/all_reduce_check.py)

@@ -4,11 +4,28 @@
 
 This edition follows the original six parts, five capability layers, and section numbering. Start with hardware, runtimes, and model fundamentals, then move into engine execution, performance optimization, and service delivery. Platform procedures and complete engineering records show how these concepts apply to specific devices.
 
+## Chinese three-volume edition
+
+- [Tutorial, case, and evidence contents](../01-deployment-foundations/SUMMARY.md)
+- [Case volume](../01-deployment-foundations/cases/README.md)
+- [Evidence volume](../01-deployment-foundations/evidence/README.md)
+- [R01–R50 complete source index](../01-deployment-foundations/evidence/sources/README.md)
+
 ## Overview and entry points
 
 - [Knowledge base home and framework diagram](README.md)
 - [Environment and evidence conventions](00-preface.md)
 - [Hardware deployment and optimization matrix](engineering/README.md)
+- [General performance optimization and testing methodology](engineering/edge-llm-performance-methodology.md)
+  - [On-device model project index](engineering/projects/README.md)
+    - [MiniMax-M2.7 multi-device inference](engineering/projects/01-minimax-m27.md)
+    - [DeepSeek V4 Flash](engineering/projects/02-deepseek-v4-flash.md)
+    - [Qwen3.6-35B-A3B](engineering/projects/03-qwen36-35b-a3b.md)
+    - [Qwen3.8-27B and Flash-Next](engineering/projects/04-qwen38-27b-flash-next.md)
+    - [GLM-5.3-Flash](engineering/projects/05-glm-53-flash.md)
+    - [vLLM ROCm text and multimodal](engineering/projects/06-vllm-rocm.md)
+    - [MiniMax-H3 video/audio generation](engineering/projects/07-minimax-h3.md)
+    - [Qwen-Image 2.1](engineering/projects/08-qwen-image-21.md)
 - [CPU walkthrough: fixed artifacts, complete service, and actual acceptance results](practice/first-service/README.md)
 
 ## Part I: overall knowledge map

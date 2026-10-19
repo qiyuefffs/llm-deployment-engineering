@@ -1,3 +1,17 @@
+---
+id: T19
+title: "API、监控与验收：让服务的状态可见"
+type: tutorial
+volume: book
+layer: 5
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "应用看到的是接口与答案，工程师还需要知道请求是否在排队、资源是否不足、错误是否增加。本章把API契约、健康、指标、质量与验收串起来，避免服务只有一个“启动成功”的截图。"
+---
+
 # API、监控与验收：让服务的状态可见
 
 [总目录](../../SUMMARY.md) · [工程交付总章](../../02-capability-layers/05-engineering-delivery.md) · [环境与运维](environment-operations.md)
@@ -43,7 +57,7 @@ SSE按事件解析，可能先出现角色或空内容，再出现正文。记�
 
 ## 5. 一个真实 metrics 文件
 
-CPU演练启用`--metrics`，采集到的[metrics.txt](../../practice/first-service/results/2026-10-18-windows-cpu/metrics.txt)包括：
+CPU演练启用`--metrics`，采集到的[metrics.txt](../../cases/C14-windows-cpu/results/2026-10-18-windows-cpu/metrics.txt)包括：
 
 ```text
 llamacpp:prompt_tokens_total 355

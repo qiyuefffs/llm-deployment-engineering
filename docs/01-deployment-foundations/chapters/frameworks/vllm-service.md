@@ -1,6 +1,20 @@
+---
+id: T24
+title: "vLLM：从模型目录到可测量的推理服务"
+type: tutorial
+volume: book
+layer: 3
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "完整工程记录： GB10构建与量化加速 · 双4080/A6000 · W7900 · 昇腾310P3"
+---
+
 # vLLM：从模型目录到可测量的推理服务
 
-**完整工程记录：** [GB10构建与量化加速](../../engineering/nvidia-gb10.md) · [双4080/A6000](../../engineering/nvidia-dual-gpu.md) · [W7900](../../engineering/amd-w7900.md) · [昇腾310P3](../../engineering/ascend-310p.md)
+**完整工程记录：** [GB10构建与量化加速](../../cases/C03-gb10/README.md) · [双4080/A6000](../../cases/C02-dual-4080/README.md) · [W7900](../../cases/C08-w7900/README.md) · [昇腾310P3](../../cases/C12-ascend-310p/README.md)
 
 [总目录](../../SUMMARY.md) · [所属总章：推理框架](../../02-capability-layers/03-inference-frameworks.md) · [压测方法](../performance/benchmarking.md)
 

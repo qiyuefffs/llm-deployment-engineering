@@ -1,6 +1,20 @@
+---
+id: T22
+title: "OpenVINO：用固定 IR 完成 Intel GPU 推理"
+type: tutorial
+volume: book
+layer: 3
+platform: "Intel"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "完整工程记录： Intel GPU/NPU完整17节报告与后续TTS原文"
+---
+
 # OpenVINO：用固定 IR 完成 Intel GPU 推理
 
-**完整工程记录：** [Intel GPU/NPU完整17节报告与后续TTS原文](../../engineering/intel-arc-npu.md)
+**完整工程记录：** [Intel GPU/NPU完整17节报告与后续TTS原文](../../cases/C09-intel-arc-npu/README.md)
 
 [总目录](../../SUMMARY.md) · [Intel平台](../hardware/intel.md) · [量化验证](../models/quantization.md)
 

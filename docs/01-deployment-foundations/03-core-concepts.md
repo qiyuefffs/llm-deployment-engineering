@@ -1,3 +1,17 @@
+---
+id: T08
+title: "第三部分：核心概念解释库"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "前面五层回答了部署过程中怎样做，本部分解释其中十个经常遇到的概念。保持原框架的十个主题，每项按“一句话解释、工程解释、工程分析”阅读。完整命令与结果仍在专题章，不在这里重复一遍教程。"
+---
+
 # 第三部分：核心概念解释库
 
 [总目录](SUMMARY.md) · [上一部分：五层能力](02-capability-layers/README.md) · [下一部分：项目复盘](04-project-review.md)

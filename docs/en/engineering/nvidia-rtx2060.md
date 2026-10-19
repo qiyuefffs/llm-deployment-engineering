@@ -1,6 +1,6 @@
 # NVIDIA RTX 2060 12GB: CUDA mixed offloading with Qwen3 quantization inference
 
-[简体中文](../../01-deployment-foundations/engineering/nvidia-rtx2060.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C01-rtx2060/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

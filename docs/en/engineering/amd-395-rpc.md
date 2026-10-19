@@ -1,6 +1,6 @@
 # AMD 395 five-machine HIP RPC: GTT repair, build, distribute and load with Kimi
 
-[简体中文](../../01-deployment-foundations/engineering/amd-395-rpc.md) | **English**
+[简体中文](../../01-deployment-foundations/cases/C07-amd-395-rpc/README.md) | **English**
 
 [Index of engineering examples](README.md) · [General directory of knowledge systems](../SUMMARY.md)
 

@@ -1,6 +1,20 @@
+---
+id: T02
+title: "第1层：硬件、运行时与计算后端"
+type: tutorial
+volume: book
+layer: 1
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "大模型的参数存放在内存中，推理时不断进行矩阵乘法、注意力计算和数据搬运。这一层先回答：用什么硬件执行，通过哪些软件调用，容量和速度受什么限制。"
+---
+
 # 第1层：硬件、运行时与计算后端
 
-[总目录](../SUMMARY.md) · [硬件完整工程实例](../engineering/README.md)
+[总目录](../SUMMARY.md) · [硬件完整工程实例](../cases/README.md)
 
 ## 1.1 这一层解决什么问题？
 
@@ -102,7 +116,7 @@ CUDA Runtime和HIP Runtime负责提交执行等工作；矩阵、attention和通
 
 CPU路线关注AVX/NEON等指令、线程数、内存带宽，以及BLAS/oneDNN/Accelerate或引擎自带kernel。软件构建使用了新指令时，旧CPU可能无法执行；线程也不是越多越快，还要考虑带宽、NUMA和应用争用。
 
-具体设备命令与历史结果集中在[工程实例矩阵](../engineering/README.md)，MUSA流程在[待验证实例](../engineering/musa.md)。支持范围按精确芯片、OS、框架版本、模型与精度判断。
+具体设备命令与历史结果集中在[工程实例矩阵](../cases/README.md)，MUSA流程在[待验证实例](../cases/C13-musa/README.md)。支持范围按精确芯片、OS、框架版本、模型与精度判断。
 
 ## 1.3 硬件适配排查顺序
 
@@ -174,7 +188,7 @@ assert y[0, 0].item() == 32
 
 输出：环境清单、构建日志、模型支持表、最小计算与目标任务结果、内存和通信证据。[适配记录模板](../templates/adaptation-record.md)。
 
-通用基础接续[模型格式与量化](02-model-formats-quantization.md)、[推理框架](03-inference-frameworks.md)和[内存与性能](04-memory-performance.md)。需要具体设备命令和历史结果时，再查[工程实例矩阵](../engineering/README.md)。
+通用基础接续[模型格式与量化](02-model-formats-quantization.md)、[推理框架](03-inference-frameworks.md)和[内存与性能](04-memory-performance.md)。需要具体设备命令和历史结果时，再查[工程实例矩阵](../cases/README.md)。
 
 ## 2026-10 工程更新
 

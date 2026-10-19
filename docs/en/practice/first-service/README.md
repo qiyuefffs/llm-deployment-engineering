@@ -1,6 +1,6 @@
 # Full Operating Example: The first local inference service
 
-[简体中文](../../../01-deployment-foundations/practice/first-service/README.md) | **English**
+[简体中文](../../../01-deployment-foundations/cases/C14-windows-cpu/README.md) | **English**
 
 [List of knowledge systems](../../SUMMARY.md) · [llama.cpp principles and build](../../chapters/frameworks/llama-cpp.md) · [Performance analytics](../../chapters/performance/benchmarking.md)
 
@@ -34,7 +34,7 @@ This environment is for Windows 10.0.26200, AMD64, i5-12600KF, 16 logic threads,
 |Services|127.0.0.1:18080, also known as book-qwen3-06b|
 |resources parameter|Ctx 2048, parallel 2, thread 4, CPU|
 
-The fixed download addresses and summaries are available. [manifest.json](../../../01-deployment-foundations/practice/first-service/manifest.json). model license Apache 2.0, engine project license MIT; Weights is not stored in the repository and is available under the terms of the original model page.
+The fixed download addresses and summaries are available. [manifest.json](../../../01-deployment-foundations/cases/C14-windows-cpu/manifest.json). model license Apache 2.0, engine project license MIT; Weights is not stored in the repository and is available under the terms of the original model page.
 
 ## 2. Access the repository and access the correct directory
 
@@ -130,7 +130,7 @@ Old terminals may also be affected by the encoding of the terminal when transmit
 
 ## 6. Real functionality results
 
-Original output view [functional.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/functional.json):
+Original output view [functional.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/functional.json):
 
 |Input|Rules for acceptance testing|It's actually legal.|Results|
 | --- | --- | --- | --- |
@@ -140,7 +140,7 @@ Original output view [functional.json](../../../01-deployment-foundations/practi
 
 Mathematical problem errors need to be preserved, and one easy problem cannot be replaced to make overall acceptance testing green. This small sample is used to check the process and does not provide a general model accuracy. If a business model is to be selected, the representative task should be increased and compared with other models or the original precision baseline.
 
-The shape of the input is single.`{`. Primitive [invalid-request.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/invalid-request.json) Record HTTP500 and JSON parsing errors, and then health is ok. Our protocol acceptance testing expects 4xx, so this failure; Health recovery passed alone.
+The shape of the input is single.`{`. Primitive [invalid-request.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/invalid-request.json) Record HTTP500 and JSON parsing errors, and then health is ok. Our protocol acceptance testing expects 4xx, so this failure; Health recovery passed alone.
 
 ## 7. True HTTP and Engine Results
 
@@ -151,26 +151,26 @@ HTTP performance request requires a list of integers, but the output limit of 32
 | 1 | 4/4 | 2.406964s | 53.18token/s | 131.16ms | 601.56ms |
 | 2 | 4/4 | 1.558745s | 82.12token/s | 217.49ms | 778.99ms |
 
-concurrency 2 total throughput increases, but the average request is expected to increase. The sample size was only 4, and no stable P99 was reported. For individual records, see [requests.jsonl](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/requests.jsonl) The results of the calculations [http-summary.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/http-summary.json).
+concurrency 2 total throughput increases, but the average request is expected to increase. The sample size was only 4, and no stable P99 was reported. For individual records, see [requests.jsonl](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/requests.jsonl) The results of the calculations [http-summary.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/http-summary.json).
 
-After the server was shut down, the result of the three-wheeled engine was pp64.`319.08±17.26token/s `,tg32 `69.88±0.22token/s` See you later. [engine-benchmark.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/engine-benchmark.json). These numbers do not include HTTP rows and cannot be directly considered as the same metric as HTTP total throughput.
+After the server was shut down, the result of the three-wheeled engine was pp64.`319.08±17.26token/s `,tg32 `69.88±0.22token/s` See you later. [engine-benchmark.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/engine-benchmark.json). These numbers do not include HTTP rows and cannot be directly considered as the same metric as HTTP total throughput.
 
 ## 8. Where does the inspection end up?
 
 |Documents|Check the content|
 | --- | --- |
-| [environment.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/environment.json) |System, version and this parameter|
-| [server-command.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/server-command.json) |The actual start parameter, path has been changed to public placeholder|
-| [models.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/models.json) |Real model name|
-| [functional.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/functional.json) |Functionality, input, response and judgment|
-| [invalid-request.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/invalid-request.json) |error status and health recovery|
-| [requests.jsonl](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/requests.jsonl) |Eight performance requests and timing|
-| [http-summary.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/http-summary.json) |Clustering and throughput|
-| [metrics.txt](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/metrics.txt) |Service indicators at the time of sampling|
-| [server.log](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/server.log) |Loading, slot and request log|
-| [engine-benchmark.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/engine-benchmark.json) |Independent engine measurement|
-| [acceptance.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/acceptance.json) |Finally passed and failed|
-| [download-hashes.json](../../../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/download-hashes.json) |Download the document summary|
+| [environment.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/environment.json) |System, version and this parameter|
+| [server-command.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/server-command.json) |The actual start parameter, path has been changed to public placeholder|
+| [models.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/models.json) |Real model name|
+| [functional.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/functional.json) |Functionality, input, response and judgment|
+| [invalid-request.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/invalid-request.json) |error status and health recovery|
+| [requests.jsonl](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/requests.jsonl) |Eight performance requests and timing|
+| [http-summary.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/http-summary.json) |Clustering and throughput|
+| [metrics.txt](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/metrics.txt) |Service indicators at the time of sampling|
+| [server.log](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/server.log) |Loading, slot and request log|
+| [engine-benchmark.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/engine-benchmark.json) |Independent engine measurement|
+| [acceptance.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/acceptance.json) |Finally passed and failed|
+| [download-hashes.json](../../../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/download-hashes.json) |Download the document summary|
 
 The conclusion is: `exercise_passed=false`. Run links, HTTP performance groups and engine benchmarks are completed; The quality and error protocols clearly fail. Different CPUs, instruction sets, system workloads, and hot states vary in speed, and reproduction aims at linking controllable results, not requiring exactly the same subset.
 

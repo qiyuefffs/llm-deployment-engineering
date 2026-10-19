@@ -116,3 +116,10 @@ Experimental processes: baseline → bottleneck evidence→ assumptions→ chang
 ## October 2026 engineering update
 
 [MTP and dynamic speculation](../chapters/performance/speculative-decoding.md), [DSpark](../chapters/performance/dspark.md), and [PD/MoE](../chapters/performance/disaggregated-serving.md) provide separate configurations, experiment matrices, and acceptance criteria.
+
+The [General Performance Optimization and Testing Methodology](../engineering/edge-llm-performance-methodology.md) adds cross-project judgments:
+
+- Multi-device RPC, independent replicas, and P/D address different capacity and latency problems; each needs a single-device baseline.
+- Judge speculation first by complete-request TTFT and E2E; acceptance rate or decode gain alone is not end-to-end acceptance.
+- Vulkan cooperative matrices, integer dot product, and low-precision kernels require same-binary ablation, correctness checks, and resource sampling.
+- Engine synthetic benchmarks, server prefill, client streaming decode, and HTTP requests use different timing boundaries.

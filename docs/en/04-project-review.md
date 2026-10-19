@@ -110,7 +110,7 @@ This example corresponds to the actual implementation of the system. [Full cours
 
 **One, the background of the project.** On a typical Windows computer, a model of dependency-free GPU deploys links to check downloads, tests, services, functionality, flow and performance files. The goal is to test the teaching process and engineering acceptance without committing the small model to the actual business quality.
 
-**Second, hardware and environment.** Windows 10.0.26200, AMD64, i5-12600KF, 16 logic threads, and Python 3.13.12. llama.cpp b9557, commit 0f7fada56, CPU only, 4 threads. Environmental fields see [environment.json](../01-deployment-foundations/practice/first-service/results/2026-10-18-windows-cpu/environment.json).
+**Second, hardware and environment.** Windows 10.0.26200, AMD64, i5-12600KF, 16 logic threads, and Python 3.13.12. llama.cpp b9557, commit 0f7fada56, CPU only, 4 threads. Environmental fields see [environment.json](../01-deployment-foundations/cases/C14-windows-cpu/results/2026-10-18-windows-cpu/environment.json).
 
 **Three, model and input.** Qwen3-0.6B-Q8_0, fixed revision with SHA256 See list. The input includes three functionality queries, single-character malformed JSON, and two sets of four listing tasks. All prompts are stored in the process and results, not dependency private samples.
 
@@ -151,3 +151,5 @@ The name of the file is to recommend that the organization retain the original m
 New versions and new evidence are written when the conclusions change. For example, the original title is written successfully, but the subsequent run has a clear kernel failure, and the output should be modified according to the specific failure, keeping the necessary version updated.
 
 Knowledge entries refer to the latest applicable conclusions while maintaining the corresponding versions of the old results. In this way, it is possible to judge whether the recording is environmentally modified, model modified, or incomplete.
+
+After completing a project record, extract reusable methods once: which layer the project addressed, what evidence was used, and under which conditions the result applies. Shared methods belong in the [General Performance Optimization and Testing Methodology](engineering/edge-llm-performance-methodology.md); project experience belongs in the [project index](engineering/projects/README.md). Commands and measurements remain in the original project record; the method page is not new runtime evidence.

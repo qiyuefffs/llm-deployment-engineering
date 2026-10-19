@@ -1,0 +1,127 @@
+{
+  "target": "docs/01-deployment-foundations/book.html",
+  "book_sha256": "9351219709f0734400d8da27e9c8ed07a88212cf5262e7cbbb62ccdd0106f221",
+  "checks": {
+    "structure": {
+      "chapters": 135,
+      "sections": 1142,
+      "duplicateIds": 0,
+      "missingAnchors": 0,
+      "visible": 1
+    },
+    "independent_project_chapters": {
+      "T41": {
+        "visible": 1,
+        "id": "ch05",
+        "commands": 6,
+        "h1": 1,
+        "overflow": false
+      },
+      "T42": {
+        "visible": 1,
+        "id": "ch06",
+        "commands": 36,
+        "h1": 1,
+        "overflow": false
+      },
+      "T43": {
+        "visible": 1,
+        "id": "ch07",
+        "commands": 36,
+        "h1": 1,
+        "overflow": false
+      },
+      "T44": {
+        "visible": 1,
+        "id": "ch08",
+        "commands": 41,
+        "h1": 1,
+        "overflow": false
+      },
+      "T45": {
+        "visible": 1,
+        "id": "ch09",
+        "commands": 2,
+        "h1": 1,
+        "overflow": false
+      },
+      "T46": {
+        "visible": 1,
+        "id": "ch10",
+        "commands": 4,
+        "h1": 1,
+        "overflow": false
+      },
+      "T47": {
+        "visible": 1,
+        "id": "ch11",
+        "commands": 2,
+        "h1": 1,
+        "overflow": false
+      },
+      "T48": {
+        "visible": 1,
+        "id": "ch12",
+        "commands": 7,
+        "h1": 1,
+        "overflow": false
+      }
+    },
+    "search": {
+      "ttft_results": 16,
+      "highlighted": 16,
+      "multi_keyword_results": 5,
+      "result_navigation": {
+        "hash": "#ch03--52-%E6%A0%B9%E6%8D%AE%E7%93%B6%E9%A2%88%E6%9E%84%E9%80%A0%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA",
+        "resultHidden": true,
+        "searchCleared": true,
+        "active": true
+      }
+    },
+    "mobile": {
+      "viewport": [
+        390,
+        844
+      ],
+      "menu_opened": true,
+      "search_navigation_closed_menu": true,
+      "all_projects_fit": true
+    },
+    "home_images": [
+      {
+        "width": 1536,
+        "height": 1024
+      }
+    ],
+    "opening_image": {
+      "desktop": {
+        "imageFirst": true,
+        "beforeHeading": true,
+        "naturalWidth": 1536,
+        "naturalHeight": 1024,
+        "renderedWidth": 850,
+        "renderedHeight": 566.65625,
+        "top": 45,
+        "webp": true,
+        "metaHidden": true,
+        "overflow": false
+      },
+      "mobile": {
+        "imageFirst": true,
+        "beforeHeading": true,
+        "naturalWidth": 1536,
+        "naturalHeight": 1024,
+        "renderedWidth": 340,
+        "renderedHeight": 226.65625,
+        "top": 85,
+        "webp": true,
+        "metaHidden": true,
+        "overflow": false
+      }
+    },
+    "runtime_errors": 0,
+    "external_network_requests": 0
+  },
+  "browser": "Chrome/152.0.7977.75",
+  "status": "passed"
+}

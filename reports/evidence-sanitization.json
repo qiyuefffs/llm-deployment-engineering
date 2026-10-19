@@ -1,0 +1,138 @@
+{
+  "R23": {
+    "original_body_sha256": "1646feda837ba40efbfa8048f2c36945ec7dce55c6f2c35d79e0292d092257e6",
+    "sanitized_body_sha256": "19a0e8e71293cf10a818044e22e6102bed28da209c3b9e53d27a39d7e5d75fbb",
+    "date": "2026-10-19",
+    "reason": "公开正文仅替换私人模型目录、登录身份、私网网段和模型摘要值；命令参数、计时与失败记录不变。",
+    "replacement_counts": {
+      "local_path": 0,
+      "username": 0,
+      "private_subnet": 3,
+      "model_digest": 0
+    }
+  },
+  "R03": {
+    "original_body_sha256": "49f2a95ae42bdb7663468be3f0fe47b17b6c4ae1773798872d8a35dc34e6290b",
+    "sanitized_body_sha256": "3ca725da2141b81cb2ecb3e39c7c7f2d5ca9db9809e1cd71f618c9e764a4c0dd",
+    "date": "2026-10-19",
+    "reason": "公开正文仅替换私人模型目录、登录身份、私网网段和模型摘要值；命令参数、计时与失败记录不变。",
+    "replacement_counts": {
+      "local_path": 1,
+      "username": 0,
+      "private_subnet": 0,
+      "model_digest": 0
+    }
+  },
+  "R35": {
+    "original_body_sha256": "ca123e16ae767290fa0533f29da3baf474e01b15f8a811c395b0677f9995e0e3",
+    "sanitized_body_sha256": "a54bb6359a9bcc83c7c214201020f91192904d35ad790685164b9ae297377e8f",
+    "date": "2026-10-19",
+    "reason": "公开正文仅替换私人模型目录、登录身份、私网网段和模型摘要值；命令参数、计时与失败记录不变。",
+    "replacement_counts": {
+      "local_path": 0,
+      "username": 0,
+      "private_subnet": 0,
+      "model_digest": 2
+    }
+  },
+  "R01": {
+    "original_body_sha256": "d77c96fe1398ac5c1420335f29d820a4c0f0aa4392a3b746b5473bd96382baaa",
+    "sanitized_body_sha256": "05e002be5e38e6f061fea0b0ef46356321d5788d7adb69512135501c2b031595",
+    "date": "2026-10-19",
+    "reason": "公开正文仅替换私人模型目录、登录身份、私网网段和模型摘要值；命令参数、计时与失败记录不变。",
+    "replacement_counts": {
+      "local_path": 1,
+      "username": 0,
+      "private_subnet": 0,
+      "model_digest": 0
+    }
+  },
+  "R21": {
+    "original_body_sha256": "d73f35d6a012e883e81a759834b00c06127d0431f82218dffbde69be0e58538a",
+    "sanitized_body_sha256": "8479e9242091d72c76f4fb2f415362f77e4edc4b95be1083f941ac9d26265279",
+    "date": "2026-10-19",
+    "reason": "公开正文仅替换私人模型目录、登录身份、私网网段和模型摘要值；命令参数、计时与失败记录不变。",
+    "replacement_counts": {
+      "local_path": 0,
+      "username": 0,
+      "private_subnet": 0,
+      "model_digest": 2
+    }
+  },
+  "R02": {
+    "original_body_sha256": "6d7d3432fa40799b44b333c74741d53f10495a8b6cc7dd8ccc0d51f897c98cf7",
+    "sanitized_body_sha256": "484f0ec582023d0112bd1340e5dc8288d8b573a85b443c026b419b2bd3efb0d4",
+    "date": "2026-10-19",
+    "reason": "公开正文仅替换私人模型目录、登录身份、私网网段和模型摘要值；命令参数、计时与失败记录不变。",
+    "replacement_counts": {
+      "local_path": 1,
+      "username": 0,
+      "private_subnet": 0,
+      "model_digest": 0
+    }
+  },
+  "R40": {
+    "original_body_sha256": "a68b2276e962a38fcf050ad92d7b23b15af3a9a2a125243eccc09fc51c9100fd",
+    "sanitized_body_sha256": "00ea70796e7c0aae10ffcad8fea114bd96a7f3dd0ec0c52fa7cc23ba559a211b",
+    "date": "2026-10-19",
+    "reason": "仅替换私人目录、卷名、节点、登录身份、认证值和模型摘要；命令参数、计时与失败记录保留。",
+    "replacement_counts": {
+      "local_path": 0,
+      "username": 1,
+      "private_subnet": 0,
+      "model_digest": 0,
+      "storage_volume": 6,
+      "credential": 0
+    }
+  },
+  "R39": {
+    "original_body_sha256": "50fc8cd90cc2ab1f5484392e6224acfe58b7040bdd4aaaf5f9d44e2b16bde570",
+    "date": "2026-10-19",
+    "replacement_counts": {
+      "storage_volume": 1,
+      "credential": 0
+    },
+    "sanitized_body_sha256": "465c14270a7361e11188bef5d1a82bcb6ba94544eb667295ba9ac2c1e382b105",
+    "reason": "仅替换私人目录、卷名、节点、登录身份、认证值和模型摘要；命令参数、计时与失败记录保留。"
+  },
+  "R43": {
+    "original_body_sha256": "a1b53b42d299e0c54f0633b8bf0794c87a2d90244c1b18e7b225472b00cac554",
+    "date": "2026-10-19",
+    "replacement_counts": {
+      "storage_volume": 1,
+      "credential": 0
+    },
+    "sanitized_body_sha256": "cf70f3b1c91f7f6659a2fe0a49846bdfefbedc4067f36477ab330812178c8b90",
+    "reason": "仅替换私人目录、卷名、节点、登录身份、认证值和模型摘要；命令参数、计时与失败记录保留。"
+  },
+  "R41": {
+    "original_body_sha256": "94248c050069b0cbe5a6b2b135f2065051878985d80e760cca32fa7a9aa62057",
+    "date": "2026-10-19",
+    "replacement_counts": {
+      "storage_volume": 44,
+      "credential": 0
+    },
+    "sanitized_body_sha256": "0b724b4288df88b9a7471c24c8046e57b2a5cbaf854a29ba0bcfbcec2e684941",
+    "reason": "仅替换私人目录、卷名、节点、登录身份、认证值和模型摘要；命令参数、计时与失败记录保留。"
+  },
+  "R42": {
+    "original_body_sha256": "abafa2be3a7a29fa50a9e3c42cb75ff360c72a154ee6f4158f1d026b2978cae1",
+    "date": "2026-10-19",
+    "replacement_counts": {
+      "storage_volume": 16,
+      "credential": 2
+    },
+    "sanitized_body_sha256": "5996a2c47d3032418d51550477bb109750e2edccf268c344421e3e79f2929099",
+    "reason": "仅替换私人目录、卷名、节点、登录身份、认证值和模型摘要；命令参数、计时与失败记录保留。"
+  },
+  "R44": {
+    "original_body_sha256": "b87154df841feb833562957001102efcad95f6a7a24ef89272ea489ffb748850",
+    "date": "2026-10-19",
+    "replacement_counts": {
+      "storage_volume": 6,
+      "credential": 0
+    },
+    "sanitized_body_sha256": "0eb5015d21568dcdd78815ae4b47a8a3627b2382a4813e347cc352437b80d669",
+    "reason": "仅替换私人目录、卷名、节点、登录身份、认证值和模型摘要；命令参数、计时与失败记录保留。"
+  }
+}

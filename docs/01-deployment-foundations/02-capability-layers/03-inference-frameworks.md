@@ -1,3 +1,17 @@
+---
+id: T04
+title: "第3层：推理框架层"
+type: tutorial
+volume: book
+layer: 3
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "推理引擎把模型文件变成可以执行的程序：加载权重、套用模板、管理KV、选择kernel、调度请求，再把token转换为输出。它与CUDA、ROCm等设备软件栈配合工作。"
+---
+
 # 第3层：推理框架层
 
 [总目录](../SUMMARY.md) · [vLLM流程](../chapters/frameworks/vllm-service.md) · [llama.cpp流程](../chapters/frameworks/llama-cpp.md) · [OpenVINO流程](../chapters/frameworks/openvino.md)
@@ -83,7 +97,7 @@ curl --fail-with-body http://127.0.0.1:8001/v1/chat/completions \
   -d '{"model":"example-model","messages":[{"role":"user","content":"计算12乘13，只输出数字。"}],"temperature":0,"max_tokens":128}'
 ```
 
-先验收功能、SSE、异常和取消，再用固定tokenizer压测。启动、KV预算、热身和真实200请求数据见[GB10完整实例](../engineering/nvidia-gb10.md)。
+先验收功能、SSE、异常和取消，再用固定tokenizer压测。启动、KV预算、热身和真实200请求数据见[GB10完整实例](../cases/C03-gb10/README.md)。
 
 ## 3.4 llama.cpp 知识结构
 
@@ -130,7 +144,7 @@ cmake --build build-cuda --target llama-server llama-bench llama-cli -j 4
   --host 127.0.0.1 --port 8080
 ```
 
-SYCL、MUSA、CANN按对应提交和厂商工具链单独准备，未知CMake变量可能被忽略，不能据此认定后端已启用。平台完整步骤见[实例矩阵](../engineering/README.md)。
+SYCL、MUSA、CANN按对应提交和厂商工具链单独准备，未知CMake变量可能被忽略，不能据此认定后端已启用。平台完整步骤见[实例矩阵](../cases/README.md)。
 
 ## 3.6 vLLM vs llama.cpp 选型表
 

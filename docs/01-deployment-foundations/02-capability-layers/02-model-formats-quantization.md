@@ -1,3 +1,17 @@
+---
+id: T03
+title: "第2层：模型格式与量化层"
+type: tutorial
+volume: book
+layer: 2
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "模型部署需要权重、网络结构、分词器和输入输出约定共同工作。下载到一个权重文件，只完成了制品准备的一部分；引擎还需要能识别其结构和数值表示。"
+---
+
 # 第2层：模型格式与量化层
 
 [总目录](../SUMMARY.md) · [GGUF完整流程](../chapters/models/gguf-conversion.md) · [量化与AWQ四组](../chapters/models/quantization.md)
@@ -124,13 +138,13 @@ vLLM部分版本的GGUF支持按实际功能测试，不假设与llama.cpp相同
 
 | 实例 | 具体选择与结果 |
 | --- | --- |
-| [RTX2060](../engineering/nvidia-rtx2060.md) | GGUF＋CPU/GPU混合，重点总内存和卸载 |
-| [8060S](../engineering/amd-8060s.md) | Q4约58token/s与BF16约10token/s，质量与计时缺项明确保留 |
-| [GB10 AWQ](../engineering/nvidia-gb10.md) | 26B-A4B/31B四组4/8bit，保留完整延迟；不单凭位宽归因 |
-| [Intel IR](../engineering/intel-arc-npu.md) | 固定revision的INT4/INT8；GPU与NPU分别验收 |
-| [Mac](../engineering/apple-mlx.md) | GGUF/Metal与MLX制品分路线，视觉不沿用文本结论 |
+| [RTX2060](../cases/C01-rtx2060/README.md) | GGUF＋CPU/GPU混合，重点总内存和卸载 |
+| [8060S](../cases/C06-radeon-8060s/README.md) | Q4约58token/s与BF16约10token/s，质量与计时缺项明确保留 |
+| [GB10 AWQ](../cases/C03-gb10/README.md) | 26B-A4B/31B四组4/8bit，保留完整延迟；不单凭位宽归因 |
+| [Intel IR](../cases/C09-intel-arc-npu/README.md) | 固定revision的INT4/INT8；GPU与NPU分别验收 |
+| [Mac](../cases/C11-m3-mlx/README.md) | GGUF/Metal与MLX制品分路线，视觉不沿用文本结论 |
 
-原操作全文：[HF→GGUF→量化→Ollama](../engineering/gguf-ollama.md)。制品交付包含身份清单、完整文件、转换/量化记录、摘要、功能与质量结果。
+原操作全文：[HF→GGUF→量化→Ollama](../appendices/gguf-ollama.md)。制品交付包含身份清单、完整文件、转换/量化记录、摘要、功能与质量结果。
 
 ## 2026-10 工程更新
 

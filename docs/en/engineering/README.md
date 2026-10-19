@@ -27,6 +27,10 @@ Each hardware input contains environments, deployment of adaptation sequences, b
 | MUSA | [Complete verification process](musa.md) |Toolkit, GGML backend, GGUF, and API|CPU→GPU, number of layers, FA, batch, slot|Not found measured source, waiting for device verification|
 | CPU | [Fixed full Windows exercises](../practice/first-service/README.md) |Fixed model/binary, SHA256, API|8 requests, 3 engine runs, and complete actual outputs|Functionality 2/3, error returned 500, total acceptance testing failure|
 
+## General performance optimization and testing methodology
+
+The [General Performance Optimization and Testing Methodology](edge-llm-performance-methodology.md) keeps only shared operations, metrics, experiments, and acceptance rules. The eight projects live in the [project document index](projects/README.md), one document per project, instead of one large combined page.
+
 ## Execution and evidence of each case
 
 ```text

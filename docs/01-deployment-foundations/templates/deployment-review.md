@@ -1,3 +1,17 @@
+---
+id: T51
+title: "部署项目复盘模板"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "以下为待填写模板。没有测量的数据写“未测”，没有取得的材料写“缺失”，不要填写预计值充当结果。"
+---
+
 # 部署项目复盘模板
 
 [知识体系首页](../README.md) · [复盘方法](../04-project-review.md)

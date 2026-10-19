@@ -107,3 +107,9 @@ Layer 5 — Delivery: environments / interfaces / monitoring / acceptance / roll
 ### 2.2 Engineering examples
 
 [Matrix of GPU instances](engineering/README.md) Access to full adaptation and optimization records by specific device. Common mechanisms are developed in the five-layer main framework definitions, platform differences, commands and data in the original records of each device.
+
+### 2.3 Skills extracted from on-device projects
+
+The [General Performance Optimization and Testing Methodology](engineering/edge-llm-performance-methodology.md) keeps shared operations and test rules. The eight projects live in the [project index](engineering/projects/README.md), one document per project. Choose a project first, then review its recommended route, minimum procedure, test methods, representative results, and boundary.
+
+Keep four cross-project boundaries: a model that loads is not automatically performant; multiple devices first address capacity or long prefill; independent replicas and RPC layer splitting are different scaling designs; speculation, P/D, and low-precision kernels all require complete-request, correctness, and resource acceptance.

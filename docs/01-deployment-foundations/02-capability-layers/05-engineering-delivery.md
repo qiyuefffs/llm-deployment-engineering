@@ -1,3 +1,17 @@
+---
+id: T06
+title: "第5层：工程交付层"
+type: tutorial
+volume: book
+layer: 5
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "完成一次生成后，还需要决定怎样提供和维护这个能力。单机CLI、应用内嵌推理、本地HTTP服务和多副本在线服务，使用的是同类模型计算，但生命周期和运维要求不同。"
+---
+
 # 第5层：工程交付层
 
 [总目录](../SUMMARY.md) · [环境/启停/回滚](../chapters/delivery/environment-operations.md) · [API/监控/验收](../chapters/delivery/api-monitoring.md)
@@ -52,7 +66,7 @@
 3. 性能：实际token、SLO、并发/到达率、资源峰值、稳态。
 4. 运维：冷启动、停止、重启、日志、升级/回滚与恢复。
 
-Intel全NPU TTS性能达标但内容错误，因此回滚；Kokoro CPU实时性通过而RSS目标失败，因此总体不能只写“通过”。对应[完整工程记录](../engineering/intel-arc-npu.md)。
+Intel全NPU TTS性能达标但内容错误，因此回滚；Kokoro CPU实时性通过而RSS目标失败，因此总体不能只写“通过”。对应[完整工程记录](../cases/C09-intel-arc-npu/README.md)。
 
 ## 5.3 每个项目必须沉淀 7 个结果
 

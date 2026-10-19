@@ -1,3 +1,17 @@
+---
+id: T10
+title: "第五部分：个人知识库目录设计"
+type: tutorial
+volume: book
+layer: 0
+platform: "general"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "本部分保持原稿的八个主题目录。它们是按工作问题查阅本体系的索引，与前面的五层正文对应，不再复制八套重复教程。项目记录保存发生过的完整过程，知识条目从中提取可复用解释，实验和故障链接同一份原始证据。"
+---
+
 # 第五部分：个人知识库目录设计
 
 [总目录](SUMMARY.md) · [上一部分：项目复盘](04-project-review.md) · [下一部分：故障排查](06-troubleshooting.md)
@@ -55,7 +69,7 @@ TensorRT-LLM与SGLang先记录选型与官方支持入口。没有作者实跑�
 
 ### 06-压测与评估
 
-[压测教程](chapters/performance/benchmarking.md)统一工具、负载、计时和指标。已公开的[CPU完整演练](practice/first-service/README.md)提供下载、服务、请求、失败、基准与原始结果。
+[压测教程](chapters/performance/benchmarking.md)统一工具、负载、计时和指标。已公开的[CPU完整演练](cases/C14-windows-cpu/README.md)提供下载、服务、请求、失败、基准与原始结果。
 
 性能与质量分开，最后按项目标准一起判断。保留工具原始明细，汇总由程序计算；不修改结果去适应预期结论。
 
@@ -87,8 +101,10 @@ TensorRT-LLM与SGLang先记录选型与官方支持入口。没有作者实跑�
 
 历史汇总缺原始文件时，标注待补证据；只有设备枚举就标注设备可见；短输入通过就写短输入范围。新版本补齐验证后再更新状态，不用“已完成”掩盖功能缺口。
 
+项目达到可复盘状态后，共性操作汇总到[通用性能优化测试方法论](engineering/edge-llm-performance-methodology.md)，每个项目单独写入[项目文档索引](engineering/projects/README.md)。项目页保持独立，不把多个模型的长流程写在同一个窗口章节里。
+
 ## 5.4 长期维护
 
 版本、模板、模型或驱动变化时，先判断影响哪一层，再补对应回归。新的成功结果保留新环境，旧结果仍链接旧版本。公开资料从私人笔记中提取工程必要字段，不直接导出整个空间。
 
-一套可用知识库应帮助你找到：问题在哪层、以前哪次遇到、当时凭什么判断、现在能复用什么。知识体系的[章节来源映射](evidence/chapter-sources.md)和[历史结果](evidence/README.md)就是这种连接方式。
+一套可用知识库应帮助你找到：问题在哪层、以前哪次遇到、当时凭什么判断、现在能复用什么。知识体系的[章节来源映射](evidence/chapter-sources.md)和[历史结果](evidence/records/README.md)就是这种连接方式。

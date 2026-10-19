@@ -1,0 +1,34 @@
+{
+  "generated_on": "2026-10-19",
+  "scope": "docs/01-deployment-foundations",
+  "records": 70,
+  "prose_characters": 324324,
+  "code_characters": 241688,
+  "code_blocks": 1071,
+  "r_sources": 50,
+  "links": {
+    "total": 804,
+    "external": 154,
+    "unresolved": 4
+  },
+  "html": {
+    "book_html_bytes": 5359426,
+    "search_index_bytes": 1008351,
+    "embedded_image_base64_bytes": 2995240,
+    "anchor_links": 1509
+  },
+  "images": {
+    "count": 2,
+    "total_bytes": 2246426,
+    "images": [
+      {
+        "path": "assets/edge-llm-deployment-framework-original.png",
+        "bytes": 2226583
+      },
+      {
+        "path": "assets/vision-input/vision-card.png",
+        "bytes": 19843
+      }
+    ]
+  }
+}

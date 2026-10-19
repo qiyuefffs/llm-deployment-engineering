@@ -1,3 +1,17 @@
+---
+id: T26
+title: "1.2.4 Mac硬件、Metal与MLX"
+type: tutorial
+volume: book
+layer: 1
+platform: "Apple"
+device: "general"
+status: historical
+source_ids: []
+updated: 2026-10-19
+summary: "这里主要讨论Apple Silicon Mac。M系列SoC将CPU、GPU、Neural Engine等集成在同一平台，CPU与GPU共享物理内存。Intel Mac的软件与硬件条件不同，不能直接套用MLX/Apple Silicon部署"
+---
+
 # 1.2.4 Mac硬件、Metal与MLX
 
 [总目录](../../SUMMARY.md) · [硬件与运行时总览](../../02-capability-layers/01-hardware-backends.md)
@@ -58,7 +72,7 @@ MLX采用惰性求值：构造数组表达式时，计算可能尚未完成。�
 
 ## 部署操作与工程参考
 
-后续分别讲GGUF＋Metal构建、MLX服务和模型能力验证。实例：[M3 Ultra Metal构建与GGUF排错](../../engineering/apple-metal.md) · [MLX、APC与oMLX完整部署优化](../../engineering/apple-mlx.md)。
+后续分别讲GGUF＋Metal构建、MLX服务和模型能力验证。实例：[M3 Ultra Metal构建与GGUF排错](../../cases/C10-m3-metal/README.md) · [MLX、APC与oMLX完整部署优化](../../cases/C11-m3-mlx/README.md)。
 
 ## 一、先区分模型路线
 
